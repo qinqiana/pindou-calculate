@@ -65,6 +65,9 @@ function packGlyph(art: string): Uint16Array {
   return out
 }
 
+// 已知限制（PR2 审查 F 项）：手绘 CJK 字模目前只有「作/品/图/纸」四字，
+// 图纸名中的其他汉字会渲染为空心方框。T23/T24 真机样张与 A30/A31 视觉验收前
+// 必须解决（扩充字模子集或改用平台系统 CJK 字体渲染）。
 const CJK = new Map<string, Uint16Array>([
   [
     '作',

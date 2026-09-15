@@ -115,7 +115,7 @@ export type StoredResult = {
 
 export type RequestRecord = {
   requestId: string
-  payloadHash: string
+  payloadCanonical: string
   result: StoredResult
 }
 

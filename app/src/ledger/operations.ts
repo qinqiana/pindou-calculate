@@ -518,7 +518,7 @@ export class Ledger {
     next.requests = next.requests.concat([
       {
         requestId,
-        payloadHash: canonical({ kind: 'restore', seq: parsed.backup.seq, exportedAt: parsed.backup.exportedAt }),
+        payloadCanonical: canonical({ kind: 'restore', seq: parsed.backup.seq, exportedAt: parsed.backup.exportedAt }),
         result: { ok: true, requestId, operationId: 'restore', seq: next.seq },
       },
     ])
@@ -576,7 +576,7 @@ export class Ledger {
     return this.write(requestId, { kind, items: payloadItems }, token, (state) => {
       const again = previewBatch(state, items, kind)
       if (!again.ok) throw new BatchFail(again)
-      if (again.lines.length === 0 && kind === 'flag') {
+      if (again.lines.length === 0) {
         return { operationId: 'noop', skipOp: true }
       }
       const reason =
@@ -610,10 +610,10 @@ export class Ledger {
   private existing(
     requestId: string,
     payload: unknown,
-  ): Ok<{ operationId: string; token: Token; patternId?: string; makeId?: string; version?: number }> | Fail | null {
+  ): Ok<{ operationId: string; token: Token; patternId?: string; makeId?: string; version?: number; perColorSum?: number; difference?: number | null }> | Fail | null {
     const prev = this.store.live().requests.find((r) => r.requestId === requestId)
     if (!prev) return null
-    if (prev.payloadHash !== canonical(payload)) return fail('request-conflict', '同一请求内容冲突')
+    if (prev.payloadCanonical !== canonical(payload)) return fail('request-conflict', '同一请求内容冲突')
     return {
       ok: true,
       operationId: prev.result.operationId,
@@ -621,6 +621,8 @@ export class Ledger {
       patternId: prev.result.patternId,
       makeId: prev.result.makeId,
       version: prev.result.version,
+      perColorSum: prev.result.perColorSum,
+      difference: prev.result.difference,
     }
   }
 
@@ -642,21 +644,8 @@ export class Ledger {
   ): Ok<{ operationId: string; token: Token; patternId?: string; makeId?: string; version?: number; perColorSum?: number; difference?: number | null }> | Fail {
     if (!requestId || requestId.trim() === '') return fail('invalid-request', '缺少请求标识')
     const live = this.store.live()
-    const hash = canonical(payload)
-    const prev = live.requests.find((r) => r.requestId === requestId)
-    if (prev) {
-      if (prev.payloadHash !== hash) return fail('request-conflict', '同一请求内容冲突')
-      return {
-        ok: true,
-        operationId: prev.result.operationId,
-        token: this.token(),
-        patternId: prev.result.patternId,
-        makeId: prev.result.makeId,
-        version: prev.result.version,
-        perColorSum: prev.result.perColorSum,
-        difference: prev.result.difference,
-      }
-    }
+    const replayed = this.existing(requestId, payload)
+    if (replayed) return replayed
     const stale = checkToken(live, token)
     if (stale) return stale
     let produced: { operationId: string; skipOp?: boolean; patternId?: string; makeId?: string; version?: number; perColorSum?: number; difference?: number | null }
@@ -670,7 +659,7 @@ export class Ledger {
         }
         state.requests.push({
           requestId,
-          payloadHash: hash,
+          payloadCanonical: canonical(payload),
           result: {
             ok: true,
             requestId,
@@ -714,7 +703,7 @@ function checkToken(state: LedgerState, token: Token): Fail | null {
 
 function isLow(row: StockRow, percent: number): boolean {
   if (row.baseline === null || row.baseline <= 0) return false
-  return row.qty / row.baseline <= percent / 100
+  return row.qty * 100 <= percent * row.baseline
 }
 
 function pushOp(
