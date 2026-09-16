@@ -1,0 +1,10 @@
+{
+  "name": "pindou-calculate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "拼豆库存与图纸用量 — Android 首版本地账本",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.ts app/src/share/share.test.ts"
+  }
+}
