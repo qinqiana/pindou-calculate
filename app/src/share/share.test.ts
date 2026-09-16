@@ -43,3 +43,27 @@ test('images are optional and do not change canvas size', () => {
   const png = renderShareImage('xiaohongshu', { patternName: 'Demo', workImage, patternImage })
   assert.deepEqual(readPngSize(png), { width: 1080, height: 1800 })
 })
+
+test('every variant renders both platforms at the fixed sizes without throwing', () => {
+  const workImage = { width: 2, height: 2, rgb: Uint8Array.of(40, 70, 90, 40, 70, 90, 40, 70, 90, 40, 70, 90) }
+  const patternImage = { width: 3, height: 1, rgb: Uint8Array.of(90, 80, 60, 90, 80, 60, 90, 80, 60) }
+  const content = { patternName: '小熊猫杯垫·春日野餐', workImage, patternImage }
+  for (const variant of ['classic', 'cover', 'polaroid'] as const) {
+    assert.deepEqual(readPngSize(renderShareImage('moments', content, variant)), { width: 1080, height: 1440 })
+    assert.deepEqual(readPngSize(renderShareImage('xiaohongshu', content, variant)), { width: 1080, height: 1800 })
+  }
+})
+
+test('variants tolerate missing name and missing images', () => {
+  for (const variant of ['classic', 'cover', 'polaroid'] as const) {
+    assert.doesNotThrow(() => renderShareImage('moments', { patternName: '' }, variant))
+    assert.doesNotThrow(() => renderShareImage('xiaohongshu', { patternName: '作品只有图纸', }, variant))
+  }
+})
+
+test('unknown variant falls back to classic pixels', () => {
+  const content = { patternName: '对照' }
+  const fallback = renderShareImage('moments', content, 'bogus' as never)
+  const classic = renderShareImage('moments', content, 'classic')
+  assert.deepEqual(fallback, classic)
+})

@@ -1,8 +1,18 @@
+import { CJK_FONT } from './cjk-font.ts'
 import { encodePngRgb, readPngSize } from './png.ts'
 
 export { readPngSize }
 
 export type ShareKind = 'moments' | 'xiaohongshu'
+export type ShareVariant = 'classic' | 'cover' | 'polaroid'
+
+export const SHARE_VARIANTS: readonly ShareVariant[] = ['classic', 'cover', 'polaroid']
+
+export const SHARE_VARIANT_LABELS: Record<ShareVariant, string> = {
+  classic: '上下双图',
+  cover: '作品大图',
+  polaroid: '手作卡片',
+}
 
 export type ShareContent = {
   patternName: string
@@ -13,7 +23,7 @@ export type ShareContent = {
 type Rgb = { r: number; g: number; b: number }
 type Box = { x: number; y: number; w: number; h: number }
 
-// 朋友圈画幅固定 1080×1440；视觉签收另做。
+// 朋友圈画幅固定 1080×1440（开发默认值，视觉验收由用户拍板）；小红书按已确认的 9:15 输出 1080×1800。
 const MOMENTS_WIDTH = 1080
 const MOMENTS_HEIGHT = 1440
 const XHS_WIDTH = 1080
@@ -53,107 +63,9 @@ const FONT5X7 = Uint8Array.of(
   0x00, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x41, 0x36, 0x08, 0x00, 0x08, 0x04, 0x08, 0x10, 0x08,
 )
 
-function packGlyph(art: string): Uint16Array {
-  const lines = art.trim().split('\n').map((s) => s.trim())
-  const out = new Uint16Array(16)
-  for (let y = 0; y < 16; y++) {
-    const line = lines[y] ?? ''
-    let bits = 0
-    for (let x = 0; x < 16; x++) if (line[x] === '#') bits |= 1 << (15 - x)
-    out[y] = bits
-  }
-  return out
-}
-
-// 已知限制（PR2 审查 F 项）：手绘 CJK 字模目前只有「作/品/图/纸」四字，
-// 图纸名中的其他汉字会渲染为空心方框。T23/T24 真机样张与 A30/A31 视觉验收前
-// 必须解决（扩充字模子集或改用平台系统 CJK 字体渲染）。
-const CJK = new Map<string, Uint16Array>([
-  [
-    '作',
-    packGlyph(`
-..##............
-..##....#####...
-..##............
-############....
-..##............
-..##...######...
-..##............
-..##..##....#...
-..##.##.........
-..####..........
-..##.#..........
-..##..#.........
-..##...##.......
-.###....##......
-#..##.....##....
-................
-`),
-  ],
-  [
-    '品',
-    packGlyph(`
-................
-...########.....
-...#......#.....
-...#......#.....
-...########.....
-................
-.######..######.
-.#....#..#....#.
-.#....#..#....#.
-.#....#..#....#.
-.######..######.
-................
-................
-................
-................
-................
-`),
-  ],
-  [
-    '图',
-    packGlyph(`
-################
-#..............#
-#......##......#
-#....######....#
-#......##......#
-#...########...#
-#......##......#
-#....#.##.#....#
-#...#..##..#...#
-#..#...##...#..#
-#......##......#
-#......##...##.#
-#..............#
-#..............#
-################
-................
-`),
-  ],
-  [
-    '纸',
-    packGlyph(`
-.#..............
-.#..#...#####...
-.####......#....
-.#..#......#....
-.#..#...######..
-.#.#.......#....
-.##.#......#....
-.#...#..#..#....
-.#....#.#..#....
-.#....##...#....
-.#....#...#.....
-.#...#....#.....
-.#..#....#.#....
-.#.#....#...#...
-##.....#.....#..
-................
-`),
-  ],
-])
+// CJK 字形来自 scripts/gen-cjk-font.py 生成的 Noto Sans SC 16×16 点阵字库
+//（GB2312 全量汉字 + 全角符号），任意图纸名都能渲染，不再出现方框。
+const CJK = CJK_FONT
 
 function fillCanvas(buf: Uint8Array, width: number, height: number, c: Rgb): void {
   const stride = width * 3
@@ -323,45 +235,100 @@ function ellipsize(text: string, maxW: number, asciiScale: number, cjkScale: num
   return out + dots
 }
 
-function paintRegion(
+/** 水平居中的一行文字（自动省略过长名称），返回实际绘制宽度。 */
+function drawCentered(
   buf: Uint8Array,
   bw: number,
   bh: number,
-  caption: string,
-  captionBox: Box,
-  frame: Box,
-  img: ShareContent['workImage'],
+  cx: number,
+  y: number,
+  text: string,
+  asciiScale: number,
+  cjkScale: number,
+  c: Rgb,
+): number {
+  const w = measure(text, asciiScale, cjkScale)
+  drawText(buf, bw, bh, Math.floor(cx - w / 2), y, text, asciiScale, cjkScale, c)
+  return w
+}
+
+/** 名称块高度：一行放得下就一行，否则两行（第二行省略）。 */
+function nameBlockHeight(text: string, maxW: number, asciiScale: number, cjkScale: number): number {
+  const clean = text.replace(/\s+/g, ' ').trim()
+  if (!clean) return 0
+  const lineH = Math.max(7 * asciiScale, 16 * cjkScale)
+  if (measure(clean, asciiScale, cjkScale) <= maxW) return lineH
+  return lineH * 2 + Math.floor(lineH * 0.35)
+}
+
+/** 左对齐名称块，最多两行，第二行过长自动省略。 */
+function drawNameBlock(
+  buf: Uint8Array,
+  bw: number,
+  bh: number,
+  x: number,
+  y: number,
+  maxW: number,
+  text: string,
+  asciiScale: number,
+  cjkScale: number,
+  c: Rgb,
 ): void {
-  const capScale = 3
-  const capAscii = 5
-  const capW = measure(caption, capAscii, capScale)
-  drawText(
-    buf,
-    bw,
-    bh,
-    captionBox.x + Math.floor((captionBox.w - capW) / 2),
-    captionBox.y + Math.floor((captionBox.h - 16 * capScale) / 2),
-    caption,
-    capAscii,
-    capScale,
-    INK,
-  )
-  fillRoundRect(buf, bw, bh, frame, 18, FRAME)
+  const clean = text.replace(/\s+/g, ' ').trim()
+  if (!clean) return
+  const lineH = Math.max(7 * asciiScale, 16 * cjkScale)
+  if (measure(clean, asciiScale, cjkScale) <= maxW) {
+    drawText(buf, bw, bh, x, y, clean, asciiScale, cjkScale, c)
+    return
+  }
+  let first = ''
+  for (const ch of clean) {
+    if (measure(first + ch, asciiScale, cjkScale) > maxW) break
+    first += ch
+  }
+  const second = ellipsize(clean.slice(first.length), maxW, asciiScale, cjkScale)
+  drawText(buf, bw, bh, x, y, first, asciiScale, cjkScale, c)
+  drawText(buf, bw, bh, x, y + lineH + Math.floor(lineH * 0.35), second, asciiScale, cjkScale, c)
+}
+
+/** 圆角小标签（如「作品」「图纸」），返回标签宽度。 */
+function drawChip(buf: Uint8Array, bw: number, bh: number, x: number, y: number, text: string, cjkScale: number): number {
+  const asciiScale = Math.max(2, cjkScale - 1)
+  const textW = measure(text, asciiScale, cjkScale)
+  const h = 16 * cjkScale + 28
+  const w = textW + 44
+  fillRoundRect(buf, bw, bh, { x, y, w, h }, Math.floor(h / 2), FRAME)
+  drawText(buf, bw, bh, x + 22, y + 14, text, asciiScale, cjkScale, INK)
+  return w
+}
+
+/** 带边框圆角相框；无图时绘制占位底与说明文字。 */
+function paintFrame(
+  buf: Uint8Array,
+  bw: number,
+  bh: number,
+  frame: Box,
+  radius: number,
+  img: ShareContent['workImage'],
+  emptyCaption: string,
+): void {
+  fillRoundRect(buf, bw, bh, frame, radius, FRAME)
   strokeRect(buf, bw, bh, frame, 3, BORDER)
   const inner: Box = { x: frame.x + 18, y: frame.y + 18, w: frame.w - 36, h: frame.h - 36 }
+  fillRect(buf, bw, bh, inner.x, inner.y, inner.w, inner.h, PLACE)
   if (usableImage(img)) {
-    fillRect(buf, bw, bh, inner.x, inner.y, inner.w, inner.h, PLACE)
     blitContain(buf, bw, bh, inner, img)
-  } else {
-    fillRect(buf, bw, bh, inner.x, inner.y, inner.w, inner.h, PLACE)
-    const labelW = measure(caption, capAscii, capScale)
+  } else if (emptyCaption) {
+    const capScale = 3
+    const capAscii = 5
+    const capW = measure(emptyCaption, capAscii, capScale)
     drawText(
       buf,
       bw,
       bh,
-      inner.x + Math.floor((inner.w - labelW) / 2),
+      inner.x + Math.floor((inner.w - capW) / 2),
       inner.y + Math.floor((inner.h - 16 * capScale) / 2),
-      caption,
+      emptyCaption,
       capAscii,
       capScale,
       MUTED,
@@ -369,7 +336,7 @@ function paintRegion(
   }
 }
 
-function paintShare(width: number, height: number, content: ShareContent): Uint8Array {
+function paintClassic(width: number, height: number, content: ShareContent): Uint8Array {
   const buf = new Uint8Array(width * height * 3)
   fillCanvas(buf, width, height, PAPER)
   const marginX = 72
@@ -383,35 +350,94 @@ function paintShare(width: number, height: number, content: ShareContent): Uint8
   const maxTitleW = width - marginX * 2
   const name = ellipsize(content.patternName ?? '', maxTitleW, titleAscii, titleCjk)
   if (name) {
-    const nameW = measure(name, titleAscii, titleCjk)
-    drawText(
-      buf,
-      width,
-      height,
-      Math.floor((width - nameW) / 2),
-      marginTop + Math.floor((titleH - Math.max(7 * titleAscii, 16 * titleCjk)) / 2),
-      name,
-      titleAscii,
-      titleCjk,
-      INK,
-    )
+    drawCentered(buf, width, height, width / 2, marginTop + Math.floor((titleH - Math.max(7 * titleAscii, 16 * titleCjk)) / 2), name, titleAscii, titleCjk, INK)
   }
   const bodyTop = marginTop + titleH
   const bodyH = height - bodyTop - marginBottom
   const regionH = Math.floor((bodyH - gap) / 2)
   const imgX = marginX
   const imgW = width - marginX * 2
-  const workCaption: Box = { x: imgX, y: bodyTop, w: imgW, h: captionH }
-  const workFrame: Box = { x: imgX, y: bodyTop + captionH, w: imgW, h: regionH - captionH }
-  const patternTop = bodyTop + regionH + gap
-  const patternCaption: Box = { x: imgX, y: patternTop, w: imgW, h: captionH }
-  const patternFrame: Box = { x: imgX, y: patternTop + captionH, w: imgW, h: regionH - captionH }
-  paintRegion(buf, width, height, '作品', workCaption, workFrame, content.workImage)
-  paintRegion(buf, width, height, '图纸', patternCaption, patternFrame, content.patternImage)
+  const paintRegion = (caption: string, top: number, img: ShareContent['workImage']) => {
+    const capScale = 3
+    const capAscii = 5
+    drawCentered(buf, width, height, width / 2, top + Math.floor((captionH - 16 * capScale) / 2), caption, capAscii, capScale, INK)
+    paintFrame(buf, width, height, { x: imgX, y: top + captionH, w: imgW, h: regionH - captionH }, 18, img, caption)
+  }
+  paintRegion('作品', bodyTop, content.workImage)
+  paintRegion('图纸', bodyTop + regionH + gap, content.patternImage)
   return buf
 }
 
-export function renderShareImage(kind: ShareKind, content: ShareContent): Uint8Array {
+function paintCover(width: number, height: number, content: ShareContent): Uint8Array {
+  const buf = new Uint8Array(width * height * 3)
+  fillCanvas(buf, width, height, PAPER)
+  const marginX = 72
+  const heroH = height === MOMENTS_HEIGHT ? 830 : 1000
+  const hero: Box = { x: marginX, y: 56, w: width - marginX * 2, h: heroH }
+  paintFrame(buf, width, height, hero, 26, content.workImage, '作品')
+  drawChip(buf, width, height, hero.x + 30, hero.y + 30, '作品', 3)
+  const cardY = hero.y + hero.h + 36
+  const card: Box = { x: marginX, y: cardY, w: width - marginX * 2, h: height - 56 - cardY }
+  fillRoundRect(buf, width, height, card, 26, FRAME)
+  strokeRect(buf, width, height, card, 3, BORDER)
+  const thumb = Math.min(card.h - 96, 360)
+  const thumbBox: Box = { x: card.x + 48, y: card.y + Math.floor((card.h - thumb) / 2), w: thumb, h: thumb }
+  paintFrame(buf, width, height, thumbBox, 16, content.patternImage, '')
+  drawChip(buf, width, height, thumbBox.x + 16, thumbBox.y + 16, '图纸', 2)
+  const nameAscii = 8
+  const nameCjk = 4
+  const nameX = thumbBox.x + thumbBox.w + 44
+  const nameMaxW = card.x + card.w - 44 - nameX
+  const blockH = nameBlockHeight(content.patternName ?? '', nameMaxW, nameAscii, nameCjk)
+  if (blockH > 0) {
+    drawNameBlock(buf, width, height, nameX, card.y + Math.floor((card.h - blockH) / 2), nameMaxW, content.patternName ?? '', nameAscii, nameCjk, INK)
+  }
+  return buf
+}
+
+function paintPolaroid(width: number, height: number, content: ShareContent): Uint8Array {
+  const buf = new Uint8Array(width * height * 3)
+  fillCanvas(buf, width, height, PAPER)
+  const marginX = 132
+  const top = height === MOMENTS_HEIGHT ? 96 : 130
+  const card: Box = { x: marginX, y: top, w: width - marginX * 2, h: height - top * 2 }
+  fillRoundRect(buf, width, height, card, 10, FRAME)
+  strokeRect(buf, width, height, card, 3, BORDER)
+  const pad = 48
+  const captionH = height === MOMENTS_HEIGHT ? 210 : 230
+  const photo: Box = { x: card.x + pad, y: card.y + pad, w: card.w - pad * 2, h: card.h - pad * 2 - captionH }
+  fillRect(buf, width, height, photo.x, photo.y, photo.w, photo.h, PLACE)
+  if (usableImage(content.workImage)) {
+    blitContain(buf, width, height, photo, content.workImage)
+  } else {
+    const capScale = 3
+    const capAscii = 5
+    drawCentered(buf, width, height, photo.x + photo.w / 2, photo.y + Math.floor((photo.h - 16 * capScale) / 2), '作品', capAscii, capScale, MUTED)
+  }
+  drawChip(buf, width, height, photo.x + 24, photo.y + 24, '作品', 2)
+  const capTop = photo.y + photo.h + 28
+  const thumb = captionH - 40
+  const thumbBox: Box = { x: card.x + pad, y: capTop, w: thumb, h: thumb }
+  paintFrame(buf, width, height, thumbBox, 12, content.patternImage, '')
+  drawChip(buf, width, height, thumbBox.x + 10, thumbBox.y + 10, '图纸', 2)
+  const nameAscii = 7
+  const nameCjk = 4
+  const nameX = thumbBox.x + thumbBox.w + 32
+  const nameMaxW = card.x + card.w - pad - nameX
+  const blockH = nameBlockHeight(content.patternName ?? '', nameMaxW, nameAscii, nameCjk)
+  if (blockH > 0) {
+    drawNameBlock(buf, width, height, nameX, capTop + Math.floor((thumb - blockH) / 2), nameMaxW, content.patternName ?? '', nameAscii, nameCjk, INK)
+  }
+  return buf
+}
+
+const PAINTERS: Record<ShareVariant, (width: number, height: number, content: ShareContent) => Uint8Array> = {
+  classic: paintClassic,
+  cover: paintCover,
+  polaroid: paintPolaroid,
+}
+
+export function renderShareImage(kind: ShareKind, content: ShareContent, variant: ShareVariant = 'classic'): Uint8Array {
   const size =
     kind === 'moments'
       ? { width: MOMENTS_WIDTH, height: MOMENTS_HEIGHT }
@@ -419,5 +445,6 @@ export function renderShareImage(kind: ShareKind, content: ShareContent): Uint8A
         ? { width: XHS_WIDTH, height: XHS_HEIGHT }
         : null
   if (!size) throw new Error('unknown share template')
-  return encodePngRgb(size.width, size.height, paintShare(size.width, size.height, content))
+  const paint = PAINTERS[variant] ?? paintClassic
+  return encodePngRgb(size.width, size.height, paint(size.width, size.height, content))
 }

@@ -21,7 +21,8 @@ test('user-facing pages exist and call shipped Ledger entry', () => {
   }
   const stock = readFileSync('app/pages/stock/index.vue', 'utf8')
   assert.match(stock, /库存/)
-  assert.match(stock, /累计已用/)
+  // SPEC §5：界面使用「已记录使用」，避免把不完整用量误称为全部实际消耗
+  assert.match(stock, /已记录使用/)
   const pattern = readFileSync('app/pages/pattern/detail.vue', 'utf8')
   assert.match(pattern, /已拼/)
   assert.match(pattern, /撤回/)

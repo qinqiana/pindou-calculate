@@ -9,9 +9,9 @@ onLaunch(() => {
 
 <style>
 page {
-  background: #f6f1e7;
-  color: #3a3228;
-  font-size: 16px;
-  line-height: 1.5;
+  background: #f7f3ea;
+  color: #2f2a23;
+  font-size: 28rpx;
+  line-height: 1.55;
 }
 </style>

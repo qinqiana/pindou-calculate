@@ -17,4 +17,3 @@ app/unpackage/
 *.local.json
 .env
 .env.*
-!app/src/ledger/mard221.json
