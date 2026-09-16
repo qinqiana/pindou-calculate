@@ -1,4 +1,6 @@
-// 临时样张渲染脚本：把 6 种分享模板输出为 PNG 供人工目检，不提交。
+// 样张渲染脚本：把 6 种分享模板输出为 PNG 供人工目检。
+// 用法：node --experimental-strip-types scripts/render-share-samples.ts [输出目录]
+// 默认输出到临时目录；需要提交验收素材时把输出目录指到 docs/acceptance/ 下。
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -34,7 +36,7 @@ for (let y = 0; y < H; y++) {
 }
 const workImage = { width: W, height: H, rgb }
 
-const outDir = join(tmpdir(), 'pindou-share-samples')
+const outDir = process.argv[2] ?? join(tmpdir(), 'pindou-share-samples')
 mkdirSync(outDir, { recursive: true })
 const kinds: ShareKind[] = ['moments', 'xiaohongshu']
 for (const kind of kinds) {
