@@ -1,5 +1,10 @@
 <template>
   <view class="page">
+    <view v-if="storageError" class="card storage-error">
+      <text class="storage-error-text">{{ storageError }}</text>
+      <button class="btn primary" @click="retryStorage">重试</button>
+    </view>
+    <template v-else>
     <view class="card">
       <text class="section-title">低库存预警</text>
       <text class="muted">按各色首次录入或最近补货后的数量为基准；扣减、撤回和盘点更正不会重置基准。</text>
@@ -35,15 +40,18 @@
     </view>
 
     <text v-if="message" class="msg">{{ message }}</text>
+    </template>
   </view>
 </template>
 
 <script setup lang="ts">
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import { appLedger, newRequestId } from '../../src/platform/app-ledger'
+import { appLedger, appStorageState, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
+import { pickTextDocument, writeTextToDownloads } from '../../src/platform/fs'
 
 const percent = ref(String(appLedger().settings().lowStockPercent))
+const storageError = ref('')
 const diff = ref<null | {
   stockChanged: number
   patternCountBefore: number
@@ -58,72 +66,47 @@ const message = ref('')
 let validated: unknown = null
 
 onShow(() => {
-  percent.value = String(appLedger().settings().lowStockPercent)
+  storageError.value = appStorageState().message ?? ''
+  if (!storageError.value) percent.value = String(appLedger().settings().lowStockPercent)
 })
+
+function retryStorage() {
+  retryAppStorage()
+  storageError.value = appStorageState().message ?? ''
+  if (!storageError.value) percent.value = String(appLedger().settings().lowStockPercent)
+}
 
 function savePercent() {
   const result = appLedger().setLowStockPercent(newRequestId(), percent.value, appLedger().token())
   message.value = result.ok ? '预警比例已保存' : result.message
 }
 
-function exportBak() {
+async function exportBak() {
   const data = appLedger().exportBackup()
-  const text = JSON.stringify(data)
-  const dest = '_doc/pindou-backup.json'
-  uni.getFileSystemManager().writeFile({
-    filePath: dest,
-    data: text,
-    encoding: 'utf8',
-    success: () => {
-      message.value = '备份已保存到文件 ' + dest + '。不含原始大图、密钥或设备路径。'
-    },
-    fail: () => {
-      message.value = '保存备份文件失败，账本未改。'
-    },
-  })
+  const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')
+  const name = 'pindou-backup-' + stamp + '.json'
+  const written = await writeTextToDownloads(name, JSON.stringify(data))
+  message.value = written.ok
+    ? '备份已保存到下载目录（' + written.value.path + '）。不含原始大图、密钥或设备路径。'
+    : written.message + '，账本未改。'
 }
 
-function chooseBak() {
-  const fs = uni.getFileSystemManager()
-  const pick = (uni as { chooseFile?: (opts: unknown) => void }).chooseFile
-  const afterRead = (raw: string) => {
-    const result = appLedger().validateBackup(raw)
-    if (!result.ok) {
-      message.value = result.message
-      diff.value = null
-      validated = null
-      return
-    }
-    diff.value = result.diff
-    validated = result.backup
-    message.value = '这是整体替换预览，取消不会改账本。'
-  }
-  if (typeof pick === 'function') {
-    pick({
-      count: 1,
-      extension: ['.json'],
-      success: (res: { tempFiles?: { path: string }[]; tempFilePaths?: string[] }) => {
-        const path = res.tempFilePaths?.[0] || res.tempFiles?.[0]?.path
-        if (!path) {
-          message.value = '已取消选择备份'
-          return
-        }
-        fs.readFile({
-          filePath: path,
-          encoding: 'utf8',
-          success: (file) => afterRead(String(file.data)),
-          fail: () => {
-            message.value = '无法读取备份文件，原账本未改。'
-          },
-        })
-      },
-      fail: () => {
-        message.value = '已取消选择备份，原账本未改。'
-      },
-    })
+async function chooseBak() {
+  const picked = await pickTextDocument()
+  if (!picked.ok) {
+    message.value = picked.message
     return
   }
-  message.value = '当前环境没有文件选择器。'
+  const result = appLedger().validateBackup(picked.value.text)
+  if (!result.ok) {
+    message.value = result.message
+    diff.value = null
+    validated = null
+    return
+  }
+  diff.value = result.diff
+  validated = result.backup
+  message.value = '这是整体替换预览，取消不会改账本。'
 }
 
 function replace() {
@@ -166,4 +149,8 @@ function cancel() {
 .diff-val { font-size: 26rpx; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .msg { display: block; margin-top: 20rpx; font-size: 26rpx; color: #566c4d; }
+
+.storage-error { padding: 40rpx 32rpx; display: flex; flex-direction: column; gap: 16rpx; }
+.storage-error-text { font-size: 26rpx; color: #8a4b2f; line-height: 1.6; }
+.storage-error .btn { margin: 0; font-size: 28rpx; border-radius: 999rpx; height: 88rpx; line-height: 88rpx; }
 </style>

@@ -27,6 +27,7 @@ export function previewShareDataUrl(kind: ShareKind, content: ShareContent, vari
   return 'data:image/png;base64,' + bytesToBase64(png)
 }
 
+/** 分享图文件名（保存由平台文件适配层决定落点与相册导入）。 */
 export function shareDestPath(kind: ShareKind, variant: ShareVariant = 'classic'): string {
-  return '_doc/pindou-share-' + kind + '-' + variant + '.png'
+  return 'pindou-share-' + kind + '-' + variant + '.png'
 }

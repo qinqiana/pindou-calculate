@@ -2,7 +2,7 @@ import { COLOR_CODES, COLOR_SET, compareColorCode, normalizeColorCode, PALETTE }
 import { restockListCsv, restockListText } from './csv.ts'
 import { pickThumbnail, sniffImage } from './image.ts'
 import { APP_VERSION, BACKUP_FORMAT_VERSION, canonical, clone, newId, parseNonNegativeInt, parsePercent, qtyMessage } from './numbers.ts'
-import { LedgerStore, type InterruptStage } from './store.ts'
+import { LedgerStore, isPersistError, type InterruptStage } from './store.ts'
 import type {
   BackupFile,
   BatchItem,
@@ -249,6 +249,8 @@ export class Ledger {
       })
     } catch (err) {
       if (isInterrupt(err)) return fail('interrupted', '保存中断，账本未改')
+      const pf = asPersistFail(err)
+      if (pf) return pf
       throw err
     }
     return { ok: true, token: this.token() }
@@ -501,10 +503,14 @@ export class Ledger {
     return { ok: true, backup: parsed.backup, diff: diffBackup(this.store.live(), parsed.backup) }
   }
 
-  cancelRestore(): Ok<{ token: Token }> {
-    this.store.envelope.pending = null
-    this.store.envelope.pointer = 'live'
-    this.store.persist()
+  cancelRestore(): Ok<{ token: Token }> | Fail {
+    try {
+      this.store.abortPending()
+    } catch (err) {
+      const pf = asPersistFail(err)
+      if (pf) return pf
+      throw err
+    }
     return { ok: true, token: this.token() }
   }
 
@@ -526,6 +532,8 @@ export class Ledger {
       this.store.replaceLive(next, this.store.interrupt)
     } catch (err) {
       if (isInterrupt(err)) return fail('interrupted', '恢复中断，仍保留完整账本')
+      const pf = asPersistFail(err)
+      if (pf) return pf
       throw err
     }
     return { ok: true, token: this.token() }
@@ -676,6 +684,8 @@ export class Ledger {
     } catch (err) {
       if (err instanceof BatchFail) return err.fail
       if (isInterrupt(err)) return fail('interrupted', '写入中断，账本未改')
+      const pf = asPersistFail(err)
+      if (pf) return pf
       throw err
     }
     return { ok: true, token: this.token(), ...produced! }
@@ -692,6 +702,12 @@ class BatchFail extends Error {
 
 function isInterrupt(err: unknown): boolean {
   return err instanceof Error && err.message.startsWith('interrupt:')
+}
+
+/** 持久化失败转成对用户的明确失败结果；其余错误继续抛出。 */
+function asPersistFail(err: unknown): Fail | null {
+  if (isPersistError(err)) return fail('persist-failed', '未能写入本机存储，账本未改，请重试')
+  return null
 }
 
 function checkToken(state: LedgerState, token: Token): Fail | null {

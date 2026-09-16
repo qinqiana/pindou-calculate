@@ -1,5 +1,10 @@
 <template>
   <view class="page">
+    <view v-if="storageError" class="card storage-error">
+      <text class="storage-error-text">{{ storageError }}</text>
+      <button class="btn primary" @click="retryStorage">重试</button>
+    </view>
+    <template v-else>
     <view class="import-card" @click="pick">
       <text class="import-plus">＋</text>
       <text class="import-title">导入图纸</text>
@@ -41,16 +46,20 @@
       <text class="empty-sub">导入一张想拼的图纸，录入逐色用量后就能看缺口、记已拼。</text>
     </view>
     <text v-if="error" class="err">{{ error }}</text>
+    </template>
   </view>
 </template>
 
 <script setup lang="ts">
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import { appLedger, newRequestId } from '../../src/platform/app-ledger'
+import { bytesToBase64 } from '../../src/ledger/image'
+import { appLedger, appStorageState, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
+import { pickImageFile } from '../../src/platform/fs'
 
 const cards = ref(appLedger().listPatternCards())
 const error = ref('')
+const storageError = ref('')
 const pendingPreview = ref('')
 const pendingName = ref('未命名图纸')
 const pendingNote = ref('')
@@ -61,29 +70,24 @@ function reload() {
   cards.value = appLedger().listPatternCards()
 }
 
-function pick() {
+function retryStorage() {
+  retryAppStorage()
+  storageError.value = appStorageState().message ?? ''
+  if (!storageError.value) reload()
+}
+
+async function pick() {
   error.value = ''
-  uni.chooseImage({
-    count: 1,
-    sizeType: ['original'],
-    success: (res) => {
-      const path = res.tempFilePaths[0]
-      pendingPreview.value = path
-      uni.getFileSystemManager().readFile({
-        filePath: path,
-        success: (file) => {
-          pendingBytes = new Uint8Array(file.data as ArrayBuffer)
-        },
-        fail: () => {
-          error.value = '读取图片失败'
-          pendingPreview.value = ''
-        },
-      })
-    },
-    fail: () => {
-      error.value = '已取消选择，没有创建图纸'
-    },
-  })
+  const picked = await pickImageFile()
+  if (!picked.ok) {
+    if (!picked.cancelled) error.value = picked.message
+    else error.value = picked.message
+    pendingPreview.value = ''
+    pendingBytes = null
+    return
+  }
+  pendingBytes = picked.value.bytes
+  pendingPreview.value = 'data:' + picked.value.mime + ';base64,' + bytesToBase64(picked.value.bytes)
 }
 
 function cancelPending() {
@@ -123,7 +127,10 @@ function open(id: string) {
   else uni.navigateTo({ url: '/pages/pattern/edit?id=' + id })
 }
 
-onShow(reload)
+onShow(() => {
+  storageError.value = appStorageState().message ?? ''
+  if (!storageError.value) reload()
+})
 </script>
 
 <style>
@@ -158,4 +165,8 @@ onShow(reload)
 .empty-title { font-size: 30rpx; font-weight: 600; }
 .empty-sub { font-size: 24rpx; color: #857c6e; text-align: center; line-height: 1.6; }
 .err { display: block; margin-top: 24rpx; color: #b65b38; font-size: 26rpx; }
+
+.storage-error { padding: 40rpx 32rpx; display: flex; flex-direction: column; gap: 16rpx; }
+.storage-error-text { font-size: 26rpx; color: #8a4b2f; line-height: 1.6; }
+.storage-error .btn { margin: 0; font-size: 28rpx; border-radius: 999rpx; height: 88rpx; line-height: 88rpx; }
 </style>

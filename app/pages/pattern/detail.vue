@@ -68,6 +68,7 @@ import { onLoad, onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { colorByCode } from '../../src/ledger/catalog'
 import { appLedger, newRequestId } from '../../src/platform/app-ledger'
+import { writeTextToDownloads } from '../../src/platform/fs'
 import { clearRequestAfterVoid, emptyMakeRequestState, markMakeSuccess, resolveMakeRequestId, type MakeAction } from '../../src/platform/make-request'
 
 const id = ref('')
@@ -120,21 +121,20 @@ function voidMake(makeId: string) {
   reload()
 }
 
-function copyList() {
+async function copyList() {
   const list = appLedger().exportRestockList(id.value)
   if (!list.ok) {
     error.value = list.message
     return
   }
   uni.setClipboardData({ data: list.text })
-  uni.getFileSystemManager().writeFile({
-    filePath: '_doc/pindou-restock.csv',
-    data: list.csv,
-    encoding: 'utf8',
-    fail: () => {
-      error.value = '清单已复制。保存文件失败，图纸和库存未改。'
-    },
-  })
+  const written = await writeTextToDownloads('pindou-restock.csv', list.csv)
+  if (!written.ok) {
+    error.value = '清单已复制。' + written.message + '，图纸和库存未改。'
+    return
+  }
+  error.value = ''
+  uni.showToast({ title: '清单已复制并导出', icon: 'none' })
 }
 
 function goShare() {

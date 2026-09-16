@@ -35,6 +35,7 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { appLedger } from '../../src/platform/app-ledger'
+import { saveImageToGallery } from '../../src/platform/fs'
 import { previewShareDataUrl, shareContentFromPattern, shareDestPath } from '../../src/share/from-pattern'
 import { renderShareImage, SHARE_VARIANTS, SHARE_VARIANT_LABELS, type ShareContent, type ShareKind, type ShareVariant } from '../../src/share/templates'
 
@@ -74,21 +75,12 @@ onLoad((q: { id?: string }) => {
   rebuild()
 })
 
-function save() {
+async function save() {
   message.value = ''
   const png = renderShareImage(kind.value, content, variant.value)
   const dest = shareDestPath(kind.value, variant.value)
-  const fs = uni.getFileSystemManager()
-  fs.writeFile({
-    filePath: dest,
-    data: png,
-    success: () => {
-      message.value = '图片已保存到本机，未发布。'
-    },
-    fail: () => {
-      message.value = '保存失败，账本未改，可以重试。'
-    },
-  })
+  const saved = await saveImageToGallery(dest, png)
+  message.value = saved.ok ? '图片已保存到系统相册（' + saved.value.path + '），未发布。' : saved.message + '，账本未改，可以重试。'
 }
 
 function cancel() {

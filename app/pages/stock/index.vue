@@ -1,5 +1,10 @@
 <template>
   <view class="page">
+    <view v-if="storageError" class="card storage-error">
+      <text class="storage-error-text">{{ storageError }}</text>
+      <button class="btn primary" @click="retryStorage">重试</button>
+    </view>
+    <template v-else>
     <view class="hero card">
       <view class="hero-head">
         <text class="hero-title">我的豆仓</text>
@@ -53,6 +58,7 @@
       <text class="empty-title">没有匹配的色号</text>
       <text class="empty-sub">换个关键词试试，不会因此新建色号。</text>
     </view>
+    </template>
   </view>
 </template>
 
@@ -60,7 +66,7 @@
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { GROUP_ORDER, colorByCode } from '../../src/ledger/catalog'
-import { appLedger } from '../../src/platform/app-ledger'
+import { appLedger, appStorageState, retryAppStorage } from '../../src/platform/app-ledger'
 
 const groups = GROUP_ORDER
 const groupNames: Record<string, string> = {
@@ -76,12 +82,18 @@ const groupNames: Record<string, string> = {
 }
 const query = ref('')
 const group = ref('')
+const storageError = ref('')
 const rows = ref(appLedger().listStock())
 const ach = ref(appLedger().achievements())
 
 function reload() {
   rows.value = appLedger().listStock(query.value, group.value || undefined)
   ach.value = appLedger().achievements()
+}
+function retryStorage() {
+  retryAppStorage()
+  storageError.value = appStorageState().message ?? ''
+  if (!storageError.value) reload()
 }
 function onSearch(e: { detail: { value: string } }) {
   query.value = e.detail.value
@@ -106,7 +118,10 @@ function goBatch(mode: string) {
 function goHistory() {
   uni.navigateTo({ url: '/pages/stock/history' })
 }
-onShow(reload)
+onShow(() => {
+  storageError.value = appStorageState().message ?? ''
+  if (!storageError.value) reload()
+})
 </script>
 
 <style>
@@ -153,4 +168,8 @@ onShow(reload)
 .empty { margin-top: 32rpx; padding: 48rpx 32rpx; display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
 .empty-title { font-size: 30rpx; font-weight: 600; }
 .empty-sub { font-size: 24rpx; color: #857c6e; }
+
+.storage-error { padding: 40rpx 32rpx; display: flex; flex-direction: column; gap: 16rpx; }
+.storage-error-text { font-size: 26rpx; color: #8a4b2f; line-height: 1.6; }
+.storage-error .btn { margin: 0; font-size: 28rpx; border-radius: 999rpx; height: 88rpx; line-height: 88rpx; }
 </style>

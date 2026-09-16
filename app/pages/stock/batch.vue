@@ -14,7 +14,7 @@
       :key="line.code"
       class="line card"
       :class="{ on: line.selected }"
-      @click="line.selected = !line.selected"
+      @click="toggleSelect(line)"
     >
       <view class="check" :class="{ on: line.selected }">{{ line.selected ? '✓' : '' }}</view>
       <view class="swatch" :style="{ background: hex(line.code) }" />
@@ -24,9 +24,9 @@
         type="number"
         :value="String(line.qty)"
         @click.stop
-        @input="e => line.qty = e.detail.value"
+        @input="e => onQty(line, e)"
       />
-      <text class="est" :class="{ exact: !line.estimated }" @click.stop="line.estimated = !line.estimated">{{ line.estimated ? '估算' : '精确' }}</text>
+      <text class="est" :class="{ exact: !line.estimated }" @click.stop="onEst(line)">{{ line.estimated ? '估算' : '精确' }}</text>
     </view>
 
     <view class="footer">
@@ -52,14 +52,18 @@ import { onLoad } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import { colorByCode } from '../../src/ledger/catalog'
 import { DEFAULT_FIRST_ENTRY } from '../../src/ledger/numbers'
+import type { Ledger } from '../../src/ledger/operations'
 import { appLedger, newRequestId } from '../../src/platform/app-ledger'
+import { bindPreview, previewStillValid, type BatchInputItem, type PreviewBinding } from '../../src/platform/batch-preview'
+
+type Token = ReturnType<Ledger['token']>
 
 const mode = ref<'first-entry' | 'count' | 'restock'>('first-entry')
 const title = ref('首次录入')
 const lines = ref<{ code: string; qty: string | number; estimated: boolean; selected: boolean }[]>([])
 const previewLines = ref<{ code: string; qtyBefore: number; qtyAfter: number; delta: number }[]>([])
 const error = ref('')
-let token = appLedger().token()
+let binding: PreviewBinding<Token> | null = null
 
 const selectedCount = computed(() => lines.value.filter((l) => l.selected).length)
 
@@ -73,42 +77,76 @@ onLoad((q: { mode?: string }) => {
     estimated: row.estimated,
     selected: false,
   }))
-  token = appLedger().token()
 })
 
 function hex(code: string) {
   return colorByCode(code)?.hex || '#ccc'
 }
 
-function selectedItems() {
+/** 数量、选中项或精度标记变化都会使旧预览失效，必须重新预览。 */
+function invalidate() {
+  previewLines.value = []
+  binding = null
+}
+
+function toggleSelect(line: { selected: boolean }) {
+  line.selected = !line.selected
+  invalidate()
+}
+
+function onQty(line: { qty: string | number }, e: { detail: { value: string } }) {
+  line.qty = e.detail.value
+  invalidate()
+}
+
+function onEst(line: { estimated: boolean }) {
+  line.estimated = !line.estimated
+  invalidate()
+}
+
+function selectedItems(): BatchInputItem[] {
   return lines.value.filter((l) => l.selected).map((l) => ({ code: l.code, qty: l.qty, estimated: l.estimated }))
+}
+
+function previewFn() {
+  const l = appLedger()
+  return mode.value === 'count' ? l.previewCount.bind(l) : mode.value === 'restock' ? l.previewRestock.bind(l) : l.previewFirstEntry.bind(l)
+}
+
+function commitFn() {
+  const l = appLedger()
+  return mode.value === 'count' ? l.commitCount.bind(l) : mode.value === 'restock' ? l.commitRestock.bind(l) : l.commitFirstEntry.bind(l)
 }
 
 function preview() {
   error.value = ''
-  const items = selectedItems()
-  const fn =
-    mode.value === 'count' ? appLedger().previewCount.bind(appLedger()) : mode.value === 'restock' ? appLedger().previewRestock.bind(appLedger()) : appLedger().previewFirstEntry.bind(appLedger())
-  const result = fn(items)
+  const result = previewFn()(selectedItems())
   if (!result.ok) {
     error.value = result.message
     previewLines.value = []
+    binding = null
     return
   }
+  binding = bindPreview(selectedItems(), result.token)
   previewLines.value = result.lines
-  token = result.token
 }
 
 function save() {
   error.value = ''
-  const items = selectedItems()
-  const req = newRequestId()
-  const fn =
-    mode.value === 'count' ? appLedger().commitCount.bind(appLedger()) : mode.value === 'restock' ? appLedger().commitRestock.bind(appLedger()) : appLedger().commitFirstEntry.bind(appLedger())
-  const result = fn(req, items, token)
+  if (!binding || previewLines.value.length === 0) {
+    error.value = '请先预览本批变更'
+    return
+  }
+  if (!previewStillValid(binding, selectedItems())) {
+    invalidate()
+    error.value = '表单在预览后被修改，请重新预览'
+    return
+  }
+  const result = commitFn()(newRequestId(), binding.items, binding.token)
   if (!result.ok) {
+    // 账本版本变化必须重新预览；不允许刷新 token 绕过确认
+    if (result.code === 'stale') invalidate()
     error.value = result.message
-    token = appLedger().token()
     return
   }
   uni.showToast({ title: '已保存', icon: 'none' })

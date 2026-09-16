@@ -4,6 +4,18 @@ import type { Envelope, LedgerState, StockRow } from './types.ts'
 
 export type InterruptStage = 'none' | 'before-commit' | 'restore-prepare' | 'restore-write' | 'restore-switch'
 
+/** 持久化写入失败（区别于中断演练）；上层据此报错并保持可见状态一致。 */
+export class PersistError extends Error {
+  constructor(message: string) {
+    super('persist:' + message)
+    this.name = 'PersistError'
+  }
+}
+
+export function isPersistError(err: unknown): err is PersistError {
+  return err instanceof PersistError
+}
+
 export type PersistSink = {
   read(): Envelope | null
   write(envelope: Envelope): void
@@ -84,10 +96,10 @@ export class LedgerStore {
       this.interrupt = 'none'
       throw new Error('interrupt:before-commit')
     }
-    this.envelope.live = next
-    this.envelope.pending = null
-    this.envelope.pointer = 'live'
-    this.persist()
+    // 先持久化、后改可见状态：写入失败时可见账本保持原样，不出现伪成功。
+    const candidate: Envelope = { pointer: 'live', live: next, pending: null }
+    if (this.sink) this.sink.write(candidate)
+    this.envelope = candidate
     return this.envelope.live
   }
 
@@ -98,24 +110,38 @@ export class LedgerStore {
       throw new Error('interrupt:restore-prepare')
     }
     const prepared = clone(next)
-    if (use === 'restore-write') {
-      this.envelope.pending = { seq: -1 } as LedgerState
-      this.envelope.pointer = 'pending'
+    const original = clone(this.envelope)
+    try {
+      if (use === 'restore-write') {
+        this.envelope.pending = { seq: -1 } as LedgerState
+        this.envelope.pointer = 'pending'
+        this.persist()
+        this.interrupt = 'none'
+        throw new Error('interrupt:restore-write')
+      }
+      this.envelope.pending = prepared
+      if (use === 'restore-switch') {
+        this.envelope.pointer = 'pending'
+        this.persist()
+        this.interrupt = 'none'
+        throw new Error('interrupt:restore-switch')
+      }
+      this.envelope.live = prepared
+      this.envelope.pending = null
+      this.envelope.pointer = 'live'
       this.persist()
-      this.interrupt = 'none'
-      throw new Error('interrupt:restore-write')
+    } catch (err) {
+      // 中断演练按原语义抛出；真实写入失败则把可见状态回滚到恢复前。
+      if (isPersistError(err)) this.envelope = original
+      throw err
     }
-    this.envelope.pending = prepared
-    if (use === 'restore-switch') {
-      this.envelope.pointer = 'pending'
-      this.persist()
-      this.interrupt = 'none'
-      throw new Error('interrupt:restore-switch')
-    }
-    this.envelope.live = prepared
-    this.envelope.pending = null
-    this.envelope.pointer = 'live'
-    this.persist()
+  }
+
+  /** 取消恢复：先落盘再改可见状态，失败时 pending 保持原样。 */
+  abortPending(): void {
+    const candidate: Envelope = { pointer: 'live', live: this.envelope.live, pending: null }
+    if (this.sink) this.sink.write(candidate)
+    this.envelope = candidate
   }
 
   persist(): void {

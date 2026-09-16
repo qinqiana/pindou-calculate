@@ -38,7 +38,8 @@ test('user-facing pages exist and call shipped Ledger entry', () => {
   const settings = readFileSync('app/pages/settings/index.vue', 'utf8')
   assert.match(settings, /备份/)
   assert.match(settings, /整体替换/)
-  assert.match(settings, /writeFile/)
+  assert.match(settings, /writeTextToDownloads/)
+  assert.match(settings, /pickTextDocument/)
   assert.match(settings, /thumbnailComplete/)
   const list = readFileSync('app/pages/pattern/list.vue', 'utf8')
   assert.match(list, /pendingPreview/)
@@ -50,6 +51,13 @@ test('user-facing pages exist and call shipped Ledger entry', () => {
   assert.match(shareNote, /不会把图纸截图说成实物成品/)
   const batch = readFileSync('app/pages/stock/batch.vue', 'utf8')
   assert.match(batch, /commitFirstEntry|previewFirstEntry/)
+  assert.match(batch, /bindPreview|previewStillValid/)
+  // 存储不可用时的错误状态与重试入口（三个主 tab 页）
+  for (const file of ['app/pages/stock/index.vue', 'app/pages/pattern/list.vue', 'app/pages/settings/index.vue']) {
+    const text = readFileSync(file, 'utf8')
+    assert.match(text, /appStorageState/, file)
+    assert.match(text, /retryAppStorage/, file)
+  }
   const detail = readFileSync('app/pages/pattern/detail.vue', 'utf8')
   assert.match(detail, /\.make\(/)
   assert.match(detail, /再拼一次/)
