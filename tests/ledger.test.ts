@@ -28,9 +28,7 @@ function must<T extends { ok: boolean }>(result: T, label: string): T {
 }
 
 function jpeg1x1(): Uint8Array {
-  return new Uint8Array([
-    0xff, 0xd8, 0xff, 0xc0, 0x00, 0x0b, 0x08, 0x00, 0x01, 0x00, 0x01, 0x01, 0x01, 0x11, 0x00, 0xff, 0xd9,
-  ])
+  return new Uint8Array(readFileSync('tests/fixtures/webp/tiny.jpg'))
 }
 
 test('MARD 221 catalog groups and search', () => {

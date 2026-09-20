@@ -13,6 +13,7 @@ class Bits {
 
   bit(): number {
     if (this.n === 0) {
+      if (this.pos >= this.data.length) throw new Error('jpeg data incomplete')
       let b = this.data[this.pos++]
       if (b === 0xff) {
         while (this.data[this.pos] === 0xff) this.pos++

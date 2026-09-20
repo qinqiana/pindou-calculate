@@ -39,10 +39,12 @@ type Token = { epoch: number; seq: number }
 export class Ledger {
   store: LedgerStore
   clock: Clock
+  private thumbnailer: typeof pickThumbnail
 
-  constructor(store?: LedgerStore, clock?: Clock) {
+  constructor(store?: LedgerStore, clock?: Clock, thumbnailer = pickThumbnail) {
     this.store = store ?? new LedgerStore()
     this.clock = clock ?? defaultClock
+    this.thumbnailer = thumbnailer
   }
 
   setInterrupt(stage: InterruptStage): void {
@@ -183,7 +185,7 @@ export class Ledger {
     if (!input.name || input.name.trim() === '') return fail('invalid-name', '图纸名称不能为空')
     const sniffed = sniffImage(input.imageBytes)
     if (!sniffed.ok) return fail('invalid-image', sniffed.message)
-    const thumb = pickThumbnail(sniffed.image, input.thumbnailBytes)
+    const thumb = this.thumbnailer(sniffed.image, input.thumbnailBytes)
     if ('ok' in thumb && thumb.ok === false) return fail('invalid-image', thumb.message)
     const thumbnail = thumb as { mime: 'image/png' | 'image/jpeg'; base64: string }
     return this.write(
@@ -197,8 +199,8 @@ export class Ledger {
           name: input.name.trim(),
           sourceNote: (input.sourceNote ?? '').trim(),
           sizeNote: (input.sizeNote ?? '').trim(),
-          pixelWidth: sniffed.image.width,
-          pixelHeight: sniffed.image.height,
+          pixelWidth: (sniffed.image.orientation ?? 1) >= 5 ? sniffed.image.height : sniffed.image.width,
+          pixelHeight: (sniffed.image.orientation ?? 1) >= 5 ? sniffed.image.width : sniffed.image.height,
           thumbnail,
           confirmedVersion: null,
           createdSeq: state.seq + 1,

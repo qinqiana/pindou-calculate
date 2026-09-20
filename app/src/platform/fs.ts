@@ -8,6 +8,7 @@
  * - 真机行为（系统选择器、作用域存储、相册可见性）以 Android 验收为准。
  */
 import { base64ToBytes } from '../ledger/image.ts'
+import { MAX_IMAGE_BYTES } from '../ledger/numbers.ts'
 
 export type FileOutcome<T> = { ok: true; value: T } | { ok: false; cancelled?: boolean; message: string }
 
@@ -55,9 +56,10 @@ function plusGlobal(): PlusAny {
   return (globalThis as { plus?: PlusAny }).plus ?? null
 }
 
-/** 选一张图纸图片并读出字节（App 优先用 plus.gallery + plus.io，H5 兜底）。 */
+/** Android 直接读取系统文档原始字节，不经相册压缩/转换。 */
 export async function pickImageFile(): Promise<FileOutcome<{ bytes: Uint8Array; mime: string }>> {
   const plus = plusGlobal()
+  if (plus?.android?.runtimeMainActivity && plus.android.invoke) return pickImageDocument(plus.android)
   if (plus?.gallery?.pick) {
     const selected = await new Promise<FileOutcome<string>>((resolve) => {
       try {
@@ -104,6 +106,7 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
           (entry: PlusAny) => {
             entry.file(
               (file: PlusAny) => {
+                if (Number(file.size) > MAX_IMAGE_BYTES) return resolve(fail('图片超过 20 MiB 上限，请选择较小的原图'))
                 const reader = new plus.io.FileReader()
                 let settled = false
                 const next = () => {
@@ -114,11 +117,16 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
                 const done = (e: PlusAny) => {
                   if (settled) return
                   const url = String(e?.target?.result ?? '')
-                  const m = /^data:(image\/[a-zA-Z0-9.+-]+)(?:;[^,]*)?;base64,(.*)$/s.exec(url)
+                  const m = /^data:([^;,]*)(?:;[^,]*)?;base64,(.*)$/s.exec(url)
                   if (!m) return next()
                   try {
+                    const bytes = base64ToBytes(m[2])
+                    if (bytes.length > MAX_IMAGE_BYTES) {
+                      settled = true
+                      return resolve(fail('图片超过 20 MiB 上限，请选择较小的原图'))
+                    }
                     settled = true
-                    resolve({ ok: true, value: { bytes: base64ToBytes(m[2]), mime: m[1] } })
+                    resolve({ ok: true, value: { bytes, mime: m[1] } })
                   } catch {
                     next()
                   }
@@ -146,7 +154,10 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
     return (async () => {
       try {
         const res = await fetch(path)
+        if (!res.ok) return fail('读取图片失败，请重新选择本机文件')
+        if (Number(res.headers.get('content-length')) > MAX_IMAGE_BYTES) return fail('图片超过 20 MiB 上限')
         const buf = await res.arrayBuffer()
+        if (buf.byteLength > MAX_IMAGE_BYTES) return fail('图片超过 20 MiB 上限')
         return { ok: true, value: { bytes: new Uint8Array(buf), mime: res.headers.get('content-type') || 'image/png' } }
       } catch {
         return fail('读取图片失败')
@@ -154,6 +165,72 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
     })()
   }
   return Promise.resolve(fail('当前环境无法读取图片文件'))
+}
+
+function pickImageDocument(android: PlusAny): Promise<FileOutcome<{ bytes: Uint8Array; mime: string }>> {
+  return new Promise((resolve) => {
+    let main: PlusAny
+    let previous: PlusAny
+    let handler: PlusAny
+    const call = (obj: PlusAny, name: string, ...args: PlusAny[]) => android.invoke(obj, name, ...args)
+    const restore = () => { if (main && handler && main.onActivityResult === handler) main.onActivityResult = previous }
+    try {
+      main = android.runtimeMainActivity()
+      const intent = android.newObject('android.content.Intent', 'android.intent.action.OPEN_DOCUMENT')
+      call(intent, 'addCategory', 'android.intent.category.OPENABLE')
+      call(intent, 'setType', 'image/*')
+      previous = main.onActivityResult
+      handler = (requestCode: number, resultCode: number, data: PlusAny) => {
+        if (requestCode !== 9022) {
+          if (typeof previous === 'function') previous(requestCode, resultCode, data)
+          return
+        }
+        restore()
+        if (resultCode !== -1 || !data) return resolve(fail('已取消选图，已有输入保留。', true))
+        let input: PlusAny
+        let channel: PlusAny
+        try {
+          const resolver = call(main, 'getContentResolver')
+          const uri = call(data, 'getData')
+          input = call(resolver, 'openInputStream', uri)
+          if (!input) throw new Error('无法打开文件')
+          channel = call('java.nio.channels.Channels', 'newChannel', input)
+          const buffer = call('java.nio.ByteBuffer', 'allocate', 65536)
+          const parts: Uint8Array[] = []
+          let size = 0
+          while (true) {
+            call(buffer, 'clear')
+            const count = call(channel, 'read', buffer)
+            if (count === -1) break
+            if (!Number.isInteger(count) || count <= 0 || count > 65536) throw new Error('无法完整读取文件')
+            size += count
+            if (size > MAX_IMAGE_BYTES) return resolve(fail('图片超过 20 MiB 上限，请选择较小的原图'))
+            const encoded = call('android.util.Base64', 'encodeToString', call(buffer, 'array'), 0, count, 2)
+            if (typeof encoded !== 'string') throw new Error('无法读取文件字节')
+            const part = base64ToBytes(encoded)
+            if (part.length !== count) throw new Error('文件读取不完整')
+            parts.push(part)
+          }
+          const bytes = new Uint8Array(size)
+          let offset = 0
+          for (const part of parts) { bytes.set(part, offset); offset += part.length }
+          resolve({ ok: true, value: { bytes, mime: String(call(resolver, 'getType', uri) || '') } })
+        } catch {
+          resolve(fail('读取图片失败，请重新选择可读取的本机文件；已有输入保留。'))
+        } finally {
+          if (channel) call(channel, 'close')
+          if (input) call(input, 'close')
+        }
+      }
+      main.onActivityResult = handler
+      // Import the activity so this void call throws on bridge errors rather than silently failing.
+      android.importClass(main)
+      main.startActivityForResult(intent, 9022)
+    } catch {
+      restore()
+      resolve(fail('无法打开文件选择器，请重试；已有输入保留。'))
+    }
+  })
 }
 
 function localPathCandidates(path: string, plus: PlusAny): string[] {

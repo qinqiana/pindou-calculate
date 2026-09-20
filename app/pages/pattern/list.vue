@@ -8,11 +8,11 @@
     <view class="import-card" @click="pick">
       <text class="import-plus">＋</text>
       <text class="import-title">导入图纸</text>
-      <text class="import-sub">从本机选择 PNG / JPG，断网也能用</text>
+      <text class="import-sub">{{ picking ? '正在读取和检查图片…' : '从本机选择 PNG / JPG / WebP，断网也能用' }}</text>
     </view>
 
     <view v-if="pendingPreview" class="card pending">
-      <image class="pending-img" :src="pendingPreview" mode="aspectFit" />
+      <image class="pending-img" :src="pendingPreview" mode="aspectFit" @load="previewReady = true" @error="previewReady = false; error = '预览失败，请重新选择图片；其他输入已保留。'" />
       <view class="field">
         <text class="field-label">图纸名称</text>
         <input class="field-input" :value="pendingName" @input="e => pendingName = e.detail.value" />
@@ -25,8 +25,8 @@
         <text class="field-label">制作尺寸（可选）</text>
         <input class="field-input" :value="pendingSize" placeholder="没有则留空，显示未提供" placeholder-class="ph" @input="e => pendingSize = e.detail.value" />
       </view>
-      <button class="btn primary" @click="savePending">确认导入这张图</button>
-      <button class="btn ghost" @click="cancelPending">取消，不创建图纸</button>
+      <button class="btn primary" :disabled="picking || saving || !previewReady" @click="savePending">确认导入这张图</button>
+      <button class="btn ghost" :disabled="saving" @click="cancelPending">取消，不创建图纸</button>
     </view>
 
     <view v-for="card in cards" :key="card.pattern.id" class="card item" @click="open(card.pattern.id)">
@@ -51,9 +51,9 @@
 </template>
 
 <script setup lang="ts">
-import { onShow } from '@dcloudio/uni-app'
+import { onHide, onShow, onUnload } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import { bytesToBase64 } from '../../src/ledger/image'
+import { handoffOriginal, prepareOriginal, takeOriginal, type OriginalImage } from '../../src/platform/image'
 import { appLedger, appStorageState, bootAppLedger, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
 import { pickImageFile } from '../../src/platform/fs'
 
@@ -61,10 +61,16 @@ const cards = ref<ReturnType<ReturnType<typeof appLedger>['listPatternCards']>>(
 const error = ref('')
 const storageError = ref('')
 const pendingPreview = ref('')
+const previewReady = ref(false)
 const pendingName = ref('未命名图纸')
 const pendingNote = ref('')
 const pendingSize = ref('')
-let pendingBytes: Uint8Array | null = null
+const picking = ref(false)
+const saving = ref(false)
+let pendingOriginal: OriginalImage | null = null
+let pendingRequest = ''
+let selection = 0
+let pendingEpoch = 0
 
 function reload() {
   cards.value = appLedger().listPatternCards()
@@ -77,47 +83,82 @@ async function retryStorage() {
 }
 
 async function pick() {
+  if (picking.value || saving.value) return
+  const request = ++selection
+  const epoch = appLedger().token().epoch
+  picking.value = true
   error.value = ''
-  const picked = await pickImageFile()
-  if (!picked.ok) {
-    if (!picked.cancelled) error.value = picked.message
-    else error.value = picked.message
-    pendingPreview.value = ''
-    pendingBytes = null
-    return
+  try {
+    const picked = await pickImageFile()
+    if (request !== selection || epoch !== appLedger().token().epoch) return
+    const pages = getCurrentPages()
+    if (pages[pages.length - 1]?.route !== 'pages/pattern/list') { releasePending(); return }
+    if (!picked.ok) { error.value = picked.message; return }
+    const prepared = prepareOriginal(picked.value.bytes)
+    if (!prepared.ok) { error.value = prepared.message; return }
+    pendingOriginal = prepared.original
+    previewReady.value = previewReady.value && pendingPreview.value === prepared.original.preview
+    pendingPreview.value = prepared.original.preview
+    pendingRequest = newRequestId()
+    pendingEpoch = epoch
+  } catch {
+    error.value = '图片处理失败，请重试选图；已有输入保留。'
+  } finally {
+    picking.value = false
   }
-  pendingBytes = picked.value.bytes
-  pendingPreview.value = 'data:' + picked.value.mime + ';base64,' + bytesToBase64(picked.value.bytes)
+}
+
+function releasePending() {
+  selection++
+  pendingPreview.value = ''
+  previewReady.value = false
+  pendingOriginal = null
 }
 
 function cancelPending() {
-  pendingPreview.value = ''
-  pendingBytes = null
+  releasePending()
   error.value = '已取消，没有创建图纸'
 }
 
 function savePending() {
-  if (!pendingBytes) {
+  if (saving.value || picking.value) return
+  if (!previewReady.value) { error.value = '请等图片预览完成后再确认。'; return }
+  if (pendingEpoch !== appLedger().token().epoch) {
+    releasePending()
+    error.value = '账本已恢复，请重新选图。'
+    return
+  }
+  if (!pendingOriginal) {
     error.value = '请先预览图纸'
     return
   }
+  saving.value = true
   const result = appLedger().createPattern(
-    newRequestId(),
+    pendingRequest,
     {
       name: pendingName.value,
       sourceNote: pendingNote.value,
       sizeNote: pendingSize.value,
-      imageBytes: pendingBytes,
+      imageBytes: pendingOriginal.bytes,
     },
     appLedger().token(),
   )
   if (!result.ok) {
-    error.value = result.message
+    saving.value = false
+    error.value = result.message + '；已有输入保留，可重试。'
     return
   }
-  pendingPreview.value = ''
-  pendingBytes = null
-  uni.navigateTo({ url: '/pages/pattern/edit?id=' + result.patternId })
+  handoffOriginal(result.patternId, pendingEpoch, pendingOriginal)
+  uni.navigateTo({
+    url: '/pages/pattern/edit?id=' + result.patternId,
+    success: () => { releasePending(); saving.value = false },
+    fail: () => {
+      takeOriginal(result.patternId, pendingEpoch)
+      saving.value = false
+      reload()
+      error.value = '图纸已导入，但未能打开用量页，请重试或从列表打开。'
+    },
+  })
 }
 
 function open(id: string) {
@@ -131,7 +172,12 @@ onShow(async () => {
   await bootAppLedger()
   storageError.value = appStorageState().message ?? ''
   if (!storageError.value) reload()
+  if (pendingOriginal && pendingEpoch !== appLedger().token().epoch) releasePending()
 })
+
+// Opening the system picker may hide the app; it is still the same input session.
+onHide(() => { if (!picking.value && !saving.value) releasePending() })
+onUnload(releasePending)
 </script>
 
 <style>

@@ -2,6 +2,7 @@ import { Ledger } from '../ledger/operations.ts'
 import { MemorySqlite, SqliteJsonStore, type SqlExec, type SqlQuery } from '../ledger/sqlite-json.ts'
 import { freshEnvelope, InvalidEnvelopeError, LedgerStore, memorySink, parseEnvelope, PersistError, type PersistSink } from '../ledger/store.ts'
 import type { Envelope } from '../ledger/types.ts'
+import { pickPlatformThumbnail } from './image.ts'
 
 /** 启动期读取失败（区别于运行期写入失败）：绝不据此初始化覆盖原库。 */
 export class BootReadError extends Error {
@@ -285,7 +286,7 @@ export function setAppPersistSink(sink: PersistSink | null): void {
 
 export function createAppLedger(sink?: PersistSink): Ledger {
   const used = sink ?? defaultAppSink()
-  return new Ledger(LedgerStore.hydrate(used))
+  return new Ledger(LedgerStore.hydrate(used), undefined, pickPlatformThumbnail)
 }
 
 /**
@@ -303,7 +304,7 @@ export function bootAppLedger(done?: () => void): Promise<void> {
   const current = (async () => {
     try {
       const sink = await defaultAppSinkAsync()
-      instance = new Ledger(LedgerStore.hydrate(sink))
+      instance = new Ledger(LedgerStore.hydrate(sink), undefined, pickPlatformThumbnail)
     } catch (err) {
       if (err instanceof BootReadError || err instanceof PersistError || err instanceof InvalidEnvelopeError) {
         bootError = '账本存储读取失败，原有数据未做任何改动。请检查存储权限或重启应用后，在页面上点重试。'

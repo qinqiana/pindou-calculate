@@ -1,5 +1,10 @@
 <template>
   <view class="page">
+    <view v-if="imagePreview" class="card">
+      <image class="original-image" :src="imagePreview" mode="aspectFit" />
+      <button v-if="original" class="btn view-original" @click="previewOriginal">放大查看原图</button>
+      <text class="hint">{{ original ? '核对完成后仅保存缩略图。' : '当前显示保存的缩略图。' }}</text>
+    </view>
     <view class="card">
       <text class="section-title">图纸信息</text>
       <view class="field">
@@ -41,13 +46,22 @@
 
     <button class="btn primary" @click="confirmAll()">确认全部用量</button>
     <text v-if="error" class="err">{{ error }}</text>
+    <view v-if="zooming && original" class="image-zoom">
+      <movable-area class="zoom-area">
+        <movable-view class="zoom-image" direction="all" :scale="true" :scale-min="1" :scale-max="8">
+          <image class="zoom-image" :src="original.preview" mode="aspectFit" />
+        </movable-view>
+      </movable-area>
+      <button class="close-zoom" @click="zooming = false">返回用量核对</button>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
+import { onBackPress, onLoad, onShow, onUnload } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { appLedger, newRequestId } from '../../src/platform/app-ledger'
+import { takeOriginal, type OriginalImage } from '../../src/platform/image'
 
 const id = ref('')
 const name = ref('')
@@ -58,11 +72,18 @@ const lines = ref<{ code: string; qty: string | number }[]>([{ code: '', qty: ''
 const error = ref('')
 const diffHint = ref('')
 const needAck = ref(false)
+const original = ref<OriginalImage | null>(null)
+const imagePreview = ref('')
+const zooming = ref(false)
+let epoch = 0
 
 onLoad((q: { id?: string }) => {
   id.value = q.id || ''
+  epoch = appLedger().token().epoch
+  original.value = takeOriginal(id.value, epoch)
   const found = appLedger().getPattern(id.value)
   if (!found) return
+  imagePreview.value = original.value?.preview || 'data:' + found.pattern.thumbnail.mime + ';base64,' + found.pattern.thumbnail.base64
   name.value = found.pattern.name
   note.value = found.pattern.sourceNote
   sizeNote.value = found.pattern.sizeNote || ''
@@ -73,7 +94,32 @@ onLoad((q: { id?: string }) => {
   }
 })
 
+function previewOriginal() {
+  zooming.value = !!original.value
+}
+
+function releaseOriginal() {
+  zooming.value = false
+  original.value = null
+  imagePreview.value = ''
+}
+
+onUnload(releaseOriginal)
+onBackPress(() => {
+  if (!zooming.value) return false
+  zooming.value = false
+  return true
+})
+onShow(() => {
+  if (epoch !== appLedger().token().epoch) releaseOriginal()
+})
+
 function confirmAll(ack = false) {
+  if (epoch !== appLedger().token().epoch) {
+    error.value = '账本已恢复，请返回列表重新打开图纸。'
+    releaseOriginal()
+    return
+  }
   error.value = ''
   diffHint.value = ''
   const meta = appLedger().updatePatternMeta(
@@ -87,7 +133,8 @@ function confirmAll(ack = false) {
     return
   }
   const usable = lines.value.filter((l) => String(l.code).trim() !== '')
-  appLedger().saveDraft(id.value, usable, titleTotal.value === '' ? null : titleTotal.value)
+  const draft = appLedger().saveDraft(id.value, usable, titleTotal.value === '' ? null : titleTotal.value)
+  if (!draft.ok) { error.value = draft.message + '；已有输入保留，可重试。'; return }
   const result = appLedger().confirmUsage(
     newRequestId(),
     id.value,
@@ -107,7 +154,8 @@ function confirmAll(ack = false) {
     error.value = result.message
     return
   }
-  uni.navigateTo({ url: '/pages/pattern/detail?id=' + id.value })
+  releaseOriginal()
+  uni.redirectTo({ url: '/pages/pattern/detail?id=' + id.value })
 }
 
 function ackAndSave() {
@@ -117,6 +165,12 @@ function ackAndSave() {
 
 <style>
 .page { padding: 24rpx 24rpx 80rpx; }
+.original-image { width: 100%; height: 420rpx; background: #fff; }
+.view-original { background: #f0e9da; color: #566c4d; }
+.image-zoom { position: fixed; inset: 0; z-index: 10; background: #fffefb; }
+.zoom-area { width: 100%; height: calc(100% - 160rpx); overflow: hidden; }
+.zoom-image { width: 100%; height: 100%; }
+.close-zoom { margin: 24rpx; background: #6b8260; color: #fff; }
 .card { background: #fffefb; border-radius: 24rpx; box-shadow: 0 2rpx 14rpx rgba(74, 62, 40, 0.06); padding: 28rpx 32rpx; margin-top: 24rpx; }
 .card:first-child { margin-top: 0; }
 
