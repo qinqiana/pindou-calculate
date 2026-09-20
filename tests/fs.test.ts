@@ -22,6 +22,38 @@ async function withEnv<T>(env: { plus?: unknown; uni?: unknown }, fn: () => Prom
 
 const PNG_BYTES = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3])
 
+test('pickImageFile：App 优先使用 plus.gallery.pick 的系统图片路径', async () => {
+  const paths: string[] = []
+  const plus = {
+    gallery: {
+      pick(ok: (path: string) => void, _fail: (err: unknown) => void, options: unknown) {
+        assert.deepEqual(options, { filter: 'image', multiple: false })
+        ok('file:///storage/emulated/0/Pictures/pattern.png')
+      },
+    },
+    io: {
+      resolveLocalFileSystemURL(path: string, ok: (e: any) => void) {
+        paths.push(path)
+        ok({
+          file(cb: (f: any) => void) {
+            cb({ name: 'pattern.png' })
+          },
+        })
+      },
+      FileReader: class {
+        onloadend: ((e: any) => void) | null = null
+        onerror: (() => void) | null = null
+        readAsDataURL() {
+          this.onloadend!({ target: { result: 'data:image/png;base64,' + Buffer.from(PNG_BYTES).toString('base64') } })
+        }
+      },
+    },
+  }
+  const r = await withEnv({ plus }, () => pickImageFile())
+  assert.equal(r.ok, true)
+  assert.deepEqual(paths, ['file:///storage/emulated/0/Pictures/pattern.png'])
+})
+
 test('pickImageFile：chooseImage + plus.io 读出字节与 mime', async () => {
   const uni = {
     chooseImage(opts: any) {

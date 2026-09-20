@@ -55,8 +55,25 @@ function plusGlobal(): PlusAny {
   return (globalThis as { plus?: PlusAny }).plus ?? null
 }
 
-/** 选一张图纸图片并读出字节（App 用 chooseImage + plus.io 读取）。 */
+/** 选一张图纸图片并读出字节（App 优先用 plus.gallery + plus.io，H5 兜底）。 */
 export async function pickImageFile(): Promise<FileOutcome<{ bytes: Uint8Array; mime: string }>> {
+  const plus = plusGlobal()
+  if (plus?.gallery?.pick) {
+    const selected = await new Promise<FileOutcome<string>>((resolve) => {
+      try {
+        plus.gallery.pick(
+          (path: string) => resolve(path ? { ok: true, value: path } : fail('选择图片失败：系统未返回文件路径')),
+          (err: unknown) => resolve(pickerFailure(err, '选择图片失败')),
+          { filter: 'image', multiple: false },
+        )
+      } catch (err) {
+        resolve(pickerFailure(err, '选择图片失败'))
+      }
+    })
+    if (!selected.ok) return selected
+    return readImageBytes(selected.value)
+  }
+
   const uni = uniGlobal()
   if (!uni?.chooseImage) return fail('当前环境不支持选择图片')
   const selected = await new Promise<FileOutcome<string>>((resolve) => {
