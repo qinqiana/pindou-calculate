@@ -2,7 +2,7 @@ import { COLOR_CODES, COLOR_SET, compareColorCode, normalizeColorCode, PALETTE }
 import { restockListCsv, restockListText } from './csv.ts'
 import { pickThumbnail, sniffImage } from './image.ts'
 import { APP_VERSION, BACKUP_FORMAT_VERSION, canonical, clone, newId, parseNonNegativeInt, parsePercent, qtyMessage } from './numbers.ts'
-import { LedgerStore, isPersistError, type InterruptStage } from './store.ts'
+import { LedgerStore, isPersistError, validateLedgerState, type InterruptStage } from './store.ts'
 import type {
   BackupFile,
   BatchItem,
@@ -906,10 +906,13 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
   } else {
     return fail('invalid-backup', '备份格式无法识别')
   }
-  if (typeof data.formatVersion !== 'number') return fail('invalid-backup', '缺少格式版本')
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return fail('invalid-backup', '备份根节点不是对象')
+  if (!Number.isSafeInteger(data.formatVersion)) return fail('invalid-backup', '缺少格式版本')
   if (data.formatVersion !== BACKUP_FORMAT_VERSION) {
     return fail('unsupported-backup', '不支持的备份格式版本：' + String(data.formatVersion))
   }
+  if (typeof data.exportedAt !== 'string' || data.exportedAt.trim() === '') return fail('invalid-backup', '备份时间无效')
+  if (data.appVersion !== undefined && typeof data.appVersion !== 'string') return fail('invalid-backup', '备份应用版本无效')
   if (
     !data.palette ||
     !data.settings ||
@@ -918,16 +921,22 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
     !Array.isArray(data.movements) ||
     !Array.isArray(data.makes) ||
     !Array.isArray(data.confirmedUsages) ||
-    !Array.isArray(data.patterns)
+    !Array.isArray(data.patterns) ||
+    (data.requests !== undefined && !Array.isArray(data.requests))
   ) {
     return fail('invalid-backup', '备份缺少必要账本字段')
+  }
+  if (!Number.isSafeInteger(data.epoch) || data.epoch < 0 || !Number.isSafeInteger(data.seq) || data.seq < 0) {
+    return fail('invalid-backup', '备份序号无效')
   }
   if (data.stock.length !== COLOR_CODES.length) return fail('invalid-backup', '备份色号数量不是 221')
   const codes = new Set<string>()
   for (const row of data.stock) {
+    if (!row || typeof row !== 'object') return fail('invalid-backup', '备份库存行无效')
     if (!COLOR_SET.has(row.code)) return fail('invalid-backup', '备份含未知色号：' + row.code)
     if (codes.has(row.code)) return fail('invalid-backup', '备份色号重复：' + row.code)
     codes.add(row.code)
+    if (typeof row.estimated !== 'boolean' || typeof row.entered !== 'boolean') return fail('invalid-backup', '备份库存状态无效：' + row.code)
     const q = parseNonNegativeInt(row.qty)
     if (!q.ok) return fail('invalid-backup', '备份数量非法：' + row.code)
     if (row.baseline !== null && row.baseline !== undefined) {
@@ -937,21 +946,29 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
   }
   const opIds = new Set<string>()
   for (const op of data.operations) {
+    if (!op || typeof op !== 'object' || typeof op.id !== 'string' || typeof op.type !== 'string' || typeof op.at !== 'string' || !Number.isSafeInteger(op.seq) || op.seq < 0 || typeof op.requestId !== 'string' || typeof op.reason !== 'string') return fail('invalid-backup', '备份操作记录无效')
     if (opIds.has(op.id)) return fail('invalid-backup', '备份操作标识重复')
     opIds.add(op.id)
   }
   const makeIds = new Set<string>()
   for (const make of data.makes) {
+    if (!make || typeof make !== 'object' || typeof make.id !== 'string' || typeof make.patternId !== 'string' || !Number.isSafeInteger(make.usageVersion) || !Array.isArray(make.linesSnapshot) || typeof make.voided !== 'boolean' || typeof make.requestId !== 'string') return fail('invalid-backup', '备份制作记录无效')
     if (makeIds.has(make.id)) return fail('invalid-backup', '备份制作标识重复')
     makeIds.add(make.id)
     for (const line of make.linesSnapshot) {
+      if (!line || typeof line !== 'object' || !Number.isSafeInteger(line.qty) || line.qty < 0) return fail('invalid-backup', '制作快照数量无效')
       if (!COLOR_SET.has(line.code)) return fail('invalid-backup', '制作快照含未知色号：' + line.code)
     }
   }
+  if (data.patterns.some((p) => !p || typeof p !== 'object' || typeof p.id !== 'string' || typeof p.name !== 'string' || !p.thumbnail || typeof p.thumbnail !== 'object' || (p.thumbnail.mime !== 'image/png' && p.thumbnail.mime !== 'image/jpeg') || typeof p.thumbnail.base64 !== 'string' || p.thumbnail.base64.length === 0)) return fail('invalid-backup', '备份图纸记录无效')
   const patternIds = new Set(data.patterns.map((p) => p.id))
   if (patternIds.size !== data.patterns.length) return fail('invalid-backup', '备份图纸标识重复')
   for (const u of data.confirmedUsages) {
+    if (!u || typeof u !== 'object' || typeof u.patternId !== 'string' || !Number.isSafeInteger(u.version) || !Array.isArray(u.lines)) return fail('invalid-backup', '备份确认用量无效')
     if (!patternIds.has(u.patternId)) return fail('invalid-backup', '确认用量缺少图纸关联')
+    for (const line of u.lines) {
+      if (!line || typeof line !== 'object' || !COLOR_SET.has(line.code) || !Number.isSafeInteger(line.qty) || line.qty < 0) return fail('invalid-backup', '确认用量行无效')
+    }
   }
   for (const make of data.makes) {
     if (!patternIds.has(make.patternId)) return fail('invalid-backup', '制作记录缺少图纸关联')
@@ -965,6 +982,12 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
   const dumped = JSON.stringify(data)
   if (dumped.includes('"originalImage"') || dumped.includes('keystore') || dumped.includes('privateKey')) {
     return fail('invalid-backup', '备份含有不允许的字段')
+  }
+  try {
+    const stateError = validateLedgerState(backupToState(data))
+    if (stateError) return fail('invalid-backup', '备份账本结构无效：' + stateError)
+  } catch {
+    return fail('invalid-backup', '备份账本结构无效')
   }
   return { ok: true, backup: data }
 }

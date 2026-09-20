@@ -54,10 +54,10 @@
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { bytesToBase64 } from '../../src/ledger/image'
-import { appLedger, appStorageState, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
+import { appLedger, appStorageState, bootAppLedger, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
 import { pickImageFile } from '../../src/platform/fs'
 
-const cards = ref(appLedger().listPatternCards())
+const cards = ref<ReturnType<ReturnType<typeof appLedger>['listPatternCards']>>([])
 const error = ref('')
 const storageError = ref('')
 const pendingPreview = ref('')
@@ -70,8 +70,8 @@ function reload() {
   cards.value = appLedger().listPatternCards()
 }
 
-function retryStorage() {
-  retryAppStorage()
+async function retryStorage() {
+  await retryAppStorage()
   storageError.value = appStorageState().message ?? ''
   if (!storageError.value) reload()
 }
@@ -127,7 +127,8 @@ function open(id: string) {
   else uni.navigateTo({ url: '/pages/pattern/edit?id=' + id })
 }
 
-onShow(() => {
+onShow(async () => {
+  await bootAppLedger()
   storageError.value = appStorageState().message ?? ''
   if (!storageError.value) reload()
 })

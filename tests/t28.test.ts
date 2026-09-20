@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 test('T28 148-bead local count matches per-color reference and conserves cells', () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..')
   const stdout = execFileSync(
-    'python3',
+    process.platform === 'win32' ? 'python' : 'python3',
     ['experiments/t28/count_grid.py', '参考样例/豆画-Mard-148图纸样例.png'],
     { encoding: 'utf8', cwd: root },
   )

@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync } from 'node:fs'
+import { mkdtempSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { COLOR_CODES, PALETTE } from '../app/src/ledger/catalog.ts'
 import { TINY_PNG } from '../app/src/ledger/image.ts'
 import { Ledger } from '../app/src/ledger/operations.ts'
-import { MAX_QTY } from '../app/src/ledger/numbers.ts'
+import { APP_VERSION, MAX_QTY } from '../app/src/ledger/numbers.ts'
 import { openNodeStore } from '../app/src/ledger/store-node.ts'
 
 function clock() {
@@ -367,6 +367,26 @@ test('backup export validate cancel replace; truncated and unknown version rejec
   const dup = JSON.parse(JSON.stringify(backup))
   dup.makes.push(dup.makes[0])
   assert.equal(other.validateBackup(dup).ok, false)
+})
+
+test('备份版本与 manifest 一致，并拒绝损坏的嵌套结构', () => {
+  const l = ledger()
+  const backup = l.exportBackup()
+  const manifest = JSON.parse(readFileSync('app/manifest.json', 'utf8')) as { versionName: string }
+  assert.equal(APP_VERSION, manifest.versionName)
+  assert.equal(backup.appVersion, manifest.versionName)
+
+  const badRoot = { ...backup, epoch: -1 }
+  assert.equal(l.validateBackup(badRoot).ok, false)
+  const badStock = JSON.parse(JSON.stringify(backup))
+  badStock.stock[0].estimated = 'yes'
+  assert.equal(l.validateBackup(badStock).ok, false)
+  const badPattern = JSON.parse(JSON.stringify(backup))
+  badPattern.patterns = [null]
+  assert.equal(l.validateBackup(badPattern).ok, false)
+  const badRequest = JSON.parse(JSON.stringify(backup))
+  badRequest.requests = [{ requestId: 'r', payloadCanonical: '{}', result: { ok: true } }]
+  assert.equal(l.validateBackup(badRequest).ok, false)
 })
 
 test('restore interrupt leaves complete before or complete after', () => {

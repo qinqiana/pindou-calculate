@@ -47,10 +47,10 @@
 <script setup lang="ts">
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import { appLedger, appStorageState, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
+import { appLedger, appStorageState, bootAppLedger, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
 import { pickTextDocument, writeTextToDownloads } from '../../src/platform/fs'
 
-const percent = ref(String(appLedger().settings().lowStockPercent))
+const percent = ref('10')
 const storageError = ref('')
 const diff = ref<null | {
   stockChanged: number
@@ -65,13 +65,14 @@ const diff = ref<null | {
 const message = ref('')
 let validated: unknown = null
 
-onShow(() => {
+onShow(async () => {
+  await bootAppLedger()
   storageError.value = appStorageState().message ?? ''
   if (!storageError.value) percent.value = String(appLedger().settings().lowStockPercent)
 })
 
-function retryStorage() {
-  retryAppStorage()
+async function retryStorage() {
+  await retryAppStorage()
   storageError.value = appStorageState().message ?? ''
   if (!storageError.value) percent.value = String(appLedger().settings().lowStockPercent)
 }

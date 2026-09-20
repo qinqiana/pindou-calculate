@@ -55,6 +55,43 @@ test('pickImageFile：chooseImage + plus.io 读出字节与 mime', async () => {
   }
 })
 
+test('pickImageFile：原始路径无法解析时尝试转换后的本地路径', async () => {
+  const paths: string[] = []
+  const uni = {
+    chooseImage(opts: any) {
+      opts.success({ tempFilePaths: ['/data/user/0/app/tmp/pattern.png'] })
+    },
+  }
+  const plus = {
+    io: {
+      convertAbsoluteFileSystem(path: string) {
+        assert.equal(path, '/data/user/0/app/tmp/pattern.png')
+        return '_doc/tmp/pattern.png'
+      },
+      resolveLocalFileSystemURL(path: string, ok: (e: any) => void, fail: () => void) {
+        paths.push(path)
+        if (path !== '_doc/tmp/pattern.png') return fail()
+        ok({
+          file(cb: (f: any) => void) {
+            cb({ name: 'pattern.png' })
+          },
+        })
+      },
+      FileReader: class {
+        onload: ((e: any) => void) | null = null
+        onloadend: ((e: any) => void) | null = null
+        onerror: (() => void) | null = null
+        readAsDataURL() {
+          this.onloadend!({ target: { result: 'data:image/png;base64,' + Buffer.from(PNG_BYTES).toString('base64') } })
+        }
+      },
+    },
+  }
+  const r = await withEnv({ plus, uni }, () => pickImageFile())
+  assert.equal(r.ok, true)
+  assert.deepEqual(paths, ['/data/user/0/app/tmp/pattern.png', '_doc/tmp/pattern.png'])
+})
+
 test('pickImageFile：用户取消返回 cancelled，不算错误', async () => {
   const uni = {
     chooseImage(opts: any) {
@@ -64,6 +101,20 @@ test('pickImageFile：用户取消返回 cancelled，不算错误', async () => 
   const r = await withEnv({ uni }, () => pickImageFile())
   assert.equal(r.ok, false)
   if (!r.ok) assert.equal(r.cancelled, true)
+})
+
+test('pickImageFile：权限或系统失败不误报为取消', async () => {
+  const uni = {
+    chooseImage(opts: any) {
+      opts.fail({ errMsg: 'authorize denied' })
+    },
+  }
+  const r = await withEnv({ uni }, () => pickImageFile())
+  assert.equal(r.ok, false)
+  if (!r.ok) {
+    assert.equal(r.cancelled, undefined)
+    assert.match(r.message, /authorize denied/)
+  }
 })
 
 test('pickImageFile：无 chooseImage 的环境给出明确失败', async () => {
@@ -141,6 +192,31 @@ test('pickTextDocument：用户取消系统选择器返回 cancelled', async () 
   const r = await withEnv({ plus }, () => pickTextDocument())
   assert.equal(r.ok, false)
   if (!r.ok) assert.equal(r.cancelled, true)
+})
+
+test('pickTextDocument：uni 文件选择失败不误报为取消', async () => {
+  const uni = {
+    chooseFile(opts: any) {
+      opts.fail({ errMsg: 'permission denied' })
+    },
+  }
+  const r = await withEnv({ uni }, () => pickTextDocument())
+  assert.equal(r.ok, false)
+  if (!r.ok) {
+    assert.equal(r.cancelled, undefined)
+    assert.match(r.message, /permission denied/)
+  }
+})
+
+test('pickTextDocument：非目标 activity result 不会清掉目标回调', async () => {
+  const { plus, main } = fakeAndroid(['{"formatVersion":1}'], -1)
+  const originalStart = main.startActivityForResult
+  main.startActivityForResult = function (intent: unknown, code: number) {
+    this.onActivityResult!(1001, 0, null)
+    originalStart.call(this, intent, code)
+  }
+  const r = await withEnv({ plus }, () => pickTextDocument())
+  assert.equal(r.ok, true)
 })
 
 test('pickTextDocument：没有可用选择器时明确失败', async () => {

@@ -66,7 +66,7 @@
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { GROUP_ORDER, colorByCode } from '../../src/ledger/catalog'
-import { appLedger, appStorageState, retryAppStorage } from '../../src/platform/app-ledger'
+import { appLedger, appStorageState, bootAppLedger, retryAppStorage } from '../../src/platform/app-ledger'
 
 const groups = GROUP_ORDER
 const groupNames: Record<string, string> = {
@@ -83,15 +83,15 @@ const groupNames: Record<string, string> = {
 const query = ref('')
 const group = ref('')
 const storageError = ref('')
-const rows = ref(appLedger().listStock())
-const ach = ref(appLedger().achievements())
+const rows = ref<ReturnType<ReturnType<typeof appLedger>['listStock']>>([])
+const ach = ref({ totalUsed: 0, completedMakes: 0, perColor: {} as Record<string, number> })
 
 function reload() {
   rows.value = appLedger().listStock(query.value, group.value || undefined)
   ach.value = appLedger().achievements()
 }
-function retryStorage() {
-  retryAppStorage()
+async function retryStorage() {
+  await retryAppStorage()
   storageError.value = appStorageState().message ?? ''
   if (!storageError.value) reload()
 }
@@ -118,7 +118,8 @@ function goBatch(mode: string) {
 function goHistory() {
   uni.navigateTo({ url: '/pages/stock/history' })
 }
-onShow(() => {
+onShow(async () => {
+  await bootAppLedger()
   storageError.value = appStorageState().message ?? ''
   if (!storageError.value) reload()
 })
