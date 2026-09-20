@@ -5,9 +5,9 @@
       <button class="btn primary" @click="retryStorage">重试</button>
     </view>
     <template v-else>
-    <view class="import-card" @click="pick">
+    <view class="import-card" :class="{ busy: picking }" @click="pick">
       <text class="import-plus">＋</text>
-      <text class="import-title">导入图纸</text>
+      <text class="import-title">{{ picking ? '正在读取图片…' : '导入图纸' }}</text>
       <text class="import-sub">从本机选择 PNG / JPG，断网也能用</text>
     </view>
 
@@ -37,8 +37,9 @@
           <text v-if="card.hasDraft" class="tag-draft">有未确认编辑</text>
         </view>
         <text class="muted">确认版次 {{ card.pattern.confirmedVersion ?? '未确认' }} · 尺寸 {{ card.sizeLabel }}</text>
-        <text class="muted">已确认总需求 {{ card.totalDemand == null ? '—' : card.totalDemand }} 颗 · 有效制作 {{ card.makeCount }} 件</text>
+        <text class="muted">{{ card.totalDemand == null ? '尚未录入用量' : '已确认总需求 ' + card.totalDemand + ' 颗' }} · 有效制作 {{ card.makeCount }} 件</text>
       </view>
+      <button class="remove-btn" @click.stop="removePattern(card.pattern.id)">移除</button>
     </view>
 
     <view v-if="cards.length === 0 && !pendingPreview" class="card empty">
@@ -64,6 +65,7 @@ const pendingPreview = ref('')
 const pendingName = ref('未命名图纸')
 const pendingNote = ref('')
 const pendingSize = ref('')
+const picking = ref(false)
 let pendingBytes: Uint8Array | null = null
 
 function reload() {
@@ -77,17 +79,20 @@ async function retryStorage() {
 }
 
 async function pick() {
+  if (picking.value) return
+  picking.value = true
   error.value = ''
-  const picked = await pickImageFile()
-  if (!picked.ok) {
-    if (!picked.cancelled) error.value = picked.message
-    else error.value = picked.message
-    pendingPreview.value = ''
-    pendingBytes = null
-    return
+  try {
+    const picked = await pickImageFile()
+    if (!picked.ok) {
+      error.value = picked.message
+      return
+    }
+    pendingBytes = picked.value.bytes
+    pendingPreview.value = 'data:' + picked.value.mime + ';base64,' + bytesToBase64(picked.value.bytes)
+  } finally {
+    picking.value = false
   }
-  pendingBytes = picked.value.bytes
-  pendingPreview.value = 'data:' + picked.value.mime + ';base64,' + bytesToBase64(picked.value.bytes)
 }
 
 function cancelPending() {
@@ -120,6 +125,22 @@ function savePending() {
   uni.navigateTo({ url: '/pages/pattern/edit?id=' + result.patternId })
 }
 
+function removePattern(patternId: string) {
+  uni.showModal({
+    title: '移除图纸',
+    content: '图纸将从主列表移除，但确认用量、制作记录和备份会保留。',
+    success: ({ confirm }: { confirm: boolean }) => {
+      if (!confirm) return
+      const result = appLedger().archivePattern(newRequestId(), patternId, appLedger().token())
+      if (!result.ok) {
+        error.value = result.message
+        return
+      }
+      reload()
+    },
+  })
+}
+
 function open(id: string) {
   const p = appLedger().getPattern(id)
   if (p && p.draft) uni.navigateTo({ url: '/pages/pattern/edit?id=' + id })
@@ -139,6 +160,7 @@ onShow(async () => {
 .card { background: #fffefb; border-radius: 24rpx; box-shadow: 0 2rpx 14rpx rgba(74, 62, 40, 0.06); }
 
 .import-card { display: flex; flex-direction: column; align-items: center; gap: 8rpx; padding: 48rpx 32rpx; border: 2rpx dashed #c4b694; border-radius: 24rpx; background: #fbf8f0; }
+.import-card.busy { opacity: 0.65; }
 .import-plus { font-size: 56rpx; color: #6b8260; line-height: 1; }
 .import-title { font-size: 32rpx; font-weight: 700; color: #566c4d; }
 .import-sub { font-size: 24rpx; color: #857c6e; }
@@ -161,6 +183,8 @@ onShow(async () => {
 .name { font-size: 32rpx; font-weight: 700; }
 .tag-draft { font-size: 20rpx; color: #b65b38; background: #f9eae0; border-radius: 999rpx; padding: 4rpx 16rpx; }
 .muted { font-size: 24rpx; color: #857c6e; }
+.remove-btn { flex: none; align-self: center; margin: 0; padding: 0 20rpx; height: 64rpx; line-height: 64rpx; font-size: 24rpx; color: #b65b38; background: #fffefb; border: 2rpx solid #e3b9a5; border-radius: 999rpx; }
+.remove-btn::after { border: none; }
 
 .empty { margin-top: 24rpx; padding: 56rpx 32rpx; display: flex; flex-direction: column; align-items: center; gap: 12rpx; }
 .empty-title { font-size: 30rpx; font-weight: 600; }

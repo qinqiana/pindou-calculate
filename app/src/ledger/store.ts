@@ -93,7 +93,7 @@ function validUsageLine(value: unknown): value is UsageLine {
 
 function validOperation(value: unknown): value is Operation {
   const op = record(value)
-  const types = new Set(['first-entry', 'count', 'restock', 'flag', 'make', 'void-make', 'settings', 'create-pattern', 'pattern-meta', 'confirm-usage', 'restore'])
+  const types = new Set(['first-entry', 'count', 'restock', 'flag', 'make', 'void-make', 'settings', 'create-pattern', 'pattern-meta', 'confirm-usage', 'archive-pattern', 'restore'])
   return !!op && text(op.id, false) && types.has(String(op.type)) && text(op.at, false) && nonNegativeInt(op.seq) && text(op.requestId, false) && text(op.reason) && (op.patternId === undefined || text(op.patternId, false)) && (op.makeId === undefined || text(op.makeId, false))
 }
 
@@ -111,7 +111,7 @@ function validThumbnail(value: unknown): boolean {
 
 function validPattern(value: unknown): value is Pattern {
   const pattern = record(value)
-  return !!pattern && text(pattern.id, false) && text(pattern.name, false) && text(pattern.sourceNote) && (pattern.pixelWidth === null || nonNegativeInt(pattern.pixelWidth)) && (pattern.pixelHeight === null || nonNegativeInt(pattern.pixelHeight)) && text(pattern.sizeNote) && validThumbnail(pattern.thumbnail) && (pattern.confirmedVersion === null || nonNegativeInt(pattern.confirmedVersion)) && nonNegativeInt(pattern.createdSeq)
+  return !!pattern && text(pattern.id, false) && text(pattern.name, false) && text(pattern.sourceNote) && (pattern.pixelWidth === null || nonNegativeInt(pattern.pixelWidth)) && (pattern.pixelHeight === null || nonNegativeInt(pattern.pixelHeight)) && text(pattern.sizeNote) && validThumbnail(pattern.thumbnail) && (pattern.confirmedVersion === null || nonNegativeInt(pattern.confirmedVersion)) && nonNegativeInt(pattern.createdSeq) && (pattern.archivedAt === undefined || pattern.archivedAt === null || text(pattern.archivedAt, false))
 }
 
 function validConfirmedUsage(value: unknown): value is ConfirmedUsage {

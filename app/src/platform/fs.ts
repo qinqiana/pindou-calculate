@@ -93,6 +93,10 @@ export async function pickImageFile(): Promise<FileOutcome<{ bytes: Uint8Array; 
 
 function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; mime: string }>> {
   const plus = plusGlobal()
+  if (path.startsWith('content://')) {
+    const content = readAndroidContentUri(path, plus)
+    if (content) return content
+  }
   if (plus?.io?.resolveLocalFileSystemURL && plus?.io?.FileReader) {
     return new Promise((resolve) => {
       const candidates = localPathCandidates(path, plus)
@@ -106,9 +110,20 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
               (file: PlusAny) => {
                 const reader = new plus.io.FileReader()
                 let settled = false
+                const finish = (result: FileOutcome<{ bytes: Uint8Array; mime: string }>) => {
+                  if (settled) return
+                  settled = true
+                  reader.onload = null
+                  reader.onloadend = null
+                  reader.onerror = null
+                  resolve(result)
+                }
                 const next = () => {
                   if (settled) return
                   settled = true
+                  reader.onload = null
+                  reader.onloadend = null
+                  reader.onerror = null
                   nextPath()
                 }
                 const done = (e: PlusAny) => {
@@ -117,8 +132,7 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
                   const m = /^data:(image\/[a-zA-Z0-9.+-]+)(?:;[^,]*)?;base64,(.*)$/s.exec(url)
                   if (!m) return next()
                   try {
-                    settled = true
-                    resolve({ ok: true, value: { bytes: base64ToBytes(m[2]), mime: m[1] } })
+                    finish({ ok: true, value: { bytes: base64ToBytes(m[2]), mime: m[1] } })
                   } catch {
                     next()
                   }
@@ -154,6 +168,49 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
     })()
   }
   return Promise.resolve(fail('当前环境无法读取图片文件'))
+}
+
+function readAndroidContentUri(path: string, plus: PlusAny): Promise<FileOutcome<{ bytes: Uint8Array; mime: string }>> | null {
+  const android = plus?.android
+  if (!android?.runtimeMainActivity || !android?.importClass || !android?.newObject || !android?.invoke) return null
+  return new Promise((resolve) => {
+    let input: PlusAny = null
+    try {
+      const activity = android.runtimeMainActivity()
+      const Uri = android.importClass('android.net.Uri')
+      const uri = Uri.parse(path)
+      input = activity.getContentResolver().openInputStream(uri)
+      if (!input) return resolve(fail('读取图片失败，请检查图片路径或存储权限'))
+      const buffer = android.newObject('byte[]', 8192)
+      const bytes: number[] = []
+      let count = android.invoke(input, 'read', buffer)
+      while (count > 0) {
+        for (let i = 0; i < count; i += 1) {
+          const value = Number(buffer[i])
+          bytes.push(value < 0 ? value + 256 : value)
+        }
+        count = android.invoke(input, 'read', buffer)
+      }
+      const result = new Uint8Array(bytes)
+      resolve({ ok: true, value: { bytes: result, mime: mimeFromImageBytes(result) } })
+    } catch {
+      resolve(fail('读取图片失败，请检查图片路径或存储权限'))
+    } finally {
+      if (input) {
+        try {
+          android.invoke(input, 'close')
+        } catch {
+          /* best effort close */
+        }
+      }
+    }
+  })
+}
+
+function mimeFromImageBytes(bytes: Uint8Array): string {
+  if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) return 'image/png'
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg'
+  return 'application/octet-stream'
 }
 
 function localPathCandidates(path: string, plus: PlusAny): string[] {

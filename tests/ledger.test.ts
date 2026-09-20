@@ -7,6 +7,7 @@ import { COLOR_CODES, PALETTE } from '../app/src/ledger/catalog.ts'
 import { TINY_PNG } from '../app/src/ledger/image.ts'
 import { Ledger } from '../app/src/ledger/operations.ts'
 import { APP_VERSION, MAX_QTY } from '../app/src/ledger/numbers.ts'
+import { LedgerStore, memorySink } from '../app/src/ledger/store.ts'
 import { openNodeStore } from '../app/src/ledger/store-node.ts'
 
 function clock() {
@@ -291,6 +292,54 @@ test('PNG and JPG import; cancel does not create; confirm does not change stock'
   const id = l.listPatterns()[0].id
   must(l.confirmUsage('c', id, { lines: [{ code: 'A1', qty: 5 }] }, l.token()), 'confirm')
   assert.equal(l.getStock('A1')!.qty, before)
+})
+
+test('未确认用量与确认后的零用量在图纸卡片上可区分', () => {
+  const l = ledger()
+  const created = must(l.createPattern('p-state', { name: '状态图纸', imageBytes: TINY_PNG }, l.token()), 'create')
+  const id = created.ok ? created.patternId! : ''
+  assert.equal(l.listPatternCards()[0].totalDemand, null)
+  must(l.confirmUsage('p-state-confirm', id, { lines: [] }, l.token()), 'confirm zero')
+  assert.equal(l.listPatternCards()[0].totalDemand, 0)
+})
+
+test('图纸归档只移出主列表，保留用量、制作、历史和备份且可幂等重试', () => {
+  const l = ledger()
+  must(l.commitFirstEntry('archive-stock', [{ code: 'A1', qty: 10 }], l.token()), 'stock')
+  const created = must(l.createPattern('archive-pattern-create', { name: '待移除图纸', imageBytes: TINY_PNG }, l.token()), 'create')
+  const id = created.ok ? created.patternId! : ''
+  must(l.confirmUsage('archive-confirm', id, { lines: [{ code: 'A1', qty: 2 }] }, l.token()), 'confirm')
+  const made = must(l.make('archive-make', id, l.token()), 'make')
+  const qtyBefore = l.getStock('A1')!.qty
+  const archived = must(l.archivePattern('archive-remove', id, l.token()), 'archive')
+  assert.equal(archived.patternId, id)
+  assert.equal(l.listPatternCards().length, 0)
+  assert.equal(l.listPatterns().length, 1)
+  assert.equal(l.getPattern(id)!.confirmed!.lines[0].qty, 2)
+  assert.equal(l.listMakes(id).length, 1)
+  assert.equal(l.getStock('A1')!.qty, qtyBefore)
+  assert.equal(l.store.live().operations.at(-1)!.type, 'archive-pattern')
+  const retry = must(l.archivePattern('archive-remove', id, l.token()), 'archive retry')
+  assert.equal(retry.operationId, archived.operationId)
+  const duplicate = l.archivePattern('archive-remove-again', id, l.token())
+  assert.equal(duplicate.ok, false)
+  if (!duplicate.ok) assert.equal(duplicate.code, 'already-archived')
+
+  const backup = l.exportBackup()
+  assert.equal(backup.patterns[0].archivedAt !== null, true)
+  const legacy = JSON.parse(JSON.stringify(backup)) as any
+  delete legacy.patterns[0].archivedAt
+  const restored = ledger()
+  assert.equal(restored.validateBackup(legacy).ok, true)
+
+  const active = ledger()
+  const activePattern = must(active.createPattern('archive-legacy', { name: '旧图纸', imageBytes: TINY_PNG }, active.token()), 'legacy create')
+  const envelope = JSON.parse(JSON.stringify(active.store.envelope)) as any
+  delete envelope.live.patterns[0].archivedAt
+  const loaded = new Ledger(LedgerStore.hydrate(memorySink({ json: JSON.stringify(envelope) })), clock())
+  assert.equal(loaded.listPatternCards().length, 1)
+  assert.equal(activePattern.ok, true)
+  assert.equal(made.ok, true)
 })
 
 test('restock csv escapes formula-like names and is not a backup', () => {
