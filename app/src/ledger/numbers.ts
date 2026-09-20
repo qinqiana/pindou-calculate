@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.1.0'
+export const APP_VERSION = '0.1.3'
 export const BACKUP_FORMAT_VERSION = 1
 export const MAX_QTY = 1_000_000_000
 export const MAX_IMAGE_BYTES = 20 * 1024 * 1024
@@ -80,5 +80,6 @@ function sortKeys(value: unknown): unknown {
 }
 
 export function clone<T>(value: T): T {
-  return structuredClone(value)
+  // 部分 Android HTML5+ 运行时没有 structuredClone；账本数据是 JSON 兼容结构。
+  return JSON.parse(JSON.stringify(value)) as T
 }

@@ -2,8 +2,8 @@
 import { onLaunch } from '@dcloudio/uni-app'
 import { bootAppLedger } from './src/platform/app-ledger'
 
-onLaunch(() => {
-  bootAppLedger()
+onLaunch(async () => {
+  await bootAppLedger()
 })
 </script>
 

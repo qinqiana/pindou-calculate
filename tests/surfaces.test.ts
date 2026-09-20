@@ -52,6 +52,11 @@ test('user-facing pages exist and call shipped Ledger entry', () => {
   const batch = readFileSync('app/pages/stock/batch.vue', 'utf8')
   assert.match(batch, /commitFirstEntry|previewFirstEntry/)
   assert.match(batch, /bindPreview|previewStillValid/)
+  assert.match(batch, /GROUP_ORDER/)
+  assert.match(batch, /全选未录入/)
+  assert.match(batch, /选本组/)
+  assert.match(batch, /expandedGroups/)
+  assert.match(batch, /isLocked/)
   // 存储不可用时的错误状态与重试入口（三个主 tab 页）
   for (const file of ['app/pages/stock/index.vue', 'app/pages/pattern/list.vue', 'app/pages/settings/index.vue']) {
     const text = readFileSync(file, 'utf8')

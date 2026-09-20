@@ -15,11 +15,25 @@ function fail<T>(message: string, cancelled = false): FileOutcome<T> {
   return { ok: false, message, ...(cancelled ? { cancelled: true } : {}) }
 }
 
+function platformMessage(err: unknown): string {
+  if (err && typeof err === 'object') {
+    const value = (err as { errMsg?: unknown; message?: unknown }).errMsg ?? (err as { message?: unknown }).message
+    if (value) return String(value)
+  }
+  return String(err ?? '')
+}
+
+function pickerFailure<T>(err: unknown, message: string): FileOutcome<T> {
+  const detail = platformMessage(err)
+  if (/cancel|cancelled|canceled|取消|用户返回|user.?back/i.test(detail)) return fail(message + '，已取消。', true)
+  return fail(detail ? message + '：' + detail : message)
+}
+
 type UniGlobal = {
   chooseImage?: (opts: {
     count: number
     sizeType?: string[]
-    success?: (res: { tempFilePaths?: string[] }) => void
+    success?: (res: { tempFilePaths?: string[]; tempFiles?: { path?: string }[] }) => void
     fail?: (err?: unknown) => void
   }) => void
   chooseFile?: (opts: {
@@ -41,50 +55,90 @@ function plusGlobal(): PlusAny {
   return (globalThis as { plus?: PlusAny }).plus ?? null
 }
 
-/** 选一张图纸图片并读出字节（App 用 chooseImage + plus.io 读取）。 */
+/** 选一张图纸图片并读出字节（App 优先用 plus.gallery + plus.io，H5 兜底）。 */
 export async function pickImageFile(): Promise<FileOutcome<{ bytes: Uint8Array; mime: string }>> {
+  const plus = plusGlobal()
+  if (plus?.gallery?.pick) {
+    const selected = await new Promise<FileOutcome<string>>((resolve) => {
+      try {
+        plus.gallery.pick(
+          (path: string) => resolve(path ? { ok: true, value: path } : fail('选择图片失败：系统未返回文件路径')),
+          (err: unknown) => resolve(pickerFailure(err, '选择图片失败')),
+          { filter: 'image', multiple: false },
+        )
+      } catch (err) {
+        resolve(pickerFailure(err, '选择图片失败'))
+      }
+    })
+    if (!selected.ok) return selected
+    return readImageBytes(selected.value)
+  }
+
   const uni = uniGlobal()
   if (!uni?.chooseImage) return fail('当前环境不支持选择图片')
-  const path = await new Promise<string | null>((resolve) => {
+  const selected = await new Promise<FileOutcome<string>>((resolve) => {
     uni.chooseImage!({
       count: 1,
       sizeType: ['original'],
-      success: (res) => resolve(res.tempFilePaths?.[0] ?? null),
-      fail: () => resolve(null),
+      success: (res) => {
+        const path = res.tempFilePaths?.[0] ?? res.tempFiles?.[0]?.path
+        resolve(path ? { ok: true, value: path } : fail('选择图片失败：系统未返回文件路径'))
+      },
+      fail: (err) => resolve(pickerFailure(err, '选择图片失败')),
     })
   })
-  if (!path) return fail('已取消选择，没有创建图纸', true)
-  return readImageBytes(path)
+  if (!selected.ok) return selected
+  return readImageBytes(selected.value)
 }
 
 function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; mime: string }>> {
   const plus = plusGlobal()
   if (plus?.io?.resolveLocalFileSystemURL && plus?.io?.FileReader) {
     return new Promise((resolve) => {
-      plus.io.resolveLocalFileSystemURL(
-        path,
-        (entry: PlusAny) => {
-          entry.file(
-            (file: PlusAny) => {
-              const reader = new plus.io.FileReader()
-              reader.onloadend = (e: PlusAny) => {
-                const url = String(e?.target?.result ?? '')
-                const m = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.*)$/.exec(url)
-                if (!m) return resolve(fail('读取图片失败'))
-                try {
-                  resolve({ ok: true, value: { bytes: base64ToBytes(m[2]), mime: m[1] } })
-                } catch {
-                  resolve(fail('读取图片失败'))
+      const candidates = localPathCandidates(path, plus)
+      const tryPath = (index: number) => {
+        if (index >= candidates.length) return resolve(fail('读取图片失败，请检查图片路径或存储权限'))
+        const nextPath = () => tryPath(index + 1)
+        plus.io.resolveLocalFileSystemURL(
+          candidates[index],
+          (entry: PlusAny) => {
+            entry.file(
+              (file: PlusAny) => {
+                const reader = new plus.io.FileReader()
+                let settled = false
+                const next = () => {
+                  if (settled) return
+                  settled = true
+                  nextPath()
                 }
-              }
-              reader.onerror = () => resolve(fail('读取图片失败'))
-              reader.readAsDataURL(file)
-            },
-            () => resolve(fail('读取图片失败')),
-          )
-        },
-        () => resolve(fail('读取图片失败')),
-      )
+                const done = (e: PlusAny) => {
+                  if (settled) return
+                  const url = String(e?.target?.result ?? '')
+                  const m = /^data:(image\/[a-zA-Z0-9.+-]+)(?:;[^,]*)?;base64,(.*)$/s.exec(url)
+                  if (!m) return next()
+                  try {
+                    settled = true
+                    resolve({ ok: true, value: { bytes: base64ToBytes(m[2]), mime: m[1] } })
+                  } catch {
+                    next()
+                  }
+                }
+                reader.onload = done
+                reader.onloadend = done
+                reader.onerror = next
+                try {
+                  reader.readAsDataURL(file)
+                } catch {
+                  next()
+                }
+              },
+              nextPath,
+            )
+          },
+          nextPath,
+        )
+      }
+      tryPath(0)
     })
   }
   // H5 开发环境兜底（浏览器 Blob URL）
@@ -102,6 +156,24 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
   return Promise.resolve(fail('当前环境无法读取图片文件'))
 }
 
+function localPathCandidates(path: string, plus: PlusAny): string[] {
+  const values = [path]
+  const add = (value: unknown) => {
+    if (typeof value === 'string' && value && !values.includes(value)) values.push(value)
+  }
+  try {
+    add(plus.io.convertLocalFileSystemURL?.(path))
+  } catch {
+    /* try the original path */
+  }
+  try {
+    add(plus.io.convertAbsoluteFileSystem?.(path))
+  } catch {
+    /* try the original path */
+  }
+  return values
+}
+
 const PICK_BACKUP_REQUEST_CODE = 9021
 
 /** 选择一个文本文件（备份 JSON）并读出内容。Android 走系统文档选择器。 */
@@ -112,15 +184,19 @@ export async function pickTextDocument(): Promise<FileOutcome<{ text: string }>>
   }
   const uni = uniGlobal()
   if (uni?.chooseFile) {
-    const path = await new Promise<string | null>((resolve) => {
+    const selected = await new Promise<FileOutcome<string>>((resolve) => {
       uni.chooseFile!({
         count: 1,
         extension: ['.json'],
-        success: (res) => resolve(res.tempFilePaths?.[0] ?? res.tempFiles?.[0]?.path ?? null),
-        fail: () => resolve(null),
+        success: (res) => {
+          const path = res.tempFilePaths?.[0] ?? res.tempFiles?.[0]?.path
+          resolve(path ? { ok: true, value: path } : fail('选择备份失败：系统未返回文件路径'))
+        },
+        fail: (err) => resolve(pickerFailure(err, '选择备份失败')),
       })
     })
-    if (!path) return fail('已取消选择备份，原账本未改。', true)
+    if (!selected.ok) return selected
+    const path = selected.value
     if (typeof fetch === 'function') {
       try {
         const res = await fetch(path)
@@ -136,15 +212,21 @@ export async function pickTextDocument(): Promise<FileOutcome<{ text: string }>>
 function pickViaAndroidIntent(plus: PlusAny): Promise<FileOutcome<{ text: string }>> {
   return new Promise((resolve) => {
     let main: PlusAny
+    let previous: PlusAny = null
+    let handler: PlusAny = null
     try {
       main = plus.android.runtimeMainActivity()
       const Intent = plus.android.importClass('android.content.Intent')
       const intent = new Intent(Intent.ACTION_OPEN_DOCUMENT)
       intent.addCategory(Intent.CATEGORY_OPENABLE)
       intent.setType('*/*')
-      main.onActivityResult = (requestCode: number, resultCode: number, data: PlusAny) => {
-        main.onActivityResult = null
-        if (requestCode !== PICK_BACKUP_REQUEST_CODE) return
+      previous = main.onActivityResult
+      handler = (requestCode: number, resultCode: number, data: PlusAny) => {
+        if (requestCode !== PICK_BACKUP_REQUEST_CODE) {
+          if (typeof previous === 'function') previous(requestCode, resultCode, data)
+          return
+        }
+        if (main.onActivityResult === handler) main.onActivityResult = previous
         if (resultCode !== -1 || !data) return resolve(fail('已取消选择备份，原账本未改。', true))
         try {
           const uri = data.getData()
@@ -165,9 +247,10 @@ function pickViaAndroidIntent(plus: PlusAny): Promise<FileOutcome<{ text: string
           resolve(fail('无法读取备份文件，原账本未改。'))
         }
       }
+      main.onActivityResult = handler
       main.startActivityForResult(intent, PICK_BACKUP_REQUEST_CODE)
     } catch {
-      main && (main.onActivityResult = null)
+      if (main && main.onActivityResult === handler) main.onActivityResult = previous
       resolve(fail('无法打开系统文件选择器'))
     }
   })
