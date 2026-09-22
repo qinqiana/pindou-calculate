@@ -1,7 +1,8 @@
 import { COLOR_CODES, COLOR_SET, compareColorCode, normalizeColorCode, PALETTE } from './catalog.ts'
 import { restockListCsv, restockListText } from './csv.ts'
 import { pickThumbnail, sniffImage } from './image.ts'
-import { APP_VERSION, BACKUP_FORMAT_VERSION, canonical, clone, newId, parseNonNegativeInt, parsePercent, qtyMessage } from './numbers.ts'
+import { APP_VERSION, BACKUP_FORMAT_VERSION, MAX_QTY, canonical, clone, newId, parseNonNegativeInt, parsePercent, qtyMessage } from './numbers.ts'
+import { normalizeRecognition } from './provenance.ts'
 import { LedgerStore, isPersistError, validateLedgerState, type InterruptStage } from './store.ts'
 import type {
   BackupFile,
@@ -16,6 +17,8 @@ import type {
   Ok,
   Operation,
   Pattern,
+  RecognitionProvenance,
+  RejectedItem,
   StockRow,
   UsageLine,
 } from './types.ts'
@@ -287,11 +290,21 @@ export class Ledger {
       titleTotal?: unknown
       acknowledgeTitleDiff?: boolean
       rejectedItems?: { raw: string; qty: number | null; note: string }[]
+      recognition?: RecognitionProvenance | null
+      /** 缺省时沿用既有手工确认请求身份。imageBytes 只在本页成功重选原图时传入。 */
+      patternMeta?: {
+        name: string
+        sourceNote: string
+        sizeNote: string
+        imageBytes?: Uint8Array
+      } | null
     },
     token: Token,
   ): Ok<{ version: number; perColorSum: number; difference: number | null; token: Token }> | Fail {
     const parsed = parseUsageLines(input.lines)
     if (!parsed.ok) return parsed
+    const meta = readPatternMeta(input.patternMeta)
+    if (!meta.ok) return meta
     let title: number | null = null
     if (input.titleTotal !== undefined && input.titleTotal !== null && String(input.titleTotal).trim() !== '') {
       const t = parseNonNegativeInt(input.titleTotal)
@@ -307,25 +320,62 @@ export class Ledger {
         perColorSum: sum,
       })
     }
+    const rejected = parseRejectedItems(input.rejectedItems)
+    if (!rejected.ok) return rejected
+    const recognition = normalizeRecognition(input.recognition, parsed.lines, title)
+    if (!recognition.ok) return fail(recognition.code, recognition.message)
     const live = this.store.live()
     if (!live.patterns.some((p) => p.id === patternId)) return fail('missing-pattern', '找不到图纸')
+    // 完整解码在唯一一次写入之前完成。请求身份只记规范化文字和生成的缩略图，不记原图字节。
+    const image = meta.value ? this.decodedReplacement(meta.value.imageBytes) : { ok: true as const, value: null }
+    if (!image.ok) return image
+    const patternMeta = meta.value
+      ? {
+          name: meta.value.name,
+          sourceNote: meta.value.sourceNote,
+          sizeNote: meta.value.sizeNote,
+          ...(image.value
+            ? { pixelWidth: image.value.pixelWidth, pixelHeight: image.value.pixelHeight, thumbnail: image.value.thumbnail }
+            : {}),
+        }
+      : null
     return this.write(
       requestId,
-      { kind: 'confirm-usage', patternId, lines: parsed.lines, title, ack: !!input.acknowledgeTitleDiff },
+      {
+        kind: 'confirm-usage',
+        patternId,
+        lines: parsed.lines,
+        title,
+        ack: !!input.acknowledgeTitleDiff,
+        ...(patternMeta ? { patternMeta } : {}),
+        ...(rejected.items.length ? { rejectedItems: rejected.items } : {}),
+        ...(recognition.value ? { recognition: recognition.value } : {}),
+      },
       token,
       (state) => {
         const pattern = state.patterns.find((p) => p.id === patternId)!
+        if (patternMeta) {
+          pattern.name = patternMeta.name
+          pattern.sourceNote = patternMeta.sourceNote
+          pattern.sizeNote = patternMeta.sizeNote
+          if (image.value) {
+            pattern.thumbnail = image.value.thumbnail
+            pattern.pixelWidth = image.value.pixelWidth
+            pattern.pixelHeight = image.value.pixelHeight
+          }
+        }
         const version = (pattern.confirmedVersion ?? 0) + 1
         const confirmed: ConfirmedUsage = {
           patternId,
           version,
           lines: parsed.lines,
-          inputMethod: 'manual',
+          inputMethod: recognition.value ? recognition.value.source : 'manual',
+          recognition: recognition.value,
           confirmedAt: this.clock(),
           titleTotal: title,
           titleDiff: difference,
           titleDiffAcknowledged: difference !== null && difference !== 0,
-          rejectedItems: input.rejectedItems ?? [],
+          rejectedItems: rejected.items,
         }
         state.confirmedUsages.push(confirmed)
         pattern.confirmedVersion = version
@@ -364,6 +414,7 @@ export class Ledger {
   getPattern(patternId: string): {
     pattern: Pattern
     confirmed: ConfirmedUsage | null
+    versions: ConfirmedUsage[]
     draft: { lines: UsageLine[]; titleTotal: number | null } | null
   } | null {
     const s = this.store.live()
@@ -373,8 +424,9 @@ export class Ledger {
       pattern.confirmedVersion == null
         ? null
         : s.confirmedUsages.find((u) => u.patternId === patternId && u.version === pattern.confirmedVersion) ?? null
+    const versions = s.confirmedUsages.filter((u) => u.patternId === patternId).sort((a, b) => a.version - b.version)
     const draft = s.drafts.find((d) => d.patternId === patternId) ?? null
-    return { pattern: clone(pattern), confirmed: confirmed ? clone(confirmed) : null, draft: draft ? clone(draft) : null }
+    return { pattern: clone(pattern), confirmed: confirmed ? clone(confirmed) : null, versions: clone(versions), draft: draft ? clone(draft) : null }
   }
 
   previewGap(patternId: string): Ok<{
@@ -638,6 +690,26 @@ export class Ledger {
     })
   }
 
+  private decodedReplacement(
+    imageBytes: Uint8Array | undefined,
+  ): Ok<{ value: { pixelWidth: number; pixelHeight: number; thumbnail: { mime: 'image/png' | 'image/jpeg'; base64: string } } | null }> | Fail {
+    if (imageBytes === undefined) return { ok: true, value: null }
+    const sniffed = sniffImage(imageBytes)
+    if (!sniffed.ok) return fail('invalid-image', sniffed.message)
+    const thumb = this.thumbnailer(sniffed.image)
+    if ('ok' in thumb && thumb.ok === false) return fail('invalid-image', thumb.message)
+    const thumbnail = thumb as { mime: 'image/png' | 'image/jpeg'; base64: string }
+    const rotated = (sniffed.image.orientation ?? 1) >= 5
+    return {
+      ok: true,
+      value: {
+        pixelWidth: rotated ? sniffed.image.height : sniffed.image.width,
+        pixelHeight: rotated ? sniffed.image.width : sniffed.image.height,
+        thumbnail,
+      },
+    }
+  }
+
   private existing(
     requestId: string,
     payload: unknown,
@@ -847,11 +919,35 @@ function previewBatch(
   return { ok: true, lines: kind === 'flag' ? meaningful : lines, token: { epoch: state.epoch, seq: state.seq } }
 }
 
+function readPatternMeta(
+  input: unknown,
+): Ok<{ value: { name: string; sourceNote: string; sizeNote: string; imageBytes?: Uint8Array } | null }> | Fail {
+  if (input === undefined || input === null) return { ok: true, value: null }
+  if (typeof input !== 'object' || Array.isArray(input)) return fail('invalid-meta', '图纸元数据无效')
+  const meta = input as Record<string, unknown>
+  if (typeof meta.name !== 'string' || typeof meta.sourceNote !== 'string' || typeof meta.sizeNote !== 'string') {
+    return fail('invalid-meta', '图纸元数据无效')
+  }
+  const name = meta.name.trim()
+  if (!name) return fail('invalid-name', '图纸名称不能为空')
+  if (meta.imageBytes !== undefined && !(meta.imageBytes instanceof Uint8Array)) return fail('invalid-image', '替换图片无效')
+  return {
+    ok: true,
+    value: {
+      name,
+      sourceNote: meta.sourceNote.trim(),
+      sizeNote: meta.sizeNote.trim(),
+      ...(meta.imageBytes !== undefined ? { imageBytes: meta.imageBytes as Uint8Array } : {}),
+    },
+  }
+}
+
 function parseUsageLines(lines: { code: unknown; qty: unknown }[]): Ok<{ lines: UsageLine[] }> | Fail {
   if (!Array.isArray(lines)) return fail('invalid-usage', '用量必须是列表')
   const seen = new Set<string>()
   const out: UsageLine[] = []
   for (const line of lines) {
+    if (!line || typeof line !== 'object') return fail('invalid-usage', '用量行无效')
     const code = normalizeColorCode(String(line.code ?? ''))
     if (!code) return colorFail(String(line.code ?? ''))
     if (seen.has(code)) return fail('duplicate-color', '色号重复，不能静默累加：' + code, { colors: [code] })
@@ -862,6 +958,19 @@ function parseUsageLines(lines: { code: unknown; qty: unknown }[]): Ok<{ lines: 
   }
   out.sort((a, b) => compareColorCode(a.code, b.code))
   return { ok: true, lines: out }
+}
+
+function parseRejectedItems(items: { raw: string; qty: number | null; note: string }[] | undefined): Ok<{ items: RejectedItem[] }> | Fail {
+  if (items === undefined) return { ok: true, items: [] }
+  if (!Array.isArray(items) || items.length > 512) return fail('invalid-rejected-item', '拒绝项列表无效')
+  const out: RejectedItem[] = []
+  for (const item of items) {
+    if (!item || typeof item !== 'object' || typeof item.raw !== 'string' || item.raw.length > 1000 || (item.qty !== null && (typeof item.qty !== 'number' || !Number.isSafeInteger(item.qty) || item.qty < 0 || item.qty > MAX_QTY)) || typeof item.note !== 'string' || item.note.length > 1000) {
+      return fail('invalid-rejected-item', '拒绝项无效')
+    }
+    out.push({ raw: item.raw, qty: item.qty, note: item.note })
+  }
+  return { ok: true, items: out }
 }
 
 export type BackupDiff = {
@@ -931,7 +1040,8 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
   }
   if (!data || typeof data !== 'object' || Array.isArray(data)) return fail('invalid-backup', '备份根节点不是对象')
   if (!Number.isSafeInteger(data.formatVersion)) return fail('invalid-backup', '缺少格式版本')
-  if (data.formatVersion !== BACKUP_FORMAT_VERSION) {
+  const inputFormatVersion = data.formatVersion
+  if (inputFormatVersion !== 1 && inputFormatVersion !== BACKUP_FORMAT_VERSION) {
     return fail('unsupported-backup', '不支持的备份格式版本：' + String(data.formatVersion))
   }
   if (typeof data.exportedAt !== 'string' || data.exportedAt.trim() === '') return fail('invalid-backup', '备份时间无效')
@@ -948,6 +1058,13 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
     (data.requests !== undefined && !Array.isArray(data.requests))
   ) {
     return fail('invalid-backup', '备份缺少必要账本字段')
+  }
+  if (inputFormatVersion === 1) {
+    for (const usage of data.confirmedUsages) {
+      if (!usage || typeof usage !== 'object' || usage.inputMethod !== 'manual' || Object.prototype.hasOwnProperty.call(usage, 'recognition')) {
+        return fail('invalid-backup', 'v1 备份只能包含手工确认用量')
+      }
+    }
   }
   if (!Number.isSafeInteger(data.epoch) || data.epoch < 0 || !Number.isSafeInteger(data.seq) || data.seq < 0) {
     return fail('invalid-backup', '备份序号无效')
@@ -1012,7 +1129,10 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
   } catch {
     return fail('invalid-backup', '备份账本结构无效')
   }
-  return { ok: true, backup: data }
+  const backup: BackupFile = inputFormatVersion === BACKUP_FORMAT_VERSION
+    ? data
+    : { ...data, formatVersion: BACKUP_FORMAT_VERSION, requests: data.requests ?? [] }
+  return { ok: true, backup }
 }
 
 function backupToState(backup: BackupFile): LedgerState {

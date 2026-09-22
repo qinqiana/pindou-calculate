@@ -1,0 +1,186 @@
+{
+  "date": "2026-09-20",
+  "baselineVersion": "pixel-glyph-0.1",
+  "optimizedVersion": "pixel-glyph-0.1.1",
+  "scope": "Local experiment only; no Android or APK performance claim",
+  "measurement": {
+    "image": "参考样例/豆画-Mard-148图纸样例.png",
+    "dimensions": [
+      5000,
+      3820
+    ],
+    "freshSequentialProcesses": true,
+    "threadBudget": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    },
+    "environment": {
+      "python": "3.12.3",
+      "pillow": "12.3.0",
+      "numpy": "2.5.2",
+      "opencv": "5.0.0",
+      "system": "Linux",
+      "machine": "aarch64",
+      "glyphBytes": 190442
+    },
+    "baseline": {
+      "runs": [
+        {
+          "rssMiB": 404.05,
+          "algorithmSeconds": 1.108,
+          "processSeconds": 1.25
+        },
+        {
+          "rssMiB": 404.32,
+          "algorithmSeconds": 1.078,
+          "processSeconds": 1.217
+        },
+        {
+          "rssMiB": 404.2,
+          "algorithmSeconds": 1.102,
+          "processSeconds": 1.24
+        }
+      ],
+      "medianRssMiB": 404.2,
+      "medianAlgorithmSeconds": 1.102,
+      "allRunsMatchNineExpectedCounts": true
+    },
+    "optimized": {
+      "runs": [
+        {
+          "rssMiB": 277.68,
+          "algorithmSeconds": 1.054,
+          "processSeconds": 1.179
+        },
+        {
+          "rssMiB": 277.24,
+          "algorithmSeconds": 1.029,
+          "processSeconds": 1.152
+        },
+        {
+          "rssMiB": 277.49,
+          "algorithmSeconds": 1.05,
+          "processSeconds": 1.154
+        }
+      ],
+      "medianRssMiB": 277.49,
+      "medianAlgorithmSeconds": 1.05,
+      "allRunsMatchNineExpectedCounts": true
+    },
+    "reductionPercent": 31.3
+  },
+  "validation": {
+    "testsPassed": 9,
+    "testSeconds": 17.383,
+    "newChecks": [
+      "EXIF rotation plus partially transparent H7 legend preserves all nine counts",
+      "Faint off-center text in a previously blank cell is unknown, not blank; baseline falsely returned ready"
+    ],
+    "sampleCount": 19,
+    "comparisonIgnores": [
+      "algorithm",
+      "elapsedSeconds",
+      "runtime"
+    ],
+    "samples": [
+      {
+        "id": "S00",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S01",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S02",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S03",
+        "status": "partial",
+        "changedResultFields": []
+      },
+      {
+        "id": "S04",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S05",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S06",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S07",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S08",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S09",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S10",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S11",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S12",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S13",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S14",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S15",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S16",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S17",
+        "status": "failed",
+        "changedResultFields": []
+      },
+      {
+        "id": "S18",
+        "status": "ready",
+        "changedResultFields": []
+      }
+    ],
+    "independentQa": false,
+    "review": "K3 optimization and original-code review; integrated changes reviewed by main session"
+  }
+}

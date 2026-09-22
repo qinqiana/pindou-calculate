@@ -69,11 +69,23 @@ export type UsageLine = { code: string; qty: number }
 
 export type RejectedItem = { raw: string; qty: number | null; note: string }
 
+export type RecognitionProvenance = {
+  source: 'legend' | 'grid' | 'assisted'
+  algorithmVersion: string
+  originalStatus: 'ready' | 'partial'
+  candidateLines: UsageLine[]
+  candidateTitleTotal: number | null
+  modified: boolean
+  risks: { id: string; reason: string; raw: string; resolved: boolean }[]
+  riskAcknowledged: boolean
+}
+
 export type ConfirmedUsage = {
   patternId: string
   version: number
   lines: UsageLine[]
-  inputMethod: 'manual'
+  inputMethod: 'manual' | 'legend' | 'grid' | 'assisted'
+  recognition?: RecognitionProvenance | null
   confirmedAt: string
   titleTotal: number | null
   titleDiff: number | null

@@ -1,0 +1,2603 @@
+{
+  "image": "参考样例/参考图纸/1789460416312_afb8306d-128b-44ba-895c-778e5132756e_1833367752401994129_1080x1421.webp",
+  "geometry": [
+    {
+      "period": 5.09419230769228,
+      "count": 208,
+      "bounds": 5.096153846153846
+    },
+    {
+      "period": 5.09469230769228,
+      "count": 208,
+      "bounds": 5.096153846153846
+    }
+  ],
+  "acceptedForUsage": false,
+  "input": "Image and prior image-only geometry; no reference quantities or external palette RGB",
+  "methods": [
+    {
+      "method": "outsideText-RGB",
+      "mapped": 11268,
+      "unresolved": 31996,
+      "counts": {
+        "D19": 4056,
+        "C22": 377,
+        "A24": 409,
+        "C27": 273,
+        "E1": 764,
+        "D11": 42,
+        "A21": 523,
+        "C23": 59,
+        "B28": 13,
+        "B10": 94,
+        "C2": 29,
+        "C15": 160,
+        "C1": 48,
+        "C18": 71,
+        "C17": 148,
+        "B20": 116,
+        "B27": 1,
+        "B31": 11,
+        "D17": 49,
+        "C21": 21,
+        "C12": 48,
+        "B9": 26,
+        "D12": 62,
+        "C19": 569,
+        "B22": 28,
+        "C25": 126,
+        "A16": 13,
+        "B24": 504,
+        "B25": 13,
+        "C3": 14,
+        "C16": 633,
+        "D10": 5,
+        "C29": 1641,
+        "C13": 3,
+        "C10": 38,
+        "D9": 14,
+        "C4": 6,
+        "C26": 8,
+        "D2": 2,
+        "B12": 3,
+        "B19": 11,
+        "A12": 112,
+        "A14": 1,
+        "B7": 34,
+        "B6": 1,
+        "D26": 26,
+        "E2": 4,
+        "C20": 55,
+        "D4": 4
+      },
+      "visibleReferenceDenominator": 64,
+      "presentAndWithinTolerance": [
+        "B25",
+        "B27",
+        "E2"
+      ],
+      "visiblePassedCount": 3,
+      "fullDiagramPassed": false
+    },
+    {
+      "method": "outsideText-twoNeutral",
+      "mapped": 9904,
+      "unresolved": 33360,
+      "counts": {
+        "D19": 1719,
+        "D5": 128,
+        "A16": 100,
+        "E1": 1681,
+        "B22": 439,
+        "E2": 533,
+        "B11": 15,
+        "A24": 104,
+        "A21": 164,
+        "A19": 174,
+        "A14": 230,
+        "D9": 4,
+        "D17": 5,
+        "C18": 265,
+        "C12": 101,
+        "B9": 79,
+        "B6": 32,
+        "C2": 41,
+        "B20": 41,
+        "B28": 56,
+        "C11": 316,
+        "A12": 581,
+        "B10": 19,
+        "C22": 71,
+        "B25": 6,
+        "D11": 9,
+        "C1": 38,
+        "B19": 33,
+        "B31": 19,
+        "C3": 65,
+        "D10": 176,
+        "B7": 57,
+        "B5": 18,
+        "C19": 19,
+        "D12": 124,
+        "C25": 82,
+        "C17": 102,
+        "C15": 8,
+        "C8": 560,
+        "C13": 7,
+        "D4": 8,
+        "C4": 4,
+        "C26": 47,
+        "D18": 23,
+        "C20": 343,
+        "D22": 6,
+        "C10": 34,
+        "D24": 4,
+        "C29": 1027,
+        "B8": 13,
+        "B12": 5,
+        "B2": 16,
+        "A6": 85,
+        "A7": 66,
+        "D26": 2
+      },
+      "visibleReferenceDenominator": 64,
+      "presentAndWithinTolerance": [
+        "D9",
+        "D17",
+        "D18"
+      ],
+      "visiblePassedCount": 3,
+      "fullDiagramPassed": false
+    },
+    {
+      "method": "mostChromatic-RGB",
+      "mapped": 8995,
+      "unresolved": 34269,
+      "counts": {
+        "D19": 1795,
+        "B24": 217,
+        "E2": 56,
+        "B25": 25,
+        "E1": 773,
+        "A19": 4,
+        "D11": 84,
+        "A24": 109,
+        "C15": 745,
+        "C18": 252,
+        "B9": 35,
+        "C11": 39,
+        "A21": 271,
+        "C19": 937,
+        "B28": 11,
+        "B10": 91,
+        "B7": 107,
+        "B31": 18,
+        "C1": 21,
+        "B20": 72,
+        "C22": 248,
+        "C25": 102,
+        "C12": 71,
+        "C16": 661,
+        "C10": 130,
+        "C27": 64,
+        "B22": 178,
+        "A12": 103,
+        "B27": 83,
+        "C23": 34,
+        "B19": 97,
+        "C17": 105,
+        "D17": 49,
+        "D12": 48,
+        "C4": 19,
+        "D2": 17,
+        "D10": 4,
+        "C8": 25,
+        "C29": 965,
+        "C20": 146,
+        "C3": 25,
+        "D18": 3,
+        "B8": 1,
+        "C26": 13,
+        "A14": 13,
+        "A6": 3,
+        "B12": 6,
+        "B6": 1,
+        "B21": 14,
+        "C2": 25,
+        "D26": 36,
+        "D9": 18,
+        "A16": 8,
+        "C21": 6,
+        "D4": 10,
+        "C13": 2
+      },
+      "visibleReferenceDenominator": 64,
+      "presentAndWithinTolerance": [
+        "A19",
+        "B8"
+      ],
+      "visiblePassedCount": 2,
+      "fullDiagramPassed": false
+    },
+    {
+      "method": "mostChromatic-twoNeutral",
+      "mapped": 12245,
+      "unresolved": 31019,
+      "counts": {
+        "D19": 912,
+        "E2": 1219,
+        "D12": 178,
+        "A21": 243,
+        "D5": 82,
+        "E1": 1816,
+        "C18": 106,
+        "A19": 302,
+        "B11": 93,
+        "A12": 833,
+        "A14": 248,
+        "C1": 14,
+        "D11": 7,
+        "C20": 471,
+        "D24": 14,
+        "B22": 333,
+        "B9": 69,
+        "B25": 11,
+        "B19": 95,
+        "C11": 1140,
+        "A6": 482,
+        "C12": 155,
+        "B6": 53,
+        "B7": 156,
+        "D17": 16,
+        "C25": 88,
+        "C19": 83,
+        "A24": 61,
+        "B28": 41,
+        "D4": 36,
+        "C15": 45,
+        "D10": 157,
+        "B10": 44,
+        "B20": 39,
+        "C17": 124,
+        "B27": 5,
+        "C26": 66,
+        "C22": 70,
+        "B31": 16,
+        "A16": 280,
+        "B8": 10,
+        "D18": 18,
+        "C8": 813,
+        "C16": 5,
+        "C3": 67,
+        "C4": 20,
+        "B5": 7,
+        "C10": 26,
+        "B12": 12,
+        "B2": 36,
+        "A7": 158,
+        "C13": 25,
+        "D22": 15,
+        "C29": 782,
+        "C2": 32,
+        "D9": 15,
+        "D26": 1
+      },
+      "visibleReferenceDenominator": 64,
+      "presentAndWithinTolerance": [
+        "B2",
+        "B5",
+        "B25",
+        "B27",
+        "C4",
+        "C20",
+        "D24"
+      ],
+      "visiblePassedCount": 7,
+      "fullDiagramPassed": false
+    },
+    {
+      "method": "median-RGB",
+      "mapped": 4446,
+      "unresolved": 38818,
+      "counts": {
+        "D19": 2837,
+        "C22": 40,
+        "C18": 343,
+        "C15": 102,
+        "E2": 16,
+        "B19": 24,
+        "E1": 340,
+        "B20": 15,
+        "B22": 18,
+        "B10": 13,
+        "C25": 17,
+        "B27": 7,
+        "C23": 10,
+        "B24": 13,
+        "B31": 26,
+        "C19": 145,
+        "C10": 85,
+        "C3": 7,
+        "D17": 14,
+        "D11": 27,
+        "C16": 59,
+        "D2": 6,
+        "A21": 2,
+        "B5": 3,
+        "A12": 11,
+        "B25": 2,
+        "C26": 8,
+        "D9": 3,
+        "C12": 2,
+        "D12": 1,
+        "C17": 1,
+        "C29": 223,
+        "C20": 25,
+        "C13": 1
+      },
+      "visibleReferenceDenominator": 64,
+      "presentAndWithinTolerance": [
+        "B27",
+        "D9"
+      ],
+      "visiblePassedCount": 2,
+      "fullDiagramPassed": false
+    },
+    {
+      "method": "median-twoNeutral",
+      "mapped": 10658,
+      "unresolved": 32606,
+      "counts": {
+        "D19": 1957,
+        "E2": 594,
+        "D5": 116,
+        "A24": 76,
+        "C18": 836,
+        "B11": 154,
+        "E1": 1772,
+        "A21": 147,
+        "A19": 207,
+        "D10": 199,
+        "C12": 143,
+        "A14": 180,
+        "B9": 87,
+        "B6": 28,
+        "B7": 101,
+        "C11": 193,
+        "B28": 41,
+        "D9": 5,
+        "B22": 188,
+        "D12": 55,
+        "B20": 58,
+        "B19": 46,
+        "C22": 91,
+        "A12": 632,
+        "B10": 35,
+        "C1": 39,
+        "C25": 31,
+        "B27": 12,
+        "C16": 2,
+        "D11": 9,
+        "B5": 31,
+        "D18": 15,
+        "C20": 356,
+        "B31": 24,
+        "C15": 15,
+        "C19": 11,
+        "B25": 15,
+        "A16": 160,
+        "C17": 58,
+        "C8": 627,
+        "C13": 8,
+        "C3": 71,
+        "C29": 901,
+        "C10": 44,
+        "D24": 2,
+        "C26": 49,
+        "B2": 11,
+        "A7": 67,
+        "A6": 144,
+        "C4": 5,
+        "B8": 7,
+        "D4": 3
+      },
+      "visibleReferenceDenominator": 64,
+      "presentAndWithinTolerance": [
+        "D9"
+      ],
+      "visiblePassedCount": 1,
+      "fullDiagramPassed": false
+    }
+  ],
+  "repeatedGlyphStack": {
+    "script": "/tmp/pindou-issue8-v06/phase_stack.py",
+    "result": "/tmp/pindou-issue8-v06/phase-period/stacks.json",
+    "image": "/tmp/pindou-issue8-v06/phase-period/stacks.png",
+    "groups": 63,
+    "matchingAnchorLabels": 0,
+    "note": "Grouping labels come from automatic same-image legend reading; reconstructed OCR is independent but groups themselves are provisional. No matching code recovered."
+  },
+  "unlabelledClusters": {
+    "script": "/tmp/pindou-issue8-v06/cluster_stack.py",
+    "result": "/tmp/pindou-issue8-v06/cluster-96/clusters.json",
+    "image": "/tmp/pindou-issue8-v06/cluster-96/clusters.png",
+    "groups": 96,
+    "note": "Unlabelled diagnostic clusters; not colour-code or bead-count truth."
+  },
+  "date": "2026-09-21",
+  "stage": "failed exploratory sampling; never merged into usage candidates",
+  "evaluation": "Compared only after output to64 visible independently read reference entries; full reference remains unavailable",
+  "conclusion": "No method meets per-colour count tolerance. Image-internal font comparison independently restores the remaining visible legend entry; that is not successful body sampling.",
+  "inversePixelBlur": {
+    "script": "/tmp/pindou-issue8-v06/unblur_stack.py",
+    "result": "/tmp/pindou-issue8-v06/inverse-stacks/readings.json",
+    "image": "/tmp/pindou-issue8-v06/inverse-stacks/unblurred.png",
+    "regularization": [
+      0.1,
+      0.03,
+      0.01
+    ],
+    "matchingAnchorLabels": 0,
+    "acceptedForUsage": false,
+    "note": "Three regularised inversions of the repeated-cell pixel stacks; ringing and non-matching text remain. No recovered glyph was admitted as a code."
+  },
+  "localGeometry": {
+    "script": "/tmp/pindou-issue8-v06/local_geometry_probe.py",
+    "result": "/tmp/pindou-issue8-v06/local-geometry.json",
+    "bodyRegion": [
+      10,
+      67,
+      1060,
+      1060
+    ],
+    "anchorCount": 64,
+    "sampling": "Same most-chromatic-pixel + bounded neutral-mixing estimator for all geometry variants",
+    "usesReferenceQuantities": false,
+    "usesExternalPaletteRgb": false,
+    "records": [
+      {
+        "geometry": "fixed",
+        "cells": 43264,
+        "mapped": 12158,
+        "unresolved": 31106,
+        "medianScatter": 21.954498291015625,
+        "medianInnerScatter": 17.37814712524414,
+        "p90Scatter": 37.0863838195802,
+        "counts": {
+          "D19": 825,
+          "E2": 1219,
+          "D12": 178,
+          "A21": 243,
+          "D5": 82,
+          "E1": 1816,
+          "C18": 106,
+          "A19": 302,
+          "B11": 93,
+          "A12": 833,
+          "A14": 248,
+          "C1": 14,
+          "D11": 7,
+          "C20": 471,
+          "D24": 14,
+          "B22": 333,
+          "B9": 69,
+          "B25": 11,
+          "B19": 95,
+          "C11": 1140,
+          "A6": 482,
+          "C12": 155,
+          "B6": 53,
+          "B7": 156,
+          "D17": 16,
+          "C25": 88,
+          "C19": 83,
+          "A24": 61,
+          "B28": 41,
+          "D4": 36,
+          "C15": 45,
+          "D10": 157,
+          "B10": 44,
+          "B20": 39,
+          "C17": 124,
+          "B27": 5,
+          "C26": 66,
+          "C22": 70,
+          "B31": 16,
+          "A16": 280,
+          "B8": 10,
+          "D18": 18,
+          "C8": 813,
+          "C16": 5,
+          "C3": 67,
+          "C4": 20,
+          "B5": 7,
+          "C10": 26,
+          "B12": 12,
+          "B2": 36,
+          "A7": 158,
+          "C13": 25,
+          "D22": 15,
+          "C29": 782,
+          "C2": 32,
+          "D9": 15,
+          "D26": 1
+        },
+        "acceptedForUsage": false,
+        "visibleReferenceDenominator": 64,
+        "presentAndWithinTolerance": [
+          "B2",
+          "B5",
+          "B25",
+          "B27",
+          "C4",
+          "C20",
+          "D24"
+        ],
+        "visiblePassedCount": 7,
+        "fullDiagramPassed": false
+      },
+      {
+        "geometry": "localPhase",
+        "cells": 43264,
+        "mapped": 12093,
+        "unresolved": 31171,
+        "medianScatter": 22.0,
+        "medianInnerScatter": 17.37814712524414,
+        "p90Scatter": 37.171226119995175,
+        "counts": {
+          "D19": 812,
+          "E2": 1198,
+          "D12": 173,
+          "A21": 227,
+          "D5": 82,
+          "E1": 1826,
+          "C18": 102,
+          "A19": 297,
+          "B11": 92,
+          "A12": 835,
+          "A14": 247,
+          "C1": 13,
+          "D11": 8,
+          "C20": 472,
+          "D24": 14,
+          "B22": 320,
+          "B9": 70,
+          "B25": 11,
+          "B19": 93,
+          "C11": 1139,
+          "A6": 482,
+          "C12": 155,
+          "B6": 51,
+          "B7": 160,
+          "D17": 14,
+          "C25": 89,
+          "C15": 47,
+          "C19": 87,
+          "A24": 62,
+          "B28": 40,
+          "D4": 40,
+          "D10": 158,
+          "B10": 44,
+          "B20": 40,
+          "C17": 122,
+          "B27": 4,
+          "C26": 62,
+          "C22": 75,
+          "B31": 16,
+          "A16": 284,
+          "B8": 10,
+          "D18": 19,
+          "C8": 806,
+          "C16": 5,
+          "C3": 59,
+          "C4": 19,
+          "B5": 7,
+          "C29": 785,
+          "C10": 26,
+          "B12": 12,
+          "B2": 36,
+          "A7": 157,
+          "C13": 23,
+          "D22": 15,
+          "C2": 31,
+          "D9": 19,
+          "D26": 1
+        },
+        "acceptedForUsage": false,
+        "visibleReferenceDenominator": 64,
+        "presentAndWithinTolerance": [
+          "B2",
+          "B5",
+          "B25",
+          "B27",
+          "C20",
+          "D24"
+        ],
+        "visiblePassedCount": 6,
+        "fullDiagramPassed": false
+      },
+      {
+        "geometry": "localEdges",
+        "cells": 43264,
+        "mapped": 12256,
+        "unresolved": 31008,
+        "medianScatter": 21.67948341369629,
+        "medianInnerScatter": 19.167885780334473,
+        "p90Scatter": 36.0,
+        "counts": {
+          "D19": 835,
+          "E2": 1221,
+          "D12": 174,
+          "A21": 223,
+          "E1": 1807,
+          "B22": 414,
+          "C18": 99,
+          "A19": 293,
+          "B11": 111,
+          "A24": 54,
+          "A14": 244,
+          "D5": 77,
+          "D11": 7,
+          "D24": 14,
+          "B9": 75,
+          "B25": 13,
+          "B19": 91,
+          "C11": 1152,
+          "A12": 837,
+          "C12": 155,
+          "B6": 56,
+          "B7": 161,
+          "C22": 67,
+          "D17": 12,
+          "C1": 13,
+          "C25": 84,
+          "C15": 44,
+          "C19": 100,
+          "B28": 39,
+          "A6": 490,
+          "D4": 43,
+          "D10": 155,
+          "B10": 41,
+          "B20": 44,
+          "C17": 123,
+          "B27": 3,
+          "C26": 70,
+          "C20": 466,
+          "B31": 17,
+          "A16": 296,
+          "B8": 9,
+          "D18": 17,
+          "C8": 807,
+          "C16": 5,
+          "C3": 69,
+          "C4": 18,
+          "B5": 7,
+          "C10": 26,
+          "B12": 14,
+          "B2": 29,
+          "A7": 158,
+          "C13": 22,
+          "D22": 14,
+          "C29": 794,
+          "C2": 33,
+          "D9": 13,
+          "D26": 1
+        },
+        "acceptedForUsage": false,
+        "visibleReferenceDenominator": 64,
+        "presentAndWithinTolerance": [
+          "B5",
+          "B25",
+          "B27",
+          "C20",
+          "D24"
+        ],
+        "visiblePassedCount": 5,
+        "fullDiagramPassed": false
+      }
+    ],
+    "note": "Paired comparison with the same 64 automatic same-image anchors and same 43264 hypothetical geometric cells; unlike prior 63-anchor exploration. Quantity evaluation occurs only after prediction. Neither tested local correction improves count accuracy; this does not rule out all other geometric methods.",
+    "acceptedForUsage": false
+  },
+  "forwardGlyphFit": {
+    "script": "/tmp/pindou-issue8-v06/forward_glyph_probe.py",
+    "result": "/tmp/pindou-issue8-v06/forward-glyph/forward.json",
+    "candidateLabelCount": 64,
+    "groups": 12,
+    "records": [
+      {
+        "cluster": 43,
+        "population": 2218,
+        "sampled": 48,
+        "rgb": [
+          231.97769165039062,
+          226.42697143554688,
+          228.86497497558594
+        ],
+        "top": [
+          {
+            "code": "A21",
+            "correlation": 0.5938230897330599,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "A12",
+            "correlation": 0.593628185657744,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B22",
+            "correlation": 0.5933158903175543,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D22",
+            "correlation": 0.5886275347312006,
+            "font": "dejavu/DejaVuSansMono-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B11",
+            "correlation": 0.5875652235295834,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.0001949040753158604
+      },
+      {
+        "cluster": 53,
+        "population": 2202,
+        "sampled": 48,
+        "rgb": [
+          214.67303466796875,
+          200.1964111328125,
+          212.57130432128906
+        ],
+        "top": [
+          {
+            "code": "A24",
+            "correlation": 0.5189308230928704,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D26",
+            "correlation": 0.5188436081085245,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D22",
+            "correlation": 0.5141518263345632,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D24",
+            "correlation": 0.5138990316342207,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C22",
+            "correlation": 0.5108228518670516,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 8.721498434594022e-05
+      },
+      {
+        "cluster": 4,
+        "population": 2107,
+        "sampled": 48,
+        "rgb": [
+          236.94566345214844,
+          225.39747619628906,
+          218.37257385253906
+        ],
+        "top": [
+          {
+            "code": "D11",
+            "correlation": 0.35000908148376475,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "A16",
+            "correlation": 0.3487663290823353,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D26",
+            "correlation": 0.3477815780498425,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "A14",
+            "correlation": 0.34555145667085174,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C11",
+            "correlation": 0.3449284801081436,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.0012427524014294589
+      },
+      {
+        "cluster": 0,
+        "population": 1728,
+        "sampled": 48,
+        "rgb": [
+          56.59461975097656,
+          100.14641571044922,
+          144.59519958496094
+        ],
+        "top": [
+          {
+            "code": "A6",
+            "correlation": 0.41255532211781454,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B8",
+            "correlation": 0.40374878976541406,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B6",
+            "correlation": 0.40169750007264415,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D9",
+            "correlation": 0.39809118414919265,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B9",
+            "correlation": 0.3972742199646616,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.008806532352400476
+      },
+      {
+        "cluster": 46,
+        "population": 1679,
+        "sampled": 48,
+        "rgb": [
+          48.50238037109375,
+          192.87461853027344,
+          194.47975158691406
+        ],
+        "top": [
+          {
+            "code": "C22",
+            "correlation": 0.5953204278923999,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C20",
+            "correlation": 0.5918788461639524,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C26",
+            "correlation": 0.5912466913960299,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C25",
+            "correlation": 0.5907880638575513,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C23",
+            "correlation": 0.5898962525154362,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.0034415817284475514
+      },
+      {
+        "cluster": 54,
+        "population": 1676,
+        "sampled": 48,
+        "rgb": [
+          65.45883178710938,
+          85.8556137084961,
+          133.57489013671875
+        ],
+        "top": [
+          {
+            "code": "A6",
+            "correlation": 0.41644506020986694,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C8",
+            "correlation": 0.41381249397958786,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D9",
+            "correlation": 0.4085055375516373,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B8",
+            "correlation": 0.40550669160839636,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D5",
+            "correlation": 0.40268165706852393,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.0026325662302790764
+      },
+      {
+        "cluster": 45,
+        "population": 1636,
+        "sampled": 48,
+        "rgb": [
+          24.72555160522461,
+          153.70111083984375,
+          159.35055541992188
+        ],
+        "top": [
+          {
+            "code": "A6",
+            "correlation": 0.3838602530832733,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C8",
+            "correlation": 0.37783019438911475,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D9",
+            "correlation": 0.373314254096093,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B8",
+            "correlation": 0.3725386215983618,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C4",
+            "correlation": 0.3724747673633491,
+            "font": "dejavu/DejaVuSansMono-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.006030058694158569
+      },
+      {
+        "cluster": 30,
+        "population": 1589,
+        "sampled": 48,
+        "rgb": [
+          216.79547119140625,
+          197.23252868652344,
+          206.12806701660156
+        ],
+        "top": [
+          {
+            "code": "D26",
+            "correlation": 0.412968841781849,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D22",
+            "correlation": 0.41157844569534197,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D24",
+            "correlation": 0.4088601129509716,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D11",
+            "correlation": 0.4045133453782983,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D16",
+            "correlation": 0.40376147510721894,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.0013903960865070397
+      },
+      {
+        "cluster": 47,
+        "population": 1442,
+        "sampled": 48,
+        "rgb": [
+          231.12448120117188,
+          218.77081298828125,
+          209.160888671875
+        ],
+        "top": [
+          {
+            "code": "C11",
+            "correlation": 0.4399092956719452,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D11",
+            "correlation": 0.4334267955850533,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C4",
+            "correlation": 0.43233367513368776,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D4",
+            "correlation": 0.43057631446290046,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C1",
+            "correlation": 0.4285323614287664,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.006482500086891885
+      },
+      {
+        "cluster": 39,
+        "population": 1234,
+        "sampled": 48,
+        "rgb": [
+          207.70907592773438,
+          192.35696411132812,
+          204.09764099121094
+        ],
+        "top": [
+          {
+            "code": "A12",
+            "correlation": 0.3516484868237035,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "D22",
+            "correlation": 0.3497367671535501,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B22",
+            "correlation": 0.34902996495146976,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "A21",
+            "correlation": 0.3489271451403719,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B2",
+            "correlation": 0.3485159320837951,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.0019117196701533556
+      },
+      {
+        "cluster": 22,
+        "population": 1162,
+        "sampled": 48,
+        "rgb": [
+          222.01634216308594,
+          219.5847625732422,
+          220.15318298339844
+        ],
+        "top": [
+          {
+            "code": "B22",
+            "correlation": 0.4995438915139027,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "A21",
+            "correlation": 0.49897027113094294,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B20",
+            "correlation": 0.49411454714093156,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B2",
+            "correlation": 0.4931786752466742,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B27",
+            "correlation": 0.49176012956519416,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.0005736203829597719
+      },
+      {
+        "cluster": 2,
+        "population": 1008,
+        "sampled": 48,
+        "rgb": [
+          60.79563903808594,
+          188.9261016845703,
+          189.95040893554688
+        ],
+        "top": [
+          {
+            "code": "B8",
+            "correlation": 0.43849805419091986,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.5
+          },
+          {
+            "code": "C22",
+            "correlation": 0.43202150563279157,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "C23",
+            "correlation": 0.4310793255771148,
+            "font": "liberation/LiberationSans-Bold.ttf",
+            "heightFraction": 0.35
+          },
+          {
+            "code": "B6",
+            "correlation": 0.4300156312553192,
+            "font": "liberation/LiberationSans-Regular.ttf",
+            "heightFraction": 0.5
+          },
+          {
+            "code": "C25",
+            "correlation": 0.4281990687453874,
+            "font": "dejavu/DejaVuSansMono-Bold.ttf",
+            "heightFraction": 0.35
+          }
+        ],
+        "acceptedForUsage": false,
+        "firstVsSecondDifferentLabelGap": 0.006476548558128292
+      }
+    ],
+    "usesReferenceQuantities": false,
+    "acceptedForUsage": false,
+    "note": "Four locally installed fonts, two glyph heights; 48 cell observations from each of 12 populous unlabelled RGB clusters. Compare pixel-area-integrated glyph templates at observed phases after row-mean removal. All first/second different-label gaps are below 0.009, so no label is accepted. This is a closed set of 64 visible automatic legend labels and cannot recover missing-legend codes; no independent ground truth for cluster identities is available."
+  },
+  "sharedPixelField": {
+    "image": "参考样例/参考图纸/1789460416312_afb8306d-128b-44ba-895c-778e5132756e_1833367752401994129_1080x1421.webp",
+    "bodyRegion": [
+      10,
+      67,
+      1060,
+      1060
+    ],
+    "geometricCellCount": 43264,
+    "anchorCount": 64,
+    "phaseBinsPerAxis": 16,
+    "iterations": 8,
+    "fittingUsesLabelsOrQuantities": false,
+    "usesReferenceQuantities": false,
+    "baselineHeldOutRgbRmse": 19.426481246948242,
+    "trace": [
+      {
+        "iteration": 1,
+        "heldOutRgbRmse": 14.276997940543234
+      },
+      {
+        "iteration": 2,
+        "heldOutRgbRmse": 14.434574743264648
+      },
+      {
+        "iteration": 3,
+        "heldOutRgbRmse": 14.579511843907056
+      },
+      {
+        "iteration": 4,
+        "heldOutRgbRmse": 14.650428320832907
+      },
+      {
+        "iteration": 5,
+        "heldOutRgbRmse": 14.693124982858512
+      },
+      {
+        "iteration": 6,
+        "heldOutRgbRmse": 14.720912134321765
+      },
+      {
+        "iteration": 7,
+        "heldOutRgbRmse": 14.740964977114656
+      },
+      {
+        "iteration": 8,
+        "heldOutRgbRmse": 14.754493049121585
+      }
+    ],
+    "records": [
+      {
+        "method": "trimmedPixelMedian",
+        "mapped": 4738,
+        "unresolved": 38526,
+        "counts": {
+          "D19": 2073,
+          "B24": 31,
+          "D16": 180,
+          "E2": 25,
+          "C15": 294,
+          "C25": 21,
+          "E1": 997,
+          "B20": 32,
+          "A24": 4,
+          "C22": 36,
+          "C23": 24,
+          "B10": 14,
+          "B22": 11,
+          "C18": 33,
+          "C19": 170,
+          "C12": 4,
+          "B31": 60,
+          "C10": 68,
+          "D22": 4,
+          "C3": 8,
+          "C21": 2,
+          "C20": 19,
+          "C13": 13,
+          "B25": 2,
+          "D17": 8,
+          "C17": 14,
+          "C16": 99,
+          "D2": 8,
+          "C26": 4,
+          "D11": 17,
+          "A21": 23,
+          "B5": 2,
+          "A12": 26,
+          "C27": 2,
+          "B19": 20,
+          "D9": 11,
+          "C2": 1,
+          "D12": 3,
+          "C29": 375
+        },
+        "acceptedForUsage": false,
+        "presentAndWithinTolerance": [
+          "C10",
+          "D2",
+          "D17"
+        ],
+        "visiblePassedCount": 3,
+        "visibleReferenceDenominator": 64,
+        "fullDiagramPassed": false
+      },
+      {
+        "method": "sharedPhaseField",
+        "mapped": 1861,
+        "unresolved": 41403,
+        "counts": {
+          "C18": 596,
+          "B25": 46,
+          "C19": 357,
+          "D19": 8,
+          "B7": 3,
+          "C22": 64,
+          "B27": 649,
+          "B10": 5,
+          "C20": 21,
+          "D11": 2,
+          "D2": 1,
+          "B19": 1,
+          "C16": 103,
+          "C26": 2,
+          "C29": 3
+        },
+        "acceptedForUsage": false,
+        "presentAndWithinTolerance": [],
+        "visiblePassedCount": 0,
+        "visibleReferenceDenominator": 64,
+        "fullDiagramPassed": false
+      }
+    ],
+    "acceptedForUsage": false,
+    "limitation": "Shared neutral ink/rule field is approximate; most-chroma phase fixes an otherwise unidentifiable background scale and offset. Counts are diagnostic only.",
+    "script": "/tmp/pindou-issue8-v06/shared_pixel_model.py",
+    "result": "/tmp/pindou-issue8-v06/shared-pixels.json",
+    "conclusion": "The model predicts held-out pixels better but yields no colour-count pass among 64 visible references. Rejected; lower pixel reconstruction loss is not evidence of correct colour identity or count."
+  },
+  "finitePaletteGlyphFit": {
+    "script": "/tmp/pindou-issue8-v06/finite_palette_probe.py",
+    "result": "/tmp/pindou-issue8-v06/finite-palette.json",
+    "candidateLabelCount": 221,
+    "templateCount": 2652,
+    "usesPaletteRgb": false,
+    "usesReferenceQuantities": false,
+    "fitSeconds": 0.7770692140329629,
+    "elapsedSecondsBeforeJsonOutput": 2.2133237819653004,
+    "wholeProcessWallSeconds": 2.36,
+    "wholeProcessPeakRssKiB": 173300,
+    "records": [
+      {
+        "cluster": 43,
+        "population": 2218,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A21",
+            "topCorrelation": 0.5938231348991394,
+            "differentLabelGap": 0.00019490718841552734,
+            "halfTopCodes": [
+              "A21",
+              "B11"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "A22",
+            "topCorrelation": 0.5963917374610901,
+            "differentLabelGap": 0.0009237527847290039,
+            "halfTopCodes": [
+              "A22",
+              "A11"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "A22",
+            "topCorrelation": 0.5963917374610901,
+            "differentLabelGap": 0.0009237527847290039,
+            "halfTopCodes": [
+              "A22",
+              "A11"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 53,
+        "population": 2202,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A24",
+            "topCorrelation": 0.5189307332038879,
+            "differentLabelGap": 8.71419906616211e-05,
+            "halfTopCodes": [
+              "D26",
+              "A24"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "A20",
+            "topCorrelation": 0.5214345455169678,
+            "differentLabelGap": 0.0006276965141296387,
+            "halfTopCodes": [
+              "D26",
+              "A22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "M8",
+            "topCorrelation": 0.5228095650672913,
+            "differentLabelGap": 0.0011265873908996582,
+            "halfTopCodes": [
+              "D26",
+              "M5"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 4,
+        "population": 2107,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D11",
+            "topCorrelation": 0.35000917315483093,
+            "differentLabelGap": 0.0012427866458892822,
+            "halfTopCodes": [
+              "D11",
+              "A16"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "A11",
+            "topCorrelation": 0.3575056791305542,
+            "differentLabelGap": 0.00365602970123291,
+            "halfTopCodes": [
+              "A11",
+              "A11"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "M6",
+            "topCorrelation": 0.3704977035522461,
+            "differentLabelGap": 0.003404170274734497,
+            "halfTopCodes": [
+              "H19",
+              "M6"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 0,
+        "population": 1728,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A6",
+            "topCorrelation": 0.41255536675453186,
+            "differentLabelGap": 0.008806496858596802,
+            "halfTopCodes": [
+              "A6",
+              "A6"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "A6",
+            "topCorrelation": 0.41255536675453186,
+            "differentLabelGap": 0.00043970346450805664,
+            "halfTopCodes": [
+              "A6",
+              "G8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "A6",
+            "topCorrelation": 0.41255536675453186,
+            "differentLabelGap": 0.00043970346450805664,
+            "halfTopCodes": [
+              "A6",
+              "G8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 46,
+        "population": 1679,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "C22",
+            "topCorrelation": 0.595320463180542,
+            "differentLabelGap": 0.00344163179397583,
+            "halfTopCodes": [
+              "C22",
+              "A19"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "C22",
+            "topCorrelation": 0.595320463180542,
+            "differentLabelGap": 0.0027022361755371094,
+            "halfTopCodes": [
+              "H8",
+              "A26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "C22",
+            "topCorrelation": 0.595320463180542,
+            "differentLabelGap": 0.0027022361755371094,
+            "halfTopCodes": [
+              "H8",
+              "A26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 54,
+        "population": 1676,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A6",
+            "topCorrelation": 0.4164449870586395,
+            "differentLabelGap": 0.0026325583457946777,
+            "halfTopCodes": [
+              "C8",
+              "A6"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "M8",
+            "topCorrelation": 0.4233162999153137,
+            "differentLabelGap": 0.0011744797229766846,
+            "halfTopCodes": [
+              "G9",
+              "A8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "M8",
+            "topCorrelation": 0.4233162999153137,
+            "differentLabelGap": 0.0011744797229766846,
+            "halfTopCodes": [
+              "G9",
+              "A8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 45,
+        "population": 1636,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A6",
+            "topCorrelation": 0.3838602602481842,
+            "differentLabelGap": 0.006030023097991943,
+            "halfTopCodes": [
+              "A6",
+              "A6"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "A8",
+            "topCorrelation": 0.38787731528282166,
+            "differentLabelGap": 0.0017709136009216309,
+            "halfTopCodes": [
+              "A4",
+              "A8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "A8",
+            "topCorrelation": 0.38787731528282166,
+            "differentLabelGap": 0.0017709136009216309,
+            "halfTopCodes": [
+              "A4",
+              "A8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 30,
+        "population": 1589,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D26",
+            "topCorrelation": 0.41296884417533875,
+            "differentLabelGap": 0.0013903677463531494,
+            "halfTopCodes": [
+              "D22",
+              "D26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H20",
+            "topCorrelation": 0.4150526821613312,
+            "differentLabelGap": 0.0015614330768585205,
+            "halfTopCodes": [
+              "D22",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "H20",
+            "topCorrelation": 0.4150526821613312,
+            "differentLabelGap": 0.0015614330768585205,
+            "halfTopCodes": [
+              "D22",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 47,
+        "population": 1442,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "C11",
+            "topCorrelation": 0.43990930914878845,
+            "differentLabelGap": 0.006482452154159546,
+            "halfTopCodes": [
+              "C4",
+              "C11"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "G11",
+            "topCorrelation": 0.4409394860267639,
+            "differentLabelGap": 0.0010301768779754639,
+            "halfTopCodes": [
+              "G4",
+              "C11"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "H6",
+            "topCorrelation": 0.4481619894504547,
+            "differentLabelGap": 0.0018140673637390137,
+            "halfTopCodes": [
+              "H6",
+              "C11"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 39,
+        "population": 1234,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A12",
+            "topCorrelation": 0.3516485095024109,
+            "differentLabelGap": 0.0019117295742034912,
+            "halfTopCodes": [
+              "B2",
+              "D22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "M4",
+            "topCorrelation": 0.3581807613372803,
+            "differentLabelGap": 0.0007843673229217529,
+            "halfTopCodes": [
+              "G1",
+              "H22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "M4",
+            "topCorrelation": 0.3581807613372803,
+            "differentLabelGap": 0.0006677806377410889,
+            "halfTopCodes": [
+              "B1",
+              "H22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 22,
+        "population": 1162,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "B22",
+            "topCorrelation": 0.49954384565353394,
+            "differentLabelGap": 0.0005735456943511963,
+            "halfTopCodes": [
+              "B2",
+              "A21"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "M2",
+            "topCorrelation": 0.5062578320503235,
+            "differentLabelGap": 0.0018194913864135742,
+            "halfTopCodes": [
+              "M2",
+              "A22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "A3",
+            "topCorrelation": 0.5131281018257141,
+            "differentLabelGap": 0.0011496543884277344,
+            "halfTopCodes": [
+              "H1",
+              "A22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 2,
+        "population": 1008,
+        "sampledCells": 48,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "B8",
+            "topCorrelation": 0.4384980797767639,
+            "differentLabelGap": 0.0064765214920043945,
+            "halfTopCodes": [
+              "C22",
+              "B8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "B8",
+            "topCorrelation": 0.4384980797767639,
+            "differentLabelGap": 0.004949212074279785,
+            "halfTopCodes": [
+              "C22",
+              "B8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "B8",
+            "topCorrelation": 0.4384980797767639,
+            "differentLabelGap": 0.004949212074279785,
+            "halfTopCodes": [
+              "C22",
+              "B8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      }
+    ],
+    "acceptedForUsage": false,
+    "note": "Single Linux diagnostic run, only 12 groups of 48 cells are matched against labels, not all geometric cells individually. The body clustering/legend stages are included in whole-process metrics. Templates are streamed and existing font files reused; no production assets or code added."
+  },
+  "finitePalettePositiveControls": {
+    "records": [
+      {
+        "nominalPixelsPerCell": 5.1,
+        "result": "/tmp/pindou-issue8-v06/finite-controls/result-5.1.json",
+        "metrics": [
+          {
+            "variant": "full221-ordinary",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C2",
+              "H7"
+            ],
+            "correctAndHalvesAgree": [
+              "C2"
+            ]
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C17",
+              "C2"
+            ],
+            "correctAndHalvesAgree": []
+          }
+        ]
+      },
+      {
+        "nominalPixelsPerCell": 10.2,
+        "result": "/tmp/pindou-issue8-v06/finite-controls/result-10.2.json",
+        "metrics": [
+          {
+            "variant": "full221-ordinary",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C12",
+              "C16",
+              "C29",
+              "H2",
+              "H7"
+            ],
+            "correctAndHalvesAgree": [
+              "C29",
+              "H2",
+              "H7"
+            ]
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C17",
+              "C19",
+              "C29"
+            ],
+            "correctAndHalvesAgree": [
+              "C17",
+              "C29"
+            ]
+          }
+        ]
+      }
+    ],
+    "acceptedForUsage": false,
+    "note": "148-cell development original resized, with known same-code cell groups supplied only to make an optimistic word-matching diagnostic. Neither automatic grouping nor full-diagram counting is tested. Not new samples, not acceptance; poor performance limits this method, not all possible algorithms."
+  },
+  "displayPaletteAgreement": {
+    "purpose": "Read-only agreement diagnostic; display RGB not accepted as a colour-code/count truth",
+    "anchorCount": 64,
+    "candidateLabelCount": 221,
+    "directMedianRgbDistance": 24.534469494854985,
+    "directP90RgbDistance": 52.807980362847935,
+    "heldOutAffineMedianRgbDistance": 21.85728767188717,
+    "heldOutAffineP90RgbDistance": 48.26536404187452,
+    "acceptedForUsage": false,
+    "directNearestCorrect": 28,
+    "leaveOneCodeOutNearestCorrect": 29,
+    "nearestDiagnosticNote": "Matches of 64 clear, already decoded legend swatches against all 221 display-reference RGB entries. This measures palette/rendering disagreement, not body sampling accuracy. Affine fit excludes the target code before ranking all 221.",
+    "result": "/tmp/pindou-issue8-v06/palette-agreement.json",
+    "examples": [
+      {
+        "code": "A12",
+        "paletteRgb": [
+          253.0,
+          162.0,
+          118.0
+        ],
+        "imageSwatchRgb": [
+          254.0,
+          191.0,
+          164.0
+        ],
+        "directRgbDistance": 54.38749856354859,
+        "leaveOneCodeOutAffineError": 44.43733748111302,
+        "directNearestCode": "F16",
+        "leaveOneCodeOutNearestCode": "F16"
+      },
+      {
+        "code": "B7",
+        "paletteRgb": [
+          63.0,
+          174.0,
+          124.0
+        ],
+        "imageSwatchRgb": [
+          5.0,
+          162.0,
+          132.0
+        ],
+        "directRgbDistance": 59.76621118993574,
+        "leaveOneCodeOutAffineError": 65.01370681083272,
+        "directNearestCode": "C19",
+        "leaveOneCodeOutNearestCode": "C19"
+      },
+      {
+        "code": "C17",
+        "paletteRgb": [
+          2.0,
+          209.0,
+          243.0
+        ],
+        "imageSwatchRgb": [
+          101.0,
+          215.0,
+          239.0
+        ],
+        "directRgbDistance": 99.2622788374315,
+        "leaveOneCodeOutAffineError": 92.41211002569132,
+        "directNearestCode": "C24",
+        "leaveOneCodeOutNearestCode": "C4"
+      }
+    ],
+    "recheckScript": "/tmp/pindou-issue8-v06/check_palette_agreement.py"
+  },
+  "fixedWordWidthDiagnostic": {
+    "script": "/tmp/pindou-issue8-v06/fixed_word_width_probe.py",
+    "result": "/tmp/pindou-issue8-v06/fixed-word-width.json",
+    "basis": "The independent 148 original has roughly fixed code width; three-character print is shorter in height than two-character print. This corrects the prior fixed-point-size template assumption.",
+    "candidateLabelCount": 221,
+    "wordAdvanceWidthFraction": 0.72,
+    "templateCount": 1326,
+    "fitSeconds": 0.5014097490347922,
+    "wholeProcessWallSeconds": 2.11,
+    "wholeProcessPeakRssKiB": 173848,
+    "records": [
+      {
+        "cluster": 43,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A21",
+            "differentLabelGap": 0.0036073923110961914,
+            "halfTopCodes": [
+              "A21",
+              "B22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H11",
+            "differentLabelGap": 0.002361297607421875,
+            "halfTopCodes": [
+              "H21",
+              "M12"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "H11",
+            "differentLabelGap": 0.002361297607421875,
+            "halfTopCodes": [
+              "H21",
+              "M12"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 53,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D26",
+            "differentLabelGap": 0.001132369041442871,
+            "halfTopCodes": [
+              "D26",
+              "D22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "G21",
+            "differentLabelGap": 0.0039220452308654785,
+            "halfTopCodes": [
+              "G11",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "C26",
+            "differentLabelGap": 0.004862070083618164,
+            "halfTopCodes": [
+              "C26",
+              "A26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 4,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D11",
+            "differentLabelGap": 0.0027429163455963135,
+            "halfTopCodes": [
+              "D11",
+              "D22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H11",
+            "differentLabelGap": 0.0012150704860687256,
+            "halfTopCodes": [
+              "M11",
+              "H11"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "M6",
+            "differentLabelGap": 0.0003738701343536377,
+            "halfTopCodes": [
+              "D26",
+              "C26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 0,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D26",
+            "differentLabelGap": 0.001669377088546753,
+            "halfTopCodes": [
+              "D11",
+              "D26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "D26",
+            "differentLabelGap": 0.001669377088546753,
+            "halfTopCodes": [
+              "D11",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "C26",
+            "differentLabelGap": 0.013000518083572388,
+            "halfTopCodes": [
+              "C26",
+              "C26"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 46,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "C22",
+            "differentLabelGap": 0.0016737580299377441,
+            "halfTopCodes": [
+              "C22",
+              "A6"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "M6",
+            "differentLabelGap": 0.000868678092956543,
+            "halfTopCodes": [
+              "H6",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "M6",
+            "differentLabelGap": 0.000868678092956543,
+            "halfTopCodes": [
+              "H6",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 54,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D26",
+            "differentLabelGap": 0.0060204267501831055,
+            "halfTopCodes": [
+              "D26",
+              "C20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H20",
+            "differentLabelGap": 0.01681169867515564,
+            "halfTopCodes": [
+              "H20",
+              "H20"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "C26",
+            "differentLabelGap": 0.003359496593475342,
+            "halfTopCodes": [
+              "C25",
+              "C26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 45,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D26",
+            "differentLabelGap": 0.003620445728302002,
+            "halfTopCodes": [
+              "A21",
+              "C20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H20",
+            "differentLabelGap": 0.004328280687332153,
+            "halfTopCodes": [
+              "A26",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "C26",
+            "differentLabelGap": 0.010942935943603516,
+            "halfTopCodes": [
+              "C26",
+              "C26"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 30,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D26",
+            "differentLabelGap": 0.0009045898914337158,
+            "halfTopCodes": [
+              "D22",
+              "D26"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H20",
+            "differentLabelGap": 0.0014926493167877197,
+            "halfTopCodes": [
+              "D22",
+              "H20"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "C26",
+            "differentLabelGap": 0.007645726203918457,
+            "halfTopCodes": [
+              "C26",
+              "C26"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 47,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "D11",
+            "differentLabelGap": 0.01121416687965393,
+            "halfTopCodes": [
+              "D11",
+              "D11"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H11",
+            "differentLabelGap": 0.004953920841217041,
+            "halfTopCodes": [
+              "H11",
+              "H11"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "H11",
+            "differentLabelGap": 0.004953920841217041,
+            "halfTopCodes": [
+              "H11",
+              "H11"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 39,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A21",
+            "differentLabelGap": 0.00768086314201355,
+            "halfTopCodes": [
+              "B27",
+              "A21"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H21",
+            "differentLabelGap": 0.001185685396194458,
+            "halfTopCodes": [
+              "A17",
+              "H22"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "G20",
+            "differentLabelGap": 0.005587756633758545,
+            "halfTopCodes": [
+              "G20",
+              "G20"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 22,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A21",
+            "differentLabelGap": 0.0033206045627593994,
+            "halfTopCodes": [
+              "A21",
+              "A21"
+            ],
+            "independentHalvesAgree": true,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H21",
+            "differentLabelGap": 0.006859719753265381,
+            "halfTopCodes": [
+              "H21",
+              "G21"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "G20",
+            "differentLabelGap": 0.0007062256336212158,
+            "halfTopCodes": [
+              "G20",
+              "G21"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      },
+      {
+        "cluster": 2,
+        "variants": [
+          {
+            "variant": "visible64-ordinary",
+            "topCode": "A6",
+            "differentLabelGap": 0.003496706485748291,
+            "halfTopCodes": [
+              "D22",
+              "A6"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-ordinary",
+            "topCode": "H20",
+            "differentLabelGap": 0.0017388761043548584,
+            "halfTopCodes": [
+              "H22",
+              "A8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "topCode": "H20",
+            "differentLabelGap": 0.0017388761043548584,
+            "halfTopCodes": [
+              "C22",
+              "A8"
+            ],
+            "independentHalvesAgree": false,
+            "acceptedForUsage": false
+          }
+        ]
+      }
+    ],
+    "positiveControls": [
+      {
+        "nominalPixelsPerCell": 5.1,
+        "metrics": [
+          {
+            "variant": "full221-ordinary",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C2",
+              "H2",
+              "H7"
+            ],
+            "correctAndHalvesAgree": [
+              "C2",
+              "H2",
+              "H7"
+            ]
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C16",
+              "C2",
+              "H2",
+              "H7"
+            ],
+            "correctAndHalvesAgree": [
+              "C2",
+              "H2",
+              "H7"
+            ]
+          }
+        ],
+        "result": "/tmp/pindou-issue8-v06/finite-controls/fixed-width-5.1.json"
+      },
+      {
+        "nominalPixelsPerCell": 10.2,
+        "metrics": [
+          {
+            "variant": "full221-ordinary",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C12",
+              "C16",
+              "C17",
+              "C19",
+              "C2",
+              "C29",
+              "H2",
+              "H7"
+            ],
+            "correctAndHalvesAgree": [
+              "C17",
+              "C2",
+              "C29",
+              "H2",
+              "H7"
+            ]
+          },
+          {
+            "variant": "full221-existingPixelFonts",
+            "expectedCodes": 9,
+            "topCodeMatches": [
+              "C12",
+              "C16",
+              "C17",
+              "C19",
+              "C2",
+              "C29",
+              "H2",
+              "H7"
+            ],
+            "correctAndHalvesAgree": [
+              "C17",
+              "C2",
+              "C29",
+              "H2",
+              "H7"
+            ]
+          }
+        ],
+        "result": "/tmp/pindou-issue8-v06/finite-controls/fixed-width-10.2.json"
+      }
+    ],
+    "acceptedForUsage": false,
+    "note": "No reliable target code/count recovered. Halves agreeing on a best code is insufficient without independent identity/coverage evidence. Controlled grouped-word diagnostics do not count as full diagram acceptance."
+  }
+}

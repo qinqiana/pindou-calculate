@@ -1,5 +1,6 @@
 import { PALETTE, COLOR_CODES, COLOR_SET, type Palette } from './catalog.ts'
 import { clone, DEFAULT_LOW_STOCK_PERCENT, MAX_QTY } from './numbers.ts'
+import { validStoredRecognition } from './provenance.ts'
 import type {
   ConfirmedUsage,
   DraftUsage,
@@ -91,6 +92,16 @@ function validUsageLine(value: unknown): value is UsageLine {
   return !!line && validColor(line.code) && nonNegativeInt(line.qty, MAX_QTY)
 }
 
+function validUsageLines(value: unknown): value is UsageLine[] {
+  if (!Array.isArray(value)) return false
+  const seen = new Set<string>()
+  for (const line of value) {
+    if (!validUsageLine(line) || seen.has(line.code)) return false
+    seen.add(line.code)
+  }
+  return true
+}
+
 function validOperation(value: unknown): value is Operation {
   const op = record(value)
   const types = new Set(['first-entry', 'count', 'restock', 'flag', 'make', 'void-make', 'settings', 'create-pattern', 'pattern-meta', 'confirm-usage', 'archive-pattern', 'restore'])
@@ -116,20 +127,24 @@ function validPattern(value: unknown): value is Pattern {
 
 function validConfirmedUsage(value: unknown): value is ConfirmedUsage {
   const usage = record(value)
-  return !!usage && text(usage.patternId, false) && nonNegativeInt(usage.version) && Array.isArray(usage.lines) && usage.lines.every(validUsageLine) && usage.inputMethod === 'manual' && text(usage.confirmedAt, false) && (usage.titleTotal === null || nonNegativeInt(usage.titleTotal, MAX_QTY)) && (usage.titleDiff === null || safeInt(usage.titleDiff)) && typeof usage.titleDiffAcknowledged === 'boolean' && Array.isArray(usage.rejectedItems) && usage.rejectedItems.every((item) => {
+  if (!usage || !text(usage.patternId, false) || !nonNegativeInt(usage.version) || !validUsageLines(usage.lines) || !text(usage.confirmedAt, false) || (usage.titleTotal !== null && !nonNegativeInt(usage.titleTotal, MAX_QTY)) || (usage.titleDiff !== null && !safeInt(usage.titleDiff)) || typeof usage.titleDiffAcknowledged !== 'boolean' || !Array.isArray(usage.rejectedItems)) return false
+  if (usage.rejectedItems.length > 512 || !usage.rejectedItems.every((item) => {
     const rejected = record(item)
-    return !!rejected && text(rejected.raw) && (rejected.qty === null || nonNegativeInt(rejected.qty, MAX_QTY)) && text(rejected.note)
-  })
+    return !!rejected && text(rejected.raw) && rejected.raw.length <= 1000 && (rejected.qty === null || nonNegativeInt(rejected.qty, MAX_QTY)) && text(rejected.note) && rejected.note.length <= 1000
+  })) return false
+  if (usage.inputMethod === 'manual') return usage.recognition === undefined || usage.recognition === null
+  if (usage.inputMethod !== 'legend' && usage.inputMethod !== 'grid' && usage.inputMethod !== 'assisted') return false
+  return !!usage.recognition && usage.recognition.source === usage.inputMethod && validStoredRecognition(usage.recognition, usage.lines, usage.titleTotal)
 }
 
 function validDraft(value: unknown): value is DraftUsage {
   const draft = record(value)
-  return !!draft && text(draft.patternId, false) && Array.isArray(draft.lines) && draft.lines.every(validUsageLine) && (draft.titleTotal === null || nonNegativeInt(draft.titleTotal, MAX_QTY))
+  return !!draft && text(draft.patternId, false) && validUsageLines(draft.lines) && (draft.titleTotal === null || nonNegativeInt(draft.titleTotal, MAX_QTY))
 }
 
 function validMake(value: unknown): value is MakeRecord {
   const make = record(value)
-  return !!make && text(make.id, false) && text(make.patternId, false) && nonNegativeInt(make.usageVersion) && text(make.nameSnapshot) && text(make.sourceNoteSnapshot) && Array.isArray(make.linesSnapshot) && make.linesSnapshot.every(validUsageLine) && text(make.completedAt, false) && typeof make.voided === 'boolean' && (make.voidedAt === null || text(make.voidedAt, false)) && text(make.requestId, false)
+  return !!make && text(make.id, false) && text(make.patternId, false) && nonNegativeInt(make.usageVersion) && text(make.nameSnapshot) && text(make.sourceNoteSnapshot) && validUsageLines(make.linesSnapshot) && text(make.completedAt, false) && typeof make.voided === 'boolean' && (make.voidedAt === null || text(make.voidedAt, false)) && text(make.requestId, false)
 }
 
 function validRequest(value: unknown): value is RequestRecord {
@@ -159,6 +174,14 @@ export function validateLedgerState(value: unknown): string | null {
   const patternIds = new Set((state.patterns as Pattern[]).map((p) => p.id))
   if (patternIds.size !== (state.patterns as Pattern[]).length) return '账本图纸标识重复'
   if ((state.confirmedUsages as ConfirmedUsage[]).some((u) => !patternIds.has(u.patternId)) || (state.drafts as DraftUsage[]).some((d) => !patternIds.has(d.patternId)) || (state.makes as MakeRecord[]).some((m) => !patternIds.has(m.patternId))) return '账本记录缺少图纸关联'
+  const usageKeys = new Set<string>()
+  for (const usage of state.confirmedUsages as ConfirmedUsage[]) {
+    const key = usage.patternId + '/' + usage.version
+    if (usage.version < 1 || usageKeys.has(key)) return '账本确认用量版次无效或重复'
+    usageKeys.add(key)
+  }
+  if ((state.patterns as Pattern[]).some(p => p.confirmedVersion !== null && !usageKeys.has(p.id + '/' + p.confirmedVersion))) return '图纸缺少当前确认用量'
+  if ((state.makes as MakeRecord[]).some(m => !usageKeys.has(m.patternId + '/' + m.usageVersion))) return '制作记录缺少当时确认用量'
 
   const operationIds = new Set((state.operations as Operation[]).map((o) => o.id))
   if (operationIds.size !== (state.operations as Operation[]).length) return '账本操作标识重复'

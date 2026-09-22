@@ -25,7 +25,7 @@
 
     <image v-if="previewSrc" class="preview" :src="previewSrc" mode="widthFix" />
 
-    <button class="btn primary" @click="save">保存图片</button>
+    <button class="btn primary" :disabled="saving" @click="save">{{ saving ? '正在保存…' : '保存图片' }}</button>
     <button class="btn ghost" @click="cancel">取消</button>
     <text v-if="message" class="msg">{{ message }}</text>
   </view>
@@ -33,11 +33,12 @@
 
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
+import { base64ToBytes } from '../../src/ledger/image'
 import { appLedger } from '../../src/platform/app-ledger'
 import { saveImageToGallery } from '../../src/platform/fs'
 import { previewShareDataUrl, shareContentFromPattern, shareDestPath } from '../../src/share/from-pattern'
-import { renderShareImage, SHARE_VARIANTS, SHARE_VARIANT_LABELS, type ShareContent, type ShareKind, type ShareVariant } from '../../src/share/templates'
+import { SHARE_VARIANTS, SHARE_VARIANT_LABELS, type ShareContent, type ShareKind, type ShareVariant } from '../../src/share/templates'
 
 const id = ref('')
 const name = ref('')
@@ -46,6 +47,7 @@ const variant = ref<ShareVariant>('classic')
 const variants = SHARE_VARIANTS
 const labels = SHARE_VARIANT_LABELS
 const message = ref('')
+const saving = ref(false)
 const previewSrc = ref('')
 let content: ShareContent = { patternName: '' }
 
@@ -76,11 +78,17 @@ onLoad((q: { id?: string }) => {
 })
 
 async function save() {
-  message.value = ''
-  const png = renderShareImage(kind.value, content, variant.value)
+  if (saving.value || !previewSrc.value) return
+  const preview = previewSrc.value
   const dest = shareDestPath(kind.value, variant.value)
-  const saved = await saveImageToGallery(dest, png)
-  message.value = saved.ok ? '图片已保存到系统相册（' + saved.value.path + '），未发布。' : saved.message + '，账本未改，可以重试。'
+  saving.value = true
+  message.value = ''
+  await nextTick()
+  try {
+    const png = base64ToBytes(preview.slice(preview.indexOf(',') + 1))
+    const saved = await saveImageToGallery(dest, png)
+    message.value = saved.ok ? '图片已保存到系统相册，未发布。' : saved.message + '，账本未改，可以重试。'
+  } finally { saving.value = false }
 }
 
 function cancel() {

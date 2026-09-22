@@ -1,0 +1,473 @@
+{
+  "stage": "done",
+  "results": [
+    {
+      "file": "S01.jpg",
+      "bytes": 662453,
+      "prepared": true,
+      "ms": 6530,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 2
+        },
+        "operationId": "op-1a0c7505b43-26a299f0ee884",
+        "patternId": "pattern-1a0c7505b43-b500596ba6c41"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 3
+        },
+        "operationId": "op-1a0c7505b70-7a536724e2cc9",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S02.jpg",
+      "bytes": 249377,
+      "prepared": true,
+      "ms": 5328,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 4
+        },
+        "operationId": "op-1a0c750863b-f8a3da343eb13",
+        "patternId": "pattern-1a0c750863b-310d3731df803"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 5
+        },
+        "operationId": "op-1a0c7508670-172b794243d2d",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S03.webp",
+      "bytes": 495322,
+      "prepared": true,
+      "ms": 5460,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 6
+        },
+        "operationId": "op-1a0c750b251-b2d351ae56737",
+        "patternId": "pattern-1a0c750b251-3e8a22e5a60b3"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 7
+        },
+        "operationId": "op-1a0c750b288-9b86b6e643c54",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S04.webp",
+      "bytes": 330198,
+      "prepared": true,
+      "ms": 4707,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 8
+        },
+        "operationId": "op-1a0c750d871-fd60bd265a9b5",
+        "patternId": "pattern-1a0c750d871-9d15f5eb968a7"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 9
+        },
+        "operationId": "op-1a0c750d8c0-f7913b21d640d",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S05.webp",
+      "bytes": 448512,
+      "prepared": true,
+      "ms": 4668,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 10
+        },
+        "operationId": "op-1a0c750fea9-ffdbae76cdbe3",
+        "patternId": "pattern-1a0c750fea9-0394aa665860f"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 11
+        },
+        "operationId": "op-1a0c750ff03-55283e38332cd",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S06.webp",
+      "bytes": 262888,
+      "prepared": true,
+      "ms": 4254,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 12
+        },
+        "operationId": "op-1a0c751219b-40fe2412c2adc",
+        "patternId": "pattern-1a0c751219b-bc5c64396e70c"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 13
+        },
+        "operationId": "op-1a0c75121ff-4bcd91266eaf4",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S07.webp",
+      "bytes": 294548,
+      "prepared": true,
+      "ms": 5210,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 14
+        },
+        "operationId": "op-1a0c7514beb-c85266db78ed4",
+        "patternId": "pattern-1a0c7514beb-c721e7dc478e"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 15
+        },
+        "operationId": "op-1a0c7514c59-4a6fffd541a37",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S08.webp",
+      "bytes": 306936,
+      "prepared": true,
+      "ms": 5245,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 16
+        },
+        "operationId": "op-1a0c75176ad-08197023906c9",
+        "patternId": "pattern-1a0c75176ac-2ef250a77d17e"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 17
+        },
+        "operationId": "op-1a0c7517731-05cbccc3af24c",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S09.webp",
+      "bytes": 201114,
+      "prepared": true,
+      "ms": 2721,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 18
+        },
+        "operationId": "op-1a0c7518db2-8d3b92c6ebf44",
+        "patternId": "pattern-1a0c7518db2-9ec813d70bd33"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 19
+        },
+        "operationId": "op-1a0c7518e2f-7bdb9a3c2743a",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S10.webp",
+      "bytes": 186860,
+      "prepared": true,
+      "ms": 2566,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 20
+        },
+        "operationId": "op-1a0c751a357-493f2591292eb",
+        "patternId": "pattern-1a0c751a357-f84cebf4e0d23"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 21
+        },
+        "operationId": "op-1a0c751a3e7-0aa8584c09a87",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S11.webp",
+      "bytes": 233570,
+      "prepared": true,
+      "ms": 3725,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 22
+        },
+        "operationId": "op-1a0c751c220-90e28419a3071",
+        "patternId": "pattern-1a0c751c220-b5d0712d36008"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 23
+        },
+        "operationId": "op-1a0c751c2bd-5e51dd64ec738",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S12.webp",
+      "bytes": 211040,
+      "prepared": true,
+      "ms": 3446,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 24
+        },
+        "operationId": "op-1a0c751dec9-e04b451ae5f17",
+        "patternId": "pattern-1a0c751dec9-ffe38066d06"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 25
+        },
+        "operationId": "op-1a0c751df73-3e2e0b1c46311",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S13.webp",
+      "bytes": 554616,
+      "prepared": true,
+      "ms": 4239,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 26
+        },
+        "operationId": "op-1a0c75201d0-f6ac594ab3722",
+        "patternId": "pattern-1a0c75201d0-934d08dbb77bc"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 27
+        },
+        "operationId": "op-1a0c7520287-4d6e14f21cdff",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S14.webp",
+      "bytes": 652624,
+      "prepared": true,
+      "ms": 3030,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 28
+        },
+        "operationId": "op-1a0c7521b7c-0f59fbc70d907",
+        "patternId": "pattern-1a0c7521b7c-fa01434362f9"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 29
+        },
+        "operationId": "op-1a0c7521c2a-c4bd7361e163",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S15.webp",
+      "bytes": 209232,
+      "prepared": true,
+      "ms": 5023,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 30
+        },
+        "operationId": "op-1a0c75243c8-d1c027b18fd7b",
+        "patternId": "pattern-1a0c75243c8-0e569f9b75b4f"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 31
+        },
+        "operationId": "op-1a0c7524482-4905df72fd2e1",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S16.jpg",
+      "bytes": 1622010,
+      "prepared": true,
+      "ms": 4993,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 32
+        },
+        "operationId": "op-1a0c7526dec-48e91b76730e7",
+        "patternId": "pattern-1a0c7526dec-ef16c575aa201"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 33
+        },
+        "operationId": "op-1a0c7526e9b-38d94f97cdded",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S17.jpg",
+      "bytes": 241096,
+      "prepared": true,
+      "ms": 5336,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 34
+        },
+        "operationId": "op-1a0c7529946-8afd5da762722",
+        "patternId": "pattern-1a0c7529946-a6a784c32ac81"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 35
+        },
+        "operationId": "op-1a0c7529a16-8f4ff77104247",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    },
+    {
+      "file": "S18.png",
+      "bytes": 3000021,
+      "prepared": true,
+      "ms": 2237,
+      "created": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 36
+        },
+        "operationId": "op-1a0c752ae76-c5f3af1efdf7e",
+        "patternId": "pattern-1a0c752ae76-66a02f8b85aef"
+      },
+      "confirmed": {
+        "ok": true,
+        "token": {
+          "epoch": 1,
+          "seq": 37
+        },
+        "operationId": "op-1a0c752af58-2d15c588d9aa7",
+        "version": 1,
+        "perColorSum": 63,
+        "difference": null
+      }
+    }
+  ]
+}

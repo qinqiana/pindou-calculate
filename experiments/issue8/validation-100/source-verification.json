@@ -1,0 +1,793 @@
+{
+  "inputVsPublicGrid": {
+    "purpose": "Source PNG vs public source-grid, independent of recognition; compare actual cells directly, no hashes",
+    "siteExportGeometry": {
+      "left": "from original SVG header (59 or 71)",
+      "top": 46,
+      "pitch": 24
+    },
+    "samples": [
+      {
+        "id": "M001",
+        "duplicates": [],
+        "referenceProductionCells": 2684,
+        "printedColorCount": 47,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M002",
+        "duplicates": [],
+        "referenceProductionCells": 6130,
+        "printedColorCount": 48,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M003",
+        "duplicates": [],
+        "referenceProductionCells": 996,
+        "printedColorCount": 10,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M004",
+        "duplicates": [],
+        "referenceProductionCells": 571,
+        "printedColorCount": 8,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M005",
+        "duplicates": [],
+        "referenceProductionCells": 1089,
+        "printedColorCount": 2,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M006",
+        "duplicates": [],
+        "referenceProductionCells": 2243,
+        "printedColorCount": 9,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M007",
+        "duplicates": [],
+        "referenceProductionCells": 1379,
+        "printedColorCount": 32,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M008",
+        "duplicates": [],
+        "referenceProductionCells": 3480,
+        "printedColorCount": 10,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M009",
+        "duplicates": [],
+        "referenceProductionCells": 1412,
+        "printedColorCount": 14,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M010",
+        "duplicates": [],
+        "referenceProductionCells": 365,
+        "printedColorCount": 3,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M011",
+        "duplicates": [],
+        "referenceProductionCells": 3136,
+        "printedColorCount": 9,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M012",
+        "duplicates": [],
+        "referenceProductionCells": 2323,
+        "printedColorCount": 20,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M013",
+        "duplicates": [],
+        "referenceProductionCells": 910,
+        "printedColorCount": 19,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M014",
+        "duplicates": [],
+        "referenceProductionCells": 35264,
+        "printedColorCount": 93,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M015",
+        "duplicates": [],
+        "referenceProductionCells": 3364,
+        "printedColorCount": 10,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M016",
+        "duplicates": [],
+        "referenceProductionCells": 1112,
+        "printedColorCount": 5,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M017",
+        "duplicates": [],
+        "referenceProductionCells": 2743,
+        "printedColorCount": 6,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M018",
+        "duplicates": [],
+        "referenceProductionCells": 869,
+        "printedColorCount": 9,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M019",
+        "duplicates": [],
+        "referenceProductionCells": 3008,
+        "printedColorCount": 9,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M020",
+        "duplicates": [],
+        "referenceProductionCells": 285,
+        "printedColorCount": 8,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M021",
+        "duplicates": [],
+        "referenceProductionCells": 30030,
+        "printedColorCount": 64,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M022",
+        "duplicates": [],
+        "referenceProductionCells": 491,
+        "printedColorCount": 4,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M023",
+        "duplicates": [],
+        "referenceProductionCells": 127,
+        "printedColorCount": 6,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M024",
+        "duplicates": [],
+        "referenceProductionCells": 168,
+        "printedColorCount": 6,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M025",
+        "duplicates": [],
+        "referenceProductionCells": 1065,
+        "printedColorCount": 24,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M026",
+        "duplicates": [],
+        "referenceProductionCells": 512,
+        "printedColorCount": 4,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M027",
+        "duplicates": [],
+        "referenceProductionCells": 974,
+        "printedColorCount": 7,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M028",
+        "duplicates": [],
+        "referenceProductionCells": 2107,
+        "printedColorCount": 27,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M029",
+        "duplicates": [],
+        "referenceProductionCells": 2124,
+        "printedColorCount": 30,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M030",
+        "duplicates": [],
+        "referenceProductionCells": 842,
+        "printedColorCount": 17,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M031",
+        "duplicates": [],
+        "referenceProductionCells": 771,
+        "printedColorCount": 11,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M032",
+        "duplicates": [],
+        "referenceProductionCells": 1615,
+        "printedColorCount": 11,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M033",
+        "duplicates": [],
+        "referenceProductionCells": 295,
+        "printedColorCount": 9,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M034",
+        "duplicates": [],
+        "referenceProductionCells": 1320,
+        "printedColorCount": 11,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M035",
+        "duplicates": [],
+        "referenceProductionCells": 866,
+        "printedColorCount": 7,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M036",
+        "duplicates": [],
+        "referenceProductionCells": 387,
+        "printedColorCount": 11,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M037",
+        "duplicates": [],
+        "referenceProductionCells": 373,
+        "printedColorCount": 13,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M038",
+        "duplicates": [],
+        "referenceProductionCells": 4096,
+        "printedColorCount": 17,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M039",
+        "duplicates": [],
+        "referenceProductionCells": 3364,
+        "printedColorCount": 15,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M040",
+        "duplicates": [],
+        "referenceProductionCells": 133,
+        "printedColorCount": 5,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M041",
+        "duplicates": [],
+        "referenceProductionCells": 282,
+        "printedColorCount": 6,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M042",
+        "duplicates": [],
+        "referenceProductionCells": 519,
+        "printedColorCount": 18,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M043",
+        "duplicates": [],
+        "referenceProductionCells": 1897,
+        "printedColorCount": 4,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M044",
+        "duplicates": [],
+        "referenceProductionCells": 117,
+        "printedColorCount": 8,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M046",
+        "duplicates": [],
+        "referenceProductionCells": 1095,
+        "printedColorCount": 13,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M047",
+        "duplicates": [],
+        "referenceProductionCells": 833,
+        "printedColorCount": 11,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M048",
+        "duplicates": [],
+        "referenceProductionCells": 285,
+        "printedColorCount": 8,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M049",
+        "duplicates": [],
+        "referenceProductionCells": 223,
+        "printedColorCount": 5,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M050",
+        "duplicates": [],
+        "referenceProductionCells": 115,
+        "printedColorCount": 1,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M051",
+        "duplicates": [],
+        "referenceProductionCells": 382,
+        "printedColorCount": 5,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M052",
+        "duplicates": [],
+        "referenceProductionCells": 397,
+        "printedColorCount": 3,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M053",
+        "duplicates": [],
+        "referenceProductionCells": 3216,
+        "printedColorCount": 29,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M055",
+        "duplicates": [],
+        "referenceProductionCells": 1502,
+        "printedColorCount": 8,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M056",
+        "duplicates": [],
+        "referenceProductionCells": 387,
+        "printedColorCount": 6,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M057",
+        "duplicates": [],
+        "referenceProductionCells": 297,
+        "printedColorCount": 5,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M058",
+        "duplicates": [],
+        "referenceProductionCells": 1024,
+        "printedColorCount": 2,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M059",
+        "duplicates": [],
+        "referenceProductionCells": 873,
+        "printedColorCount": 17,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "M060",
+        "duplicates": [],
+        "referenceProductionCells": 116,
+        "printedColorCount": 5,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "R001",
+        "duplicates": [],
+        "referenceProductionCells": 161,
+        "printedColorCount": 11,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      },
+      {
+        "id": "R002",
+        "duplicates": [],
+        "referenceProductionCells": 308,
+        "printedColorCount": 5,
+        "pixelMismatches": 0,
+        "mismatchExamples": []
+      }
+    ]
+  },
+  "previousSourceGridComparison": {
+    "method": "Compare original public cell arrays directly, without hashes or recognizer output.",
+    "previousGridsCompared": 31,
+    "samples": [
+      {
+        "id": "M001",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M002",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M003",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M004",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M005",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M006",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M007",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M008",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M009",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M010",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M011",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M012",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M013",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M014",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M015",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M016",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M017",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M018",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M019",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M020",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M021",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M022",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M023",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M024",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M025",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M026",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M027",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M028",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M029",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M030",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M031",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M032",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M033",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M034",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M035",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M036",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M037",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M038",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M039",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M040",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M041",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M042",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M043",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M044",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M046",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M047",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M048",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M049",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M050",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M051",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M052",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M053",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M055",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M056",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M057",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M058",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M059",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "M060",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "R001",
+        "matchesPriorSourceGrids": []
+      },
+      {
+        "id": "R002",
+        "matchesPriorSourceGrids": []
+      }
+    ]
+  },
+  "frozenCodeUnchanged": true,
+  "referenceReview": "Main agent viewed all charts/contact sheets and all non-BitBead printed legends; CSV rows compared to reference when available. No recognizer output used as truth.",
+  "exclusions": [
+    {
+      "id": "M045",
+      "duplicateOf": "M006",
+      "reason": "same portrait, brightness/color variant, visually checked before M045 inference result"
+    },
+    {
+      "id": "M054",
+      "duplicateOf": "M030",
+      "reason": "same crystal apple design, color variant, visually checked before M054 inference result"
+    },
+    {
+      "id": "L006",
+      "reason": "Already used in preceding first/dev trials, not new",
+      "replacementRequested": true
+    },
+    {
+      "id": "L022",
+      "duplicateOf": "L021",
+      "reason": "Same 福 coin design with slightly changed colors/counts, main visual review; excluded before reading this batch inference results",
+      "replacementRequested": true
+    }
+  ],
+  "referenceCorrections": [
+    {
+      "id": "L025",
+      "reason": "Main agent read original printed legend: F06=3 omitted in collector draft; source says 13 colors/277 beads, draft summed12/274",
+      "addExpected": {
+        "F6": 3
+      },
+      "addRawExpected": {
+        "F06": 3
+      },
+      "basis": "original printed diagram, not inference output"
+    },
+    {
+      "id": "L040",
+      "reason": "Main agent visually checked printed legend: final item is E14=728, not collector draft F14=728; checked before inspecting batch4 inference results",
+      "removeExpected": [
+        "F14"
+      ],
+      "removeRawExpected": [
+        "F14"
+      ],
+      "addExpected": {
+        "E14": 728
+      },
+      "addRawExpected": {
+        "E14": 728
+      },
+      "basis": "original printed legend, not inference output"
+    }
+  ]
+}

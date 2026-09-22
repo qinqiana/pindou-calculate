@@ -1,0 +1,36 @@
+{
+  "freeze": "v03-20260920",
+  "freshSequentialProcesses": true,
+  "trainingRunning": false,
+  "runs": [
+    {
+      "rssMiB": 215.7734375,
+      "algorithmSeconds": 1.223,
+      "processSeconds": 1.328
+    },
+    {
+      "rssMiB": 215.703125,
+      "algorithmSeconds": 1.179,
+      "processSeconds": 1.296
+    },
+    {
+      "rssMiB": 215.44140625,
+      "algorithmSeconds": 1.203,
+      "processSeconds": 1.321
+    }
+  ],
+  "medianRssMiB": 215.703125,
+  "medianAlgorithmSeconds": 1.203,
+  "runtime": {
+    "python": "3.12.3",
+    "pillow": "12.3.0",
+    "numpy": "2.5.2",
+    "opencv": "5.0.0",
+    "system": "Linux",
+    "machine": "aarch64",
+    "peakRssBytes": 225906688,
+    "glyphBytes": 190442
+  },
+  "sameNineCounts": true,
+  "scope": "Python process, not APK size or Android performance"
+}

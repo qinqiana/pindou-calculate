@@ -1,6 +1,13 @@
 import { base64ToBytes, bytesToBase64, pickThumbnail, sniffImage } from '../ledger/image.ts'
 import { MAX_IMAGE_PIXELS } from '../ledger/numbers.ts'
 
+// The picker retains its granted URI only for the lifetime of these original bytes.
+// Native decoders can read it directly without copying a Java byte[] through the JS bridge.
+const nativeSources = new WeakMap<Uint8Array, string>()
+export function rememberNativeImage(bytes: Uint8Array, uri: string): void {
+  nativeSources.set(bytes, uri)
+}
+
 /** Android codecs decode the complete original; only the small PNG crosses back to JS. */
 export const pickPlatformThumbnail: typeof pickThumbnail = (image, _thumbnailBytes) => {
   const android = (globalThis as { plus?: any }).plus?.android
@@ -13,22 +20,29 @@ export const pickPlatformThumbnail: typeof pickThumbnail = (image, _thumbnailByt
   }
   const call = (obj: any, method: string, ...args: any[]) => android.invoke(obj, method, ...args)
   let stream: any
+  let input: any
   try {
     const checked = sniffImage(image.bytes)
     if (!checked.ok) return checked
     image = checked.image
-    const data = call('android.util.Base64', 'decode', bytesToBase64(image.bytes), 2)
-    if (!data) throw new Error('无法读取原图字节，请重新选图')
-    const sdk = Number(android.getAttribute('android.os.Build$VERSION', 'SDK_INT'))
+    const sdk = Number(android.importClass('android.os.Build$VERSION').SDK_INT)
     if (!Number.isInteger(sdk) || sdk < 21) throw new Error('无法确认图片解码环境，请重启应用后重试')
+    const uri = nativeSources.get(image.bytes)
     let bitmap: any
-    if (sdk >= 28) {
-      const buffer = call('java.nio.ByteBuffer', 'wrap', data)
-      const source = call('android.graphics.ImageDecoder', 'createSource', buffer)
-      // No partial-image listener: damaged/incomplete decoding must fail.
-      bitmap = keep(call('android.graphics.ImageDecoder', 'decodeBitmap', source))
+    if (uri) {
+      const resolver = call(android.runtimeMainActivity(), 'getContentResolver')
+      const nativeUri = call('android.net.Uri', 'parse', uri)
+      if (sdk >= 28) bitmap = keep(call('android.graphics.ImageDecoder', 'decodeBitmap', call('android.graphics.ImageDecoder', 'createSource', resolver, nativeUri)))
+      else {
+        input = call(resolver, 'openInputStream', nativeUri)
+        bitmap = keep(call('android.graphics.BitmapFactory', 'decodeStream', input))
+      }
     } else {
-      bitmap = keep(call('android.graphics.BitmapFactory', 'decodeByteArray', data, 0, image.bytes.length))
+      const data = call('android.util.Base64', 'decode', bytesToBase64(image.bytes), 2)
+      if (!data) throw new Error('无法读取原图字节，请重新选图')
+      // No partial-image listener: damaged/incomplete decoding must fail.
+      if (sdk >= 28) bitmap = keep(call('android.graphics.ImageDecoder', 'decodeBitmap', call('android.graphics.ImageDecoder', 'createSource', call('java.nio.ByteBuffer', 'wrap', data))))
+      else bitmap = keep(call('android.graphics.BitmapFactory', 'decodeByteArray', data, 0, image.bytes.length))
     }
     const width = Number(call(bitmap, 'getWidth'))
     const height = Number(call(bitmap, 'getHeight'))
@@ -39,7 +53,7 @@ export const pickPlatformThumbnail: typeof pickThumbnail = (image, _thumbnailByt
     }
     const ratio = Math.min(1, 256 / Math.max(width, height))
     bitmap = keep(call('android.graphics.Bitmap', 'createScaledBitmap', bitmap, Math.max(1, Math.round(width * ratio)), Math.max(1, Math.round(height * ratio)), true))
-    const config = android.getAttribute('android.graphics.Bitmap$Config', 'ARGB_8888')
+    const config = android.importClass('android.graphics.Bitmap$Config').ARGB_8888
     // ImageDecoder may return a hardware bitmap; software Canvas needs a software copy.
     if (sdk >= 28) bitmap = keep(call(bitmap, 'copy', config, false))
     if (sdk < 28 && (image.orientation ?? 1) !== 1) {
@@ -59,7 +73,7 @@ export const pickPlatformThumbnail: typeof pickThumbnail = (image, _thumbnailByt
     call(canvas, 'drawColor', -1)
     call(canvas, 'drawBitmap', bitmap, 0.0, 0.0, null)
     stream = android.newObject('java.io.ByteArrayOutputStream')
-    const png = android.getAttribute('android.graphics.Bitmap$CompressFormat', 'PNG')
+    const png = android.importClass('android.graphics.Bitmap$CompressFormat').PNG
     if (call(target, 'compress', png, 100, stream) !== true) throw new Error('缩略图转换失败，请重试选图')
     const encoded = call('android.util.Base64', 'encodeToString', call(stream, 'toByteArray'), 2)
     if (typeof encoded !== 'string' || !encoded) throw new Error('缩略图转换失败，请重试选图')
@@ -75,6 +89,7 @@ export const pickPlatformThumbnail: typeof pickThumbnail = (image, _thumbnailByt
       try { call(bitmap, 'recycle') } catch { /* Preserve the original decode outcome. */ }
     }
     if (stream) { try { call(stream, 'close') } catch { /* No file was created. */ } }
+    if (input) { try { call(input, 'close') } catch { /* Preserve decode outcome. */ } }
   }
 }
 

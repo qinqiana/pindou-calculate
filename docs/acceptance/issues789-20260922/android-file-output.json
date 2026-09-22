@@ -1,0 +1,31 @@
+{
+  "date": "2026-09-22",
+  "device": "Xiaomi 14 Ultra / Android 15",
+  "ledger": "isolated acceptance ledger",
+  "publicBackup": {
+    "path": "/sdcard/Download/豆计/pindou-acceptance-789.json",
+    "bytes": 4585013,
+    "pulledAndParsed": true,
+    "formatVersion": 2,
+    "appVersion": "0.2.0",
+    "patterns": 22,
+    "seq": 42,
+    "epoch": 1,
+    "movements": 0,
+    "automaticConfirmedSum": 149,
+    "automaticCandidateSum": 148,
+    "automaticCandidateTitleTotal": null,
+    "systemPickerRestoreTested": false
+  },
+  "gallery": {
+    "saveCallbackOk": true,
+    "mediaStoreRowFound": true,
+    "mediaStoreId": 1000002749,
+    "displayName": "pindou-acceptance-789.png",
+    "relativePath": "DCIM/Camera/",
+    "width": 1080,
+    "height": 1440,
+    "template": "moments/classic",
+    "latestSavedPixelsVisuallyReviewed": false
+  }
+}

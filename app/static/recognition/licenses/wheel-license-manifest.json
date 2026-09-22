@@ -1,0 +1,110 @@
+[
+  {
+    "package": "numpy",
+    "version": "2.4.6",
+    "wheel": "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+    "official_wheel_url": "https://cdn.jsdelivr.net/pyodide/v314.0.7/full/numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+    "license_fields": {
+      "Name": [
+        "numpy"
+      ],
+      "Version": [
+        "2.4.6"
+      ],
+      "License-Expression": [
+        "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0"
+      ],
+      "License-File": [
+        "LICENSE.txt",
+        "numpy/_core/include/numpy/libdivide/LICENSE.txt",
+        "numpy/_core/src/common/pythoncapi-compat/COPYING",
+        "numpy/_core/src/highway/LICENSE",
+        "numpy/_core/src/multiarray/dragon4_LICENSE.txt",
+        "numpy/_core/src/npysort/x86-simd-sort/LICENSE.md",
+        "numpy/_core/src/umath/svml/LICENSE",
+        "numpy/fft/pocketfft/LICENSE.md",
+        "numpy/linalg/lapack_lite/LICENSE.txt",
+        "numpy/ma/LICENSE",
+        "numpy/random/LICENSE.md",
+        "numpy/random/src/distributions/LICENSE.md",
+        "numpy/random/src/mt19937/LICENSE.md",
+        "numpy/random/src/pcg64/LICENSE.md",
+        "numpy/random/src/philox/LICENSE.md",
+        "numpy/random/src/sfc64/LICENSE.md",
+        "numpy/random/src/splitmix64/LICENSE.md"
+      ]
+    },
+    "extracted_license_paths": [
+      "numpy-2.4.6.dist-info/licenses/LICENSE.txt",
+      "numpy-2.4.6.dist-info/licenses/numpy/_core/include/numpy/libdivide/LICENSE.txt",
+      "numpy-2.4.6.dist-info/licenses/numpy/_core/src/common/pythoncapi-compat/COPYING",
+      "numpy-2.4.6.dist-info/licenses/numpy/_core/src/highway/LICENSE",
+      "numpy-2.4.6.dist-info/licenses/numpy/_core/src/multiarray/dragon4_LICENSE.txt",
+      "numpy-2.4.6.dist-info/licenses/numpy/_core/src/npysort/x86-simd-sort/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/_core/src/umath/svml/LICENSE",
+      "numpy-2.4.6.dist-info/licenses/numpy/fft/pocketfft/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/linalg/lapack_lite/LICENSE.txt",
+      "numpy-2.4.6.dist-info/licenses/numpy/ma/LICENSE",
+      "numpy-2.4.6.dist-info/licenses/numpy/random/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/random/src/distributions/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/random/src/mt19937/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/random/src/pcg64/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/random/src/philox/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/random/src/sfc64/LICENSE.md",
+      "numpy-2.4.6.dist-info/licenses/numpy/random/src/splitmix64/LICENSE.md",
+      "numpy/_core/include/numpy/random/LICENSE.txt",
+      "numpy/ma/LICENSE",
+      "numpy/random/LICENSE.md"
+    ]
+  },
+  {
+    "package": "opencv-python",
+    "version": "4.11.0.86",
+    "wheel": "opencv_python-4.11.0.86-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+    "official_wheel_url": "https://cdn.jsdelivr.net/pyodide/v314.0.7/full/opencv_python-4.11.0.86-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+    "license_fields": {
+      "Name": [
+        "opencv-python"
+      ],
+      "Version": [
+        "4.11.0.86"
+      ],
+      "License": [
+        "Apache 2.0"
+      ],
+      "License-File": [
+        "LICENSE-3RD-PARTY.txt",
+        "LICENSE.txt"
+      ]
+    },
+    "extracted_license_paths": [
+      "cv2/LICENSE-3RD-PARTY.txt",
+      "cv2/LICENSE.txt",
+      "opencv_python-4.11.0.86.dist-info/LICENSE-3RD-PARTY.txt",
+      "opencv_python-4.11.0.86.dist-info/LICENSE.txt"
+    ]
+  },
+  {
+    "package": "Pillow",
+    "version": "12.2.0",
+    "wheel": "pillow-12.2.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+    "official_wheel_url": "https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pillow-12.2.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+    "license_fields": {
+      "Name": [
+        "pillow"
+      ],
+      "Version": [
+        "12.2.0"
+      ],
+      "License-Expression": [
+        "MIT-CMU"
+      ],
+      "License-File": [
+        "LICENSE"
+      ]
+    },
+    "extracted_license_paths": [
+      "pillow-12.2.0.dist-info/licenses/LICENSE"
+    ]
+  }
+]

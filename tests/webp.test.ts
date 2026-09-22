@@ -36,7 +36,8 @@ print(json.dumps(dict(width=w, height=h, png=base64.b64encode(out.getvalue()).de
     return JSON.parse(output.toString())
   }
   const android = {
-    getAttribute(_obj: string, name: string) { return name === 'SDK_INT' ? sdk : name },
+    // Native.js static fields live on imported classes, not getAttribute(className).
+    importClass(_name: string) { return { SDK_INT: sdk, ARGB_8888: 'ARGB_8888', PNG: 'PNG' } },
     newObject(name: string, target?: any) { return { name, target } },
     invoke(obj: any, method: string, ...args: any[]): any {
       calls.push(method)
@@ -66,7 +67,7 @@ async function withAndroid<T>(android: any, fn: () => T | Promise<T>): Promise<T
   try { return await fn() } finally { if (previous === undefined) delete g.plus; else g.plus = previous }
 }
 
-test('18 real originals → full decode → manual confirmation → restart → share → v1 restore', async () => {
+test('18 real originals → full decode → manual confirmation → restart → share → v2 restore', async () => {
   assert.equal(samples.length, 18)
   assert.equal(samples.filter(p => p.endsWith('.webp')).length, 13)
   const dir = mkdtempSync(join(tmpdir(), 'pindou-webp-'))
@@ -101,7 +102,7 @@ test('18 real originals → full decode → manual confirmation → restart → 
       const first = ledger.listPatterns()[0]
       assert.ok(ledger.make('make', first.id, ledger.token()).ok)
       const backup = ledger.exportBackup()
-      assert.equal(backup.formatVersion, 1)
+      assert.equal(backup.formatVersion, 2)
       assert.doesNotMatch(JSON.stringify(backup), /"(?:imageBytes|bytes|preview|original|path)":/)
       ledger = new Ledger(openNodeStore(join(dir, 'ledger.json')), undefined, pickPlatformThumbnail)
       assert.deepEqual(ledger.listPatterns(), backup.patterns)

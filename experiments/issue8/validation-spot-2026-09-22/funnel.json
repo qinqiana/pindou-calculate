@@ -1,0 +1,740 @@
+{
+  "counts": {
+    "download-failed": 43,
+    "accepted": 100,
+    "duplicate-or-recolor": 2,
+    "svg-download-failed": 1
+  },
+  "examined": [
+    {
+      "site": "石弦",
+      "key": "sx-1170",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-598",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1459",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "f44ca36b-a218-4c73-b1f9-d78f7fec8dde",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-2011",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1591",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1691",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-562",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1907",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1174",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1879",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1407",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-908",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-642",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1891",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1627",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1443",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1283",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1391",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-892",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1735",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1259",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1247",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-782",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-529",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "5f48fd7a-adfa-491d-a54a-c6968406deae",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1899",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1003",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "b75b6987-d251-45ce-a4fa-2db6334325ca",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1739",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-694",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1799",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "c4f2a88d-3763-4d9c-9ece-57e9c8b65145",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "275ca2e6-6121-4d6b-91b3-23af370710d7",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1751",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-2015",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "19f91fdb-9825-480b-be0f-ded39adb3899",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1743",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "7e8e52c4-bc0f-4cbc-b686-67eeae5adcbe",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1251",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-726",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "27219da1-a862-4d70-a437-af3786906ab8",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-541",
+      "reason": "download-failed"
+    },
+    {
+      "site": "BitBead",
+      "key": "21f6b401-090a-416c-93e7-a942f6d67899",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-606",
+      "reason": "download-failed"
+    },
+    {
+      "site": "BitBead",
+      "key": "274fcf9c-36c7-5829-b7a2-4aebc384c546",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-802",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1507",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1115",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "597c913b-fe78-4eae-8a3d-64bf3a010d98",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1871",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1119",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1723",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-770",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1190",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1455",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "19ce3fd6-b648-4a22-aae0-18936aa8cc19",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1839",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1631",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-864",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1111",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1091",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-718",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1599",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-610",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "01768195-659f-48b9-9e04-089be2bb1024",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1015",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-594",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-698",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1267",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1767",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-549",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1263",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1639",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1527",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1331",
+      "reason": "download-failed"
+    },
+    {
+      "site": "BitBead",
+      "key": "125a57d0-1abc-43c7-bc05-f7c7d330d910",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-945",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1149",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "2a9b1029-212e-4aea-8816-d489938f4024",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-754",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1475",
+      "reason": "duplicate-or-recolor"
+    },
+    {
+      "site": "BitBead",
+      "key": "fa1387c3-80ba-495f-8ee3-41c24a4181da",
+      "reason": "svg-download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1275",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1863",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-936",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-852",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-558",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-818",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1795",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-650",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1027",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1951",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1075",
+      "reason": "download-failed"
+    },
+    {
+      "site": "BitBead",
+      "key": "f68bfebf-1f22-4032-9997-3f72a7fa636b",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1007",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1471",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1887",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-916",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1327",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-525",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-995",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "13be92bc-eb17-50bd-a8c0-2f42e3fb25a2",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1055",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-618",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-578",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-904",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1755",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1271",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1563",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-714",
+      "reason": "download-failed"
+    },
+    {
+      "site": "BitBead",
+      "key": "00000000-0000-4000-8000-000000000024",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-614",
+      "reason": "duplicate-or-recolor"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-762",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "f15da121-a497-4ffb-b0a7-08b2433c73bd",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-658",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1667",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1063",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-662",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1775",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-834",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-666",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-912",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "d06e73c1-6355-4dc0-a984-2b9b14e3b7db",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "52429fa5-ca98-4437-a6b7-aee9a8ec1d89",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1311",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "ef806242-e043-4b6d-8280-921d4261ede7",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1875",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1503",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "79e9a2e6-a8f7-42b2-9759-71fd8da10854",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-626",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-570",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1831",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1807",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1287",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-2035",
+      "reason": "accepted"
+    },
+    {
+      "site": "BitBead",
+      "key": "af947e3c-bcd4-4967-b218-d85a67499bfd",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-924",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-798",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-706",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1131",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1099",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-690",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-1611",
+      "reason": "download-failed"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-766",
+      "reason": "accepted"
+    },
+    {
+      "site": "石弦",
+      "key": "sx-638",
+      "reason": "accepted"
+    }
+  ]
+}

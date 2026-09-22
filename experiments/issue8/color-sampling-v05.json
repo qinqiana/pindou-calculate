@@ -1,0 +1,1864 @@
+{
+  "date": "2026-09-20",
+  "sample": "S03",
+  "image": "参考样例/参考图纸/1789460416312_afb8306d-128b-44ba-895c-778e5132756e_1833367752401994129_1080x1421.webp",
+  "stage": "failed exploratory colour sampling; not production recognition",
+  "inputToProbe": "original image only; auto-read labels and swatch colours from the same image; no reference quantities, sample IDs or official/community RGB mapping used by the probe",
+  "evaluationAfterProbe": "64 visible legend entries from independently read references-v05.json; code must be present before applying max(3,10%) tolerance; not a complete reference",
+  "geometryWarning": "208x208 is an automatic geometry hypothesis, not confirmed bead count; 43264 is not the title total 43116 and cannot be substituted for it",
+  "allMethodsPassed": false,
+  "acceptedForUsage": false,
+  "methods": [
+    {
+      "method": "std",
+      "description": "整格 RGB 中位数",
+      "script": "/tmp/pindou-issue8-v05/color_census_probe.py",
+      "rawResult": "/tmp/pindou-issue8-v05/old3/S03-colors-std.json",
+      "bodyRegion": [
+        10,
+        67,
+        1060,
+        1060
+      ],
+      "axes": [
+        {
+          "estimatedPitch": 5.094192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        },
+        {
+          "estimatedPitch": 5.095192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        }
+      ],
+      "sampledCells": 43264,
+      "mappedCells": 4417,
+      "unresolvedCells": 38847,
+      "counts": {
+        "A12": 16,
+        "A14": 1,
+        "A21": 3,
+        "B10": 15,
+        "B19": 20,
+        "B20": 18,
+        "B22": 23,
+        "B24": 21,
+        "B25": 3,
+        "B27": 7,
+        "B28": 1,
+        "B31": 27,
+        "B5": 2,
+        "C10": 97,
+        "C12": 2,
+        "C13": 2,
+        "C15": 88,
+        "C16": 52,
+        "C17": 4,
+        "C18": 317,
+        "C19": 151,
+        "C20": 25,
+        "C22": 30,
+        "C23": 10,
+        "C25": 15,
+        "C26": 6,
+        "C29": 216,
+        "C3": 6,
+        "D11": 11,
+        "D12": 2,
+        "D17": 16,
+        "D19": 2833,
+        "D2": 8,
+        "D22": 1,
+        "D9": 2,
+        "E1": 344,
+        "E2": 22
+      },
+      "visibleReferenceItems": 64,
+      "visibleItemsPresentAndWithinTolerance": 2,
+      "comparison": {
+        "A6": {
+          "expected": 50,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A7": {
+          "expected": 1,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A12": {
+          "expected": 5,
+          "actual": 16,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A14": {
+          "expected": 24,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A16": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A19": {
+          "expected": 2,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A21": {
+          "expected": 892,
+          "actual": 3,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A24": {
+          "expected": 10,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B2": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B5": {
+          "expected": 9,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B6": {
+          "expected": 5,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B7": {
+          "expected": 824,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B8": {
+          "expected": 1,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B9": {
+          "expected": 149,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B10": {
+          "expected": 280,
+          "actual": 15,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B11": {
+          "expected": 10,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B12": {
+          "expected": 43,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B19": {
+          "expected": 73,
+          "actual": 20,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B20": {
+          "expected": 91,
+          "actual": 18,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B21": {
+          "expected": 49,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B22": {
+          "expected": 65,
+          "actual": 23,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B24": {
+          "expected": 743,
+          "actual": 21,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B25": {
+          "expected": 10,
+          "actual": 3,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B27": {
+          "expected": 4,
+          "actual": 7,
+          "present": true,
+          "withinTolerance": true
+        },
+        "B28": {
+          "expected": 68,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B31": {
+          "expected": 3,
+          "actual": 27,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C1": {
+          "expected": 64,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C2": {
+          "expected": 569,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C3": {
+          "expected": 270,
+          "actual": 6,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C4": {
+          "expected": 23,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C8": {
+          "expected": 706,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C10": {
+          "expected": 63,
+          "actual": 97,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C11": {
+          "expected": 1658,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C12": {
+          "expected": 200,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C13": {
+          "expected": 94,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C15": {
+          "expected": 2829,
+          "actual": 88,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C16": {
+          "expected": 2086,
+          "actual": 52,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C17": {
+          "expected": 749,
+          "actual": 4,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C18": {
+          "expected": 124,
+          "actual": 317,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C19": {
+          "expected": 2718,
+          "actual": 151,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C20": {
+          "expected": 505,
+          "actual": 25,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C21": {
+          "expected": 29,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C22": {
+          "expected": 429,
+          "actual": 30,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C23": {
+          "expected": 156,
+          "actual": 10,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C25": {
+          "expected": 157,
+          "actual": 15,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C26": {
+          "expected": 109,
+          "actual": 6,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C27": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C29": {
+          "expected": 2024,
+          "actual": 216,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D2": {
+          "expected": 10,
+          "actual": 8,
+          "present": true,
+          "withinTolerance": true
+        },
+        "D4": {
+          "expected": 331,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D5": {
+          "expected": 5,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D9": {
+          "expected": 6,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D10": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D11": {
+          "expected": 117,
+          "actual": 11,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D12": {
+          "expected": 226,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D16": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D17": {
+          "expected": 6,
+          "actual": 16,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D18": {
+          "expected": 24,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D19": {
+          "expected": 4931,
+          "actual": 2833,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D22": {
+          "expected": 31,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D24": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D26": {
+          "expected": 275,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "E1": {
+          "expected": 155,
+          "actual": 344,
+          "present": true,
+          "withinTolerance": false
+        },
+        "E2": {
+          "expected": 4,
+          "actual": 22,
+          "present": true,
+          "withinTolerance": false
+        }
+      },
+      "acceptedForUsage": false
+    },
+    {
+      "method": "chroma",
+      "description": "每格高色度像素",
+      "script": "/tmp/pindou-issue8-v05/color_census_chroma.py",
+      "rawResult": "/tmp/pindou-issue8-v05/old3/S03-colors-chroma.json",
+      "bodyRegion": [
+        10,
+        67,
+        1060,
+        1060
+      ],
+      "axes": [
+        {
+          "estimatedPitch": 5.094192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        },
+        {
+          "estimatedPitch": 5.095192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        }
+      ],
+      "sampledCells": 43264,
+      "mappedCells": 7271,
+      "unresolvedCells": 35993,
+      "counts": {
+        "A12": 85,
+        "A14": 7,
+        "A21": 87,
+        "A24": 36,
+        "A6": 2,
+        "B10": 70,
+        "B12": 2,
+        "B19": 99,
+        "B20": 50,
+        "B21": 2,
+        "B22": 190,
+        "B24": 103,
+        "B25": 15,
+        "B27": 24,
+        "B28": 11,
+        "B31": 28,
+        "B7": 64,
+        "B9": 22,
+        "C1": 12,
+        "C10": 151,
+        "C11": 18,
+        "C12": 71,
+        "C13": 5,
+        "C15": 577,
+        "C16": 477,
+        "C17": 91,
+        "C18": 368,
+        "C19": 783,
+        "C2": 23,
+        "C20": 120,
+        "C21": 10,
+        "C22": 238,
+        "C23": 16,
+        "C25": 104,
+        "C26": 18,
+        "C27": 11,
+        "C29": 709,
+        "C3": 9,
+        "C4": 5,
+        "C8": 5,
+        "D10": 2,
+        "D11": 96,
+        "D12": 15,
+        "D17": 63,
+        "D18": 2,
+        "D19": 1635,
+        "D2": 20,
+        "D26": 2,
+        "D4": 4,
+        "D9": 30,
+        "E1": 615,
+        "E2": 69
+      },
+      "visibleReferenceItems": 64,
+      "visibleItemsPresentAndWithinTolerance": 0,
+      "comparison": {
+        "A6": {
+          "expected": 50,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A7": {
+          "expected": 1,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A12": {
+          "expected": 5,
+          "actual": 85,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A14": {
+          "expected": 24,
+          "actual": 7,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A16": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A19": {
+          "expected": 2,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A21": {
+          "expected": 892,
+          "actual": 87,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A24": {
+          "expected": 10,
+          "actual": 36,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B2": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B5": {
+          "expected": 9,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B6": {
+          "expected": 5,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B7": {
+          "expected": 824,
+          "actual": 64,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B8": {
+          "expected": 1,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B9": {
+          "expected": 149,
+          "actual": 22,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B10": {
+          "expected": 280,
+          "actual": 70,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B11": {
+          "expected": 10,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B12": {
+          "expected": 43,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B19": {
+          "expected": 73,
+          "actual": 99,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B20": {
+          "expected": 91,
+          "actual": 50,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B21": {
+          "expected": 49,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B22": {
+          "expected": 65,
+          "actual": 190,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B24": {
+          "expected": 743,
+          "actual": 103,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B25": {
+          "expected": 10,
+          "actual": 15,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B27": {
+          "expected": 4,
+          "actual": 24,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B28": {
+          "expected": 68,
+          "actual": 11,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B31": {
+          "expected": 3,
+          "actual": 28,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C1": {
+          "expected": 64,
+          "actual": 12,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C2": {
+          "expected": 569,
+          "actual": 23,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C3": {
+          "expected": 270,
+          "actual": 9,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C4": {
+          "expected": 23,
+          "actual": 5,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C8": {
+          "expected": 706,
+          "actual": 5,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C10": {
+          "expected": 63,
+          "actual": 151,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C11": {
+          "expected": 1658,
+          "actual": 18,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C12": {
+          "expected": 200,
+          "actual": 71,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C13": {
+          "expected": 94,
+          "actual": 5,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C15": {
+          "expected": 2829,
+          "actual": 577,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C16": {
+          "expected": 2086,
+          "actual": 477,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C17": {
+          "expected": 749,
+          "actual": 91,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C18": {
+          "expected": 124,
+          "actual": 368,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C19": {
+          "expected": 2718,
+          "actual": 783,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C20": {
+          "expected": 505,
+          "actual": 120,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C21": {
+          "expected": 29,
+          "actual": 10,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C22": {
+          "expected": 429,
+          "actual": 238,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C23": {
+          "expected": 156,
+          "actual": 16,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C25": {
+          "expected": 157,
+          "actual": 104,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C26": {
+          "expected": 109,
+          "actual": 18,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C27": {
+          "expected": 37,
+          "actual": 11,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C29": {
+          "expected": 2024,
+          "actual": 709,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D2": {
+          "expected": 10,
+          "actual": 20,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D4": {
+          "expected": 331,
+          "actual": 4,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D5": {
+          "expected": 5,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D9": {
+          "expected": 6,
+          "actual": 30,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D10": {
+          "expected": 15,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D11": {
+          "expected": 117,
+          "actual": 96,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D12": {
+          "expected": 226,
+          "actual": 15,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D16": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D17": {
+          "expected": 6,
+          "actual": 63,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D18": {
+          "expected": 24,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D19": {
+          "expected": 4931,
+          "actual": 1635,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D22": {
+          "expected": 31,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D24": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D26": {
+          "expected": 275,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "E1": {
+          "expected": 155,
+          "actual": 615,
+          "present": true,
+          "withinTolerance": false
+        },
+        "E2": {
+          "expected": 4,
+          "actual": 69,
+          "present": true,
+          "withinTolerance": false
+        }
+      },
+      "acceptedForUsage": false
+    },
+    {
+      "method": "phase",
+      "description": "全图色度最高的三个采样相位",
+      "script": "/tmp/pindou-issue8-v05/color_census_phase.py",
+      "rawResult": "/tmp/pindou-issue8-v05/old3/S03-colors-phase.json",
+      "bodyRegion": [
+        10,
+        67,
+        1060,
+        1060
+      ],
+      "axes": [
+        {
+          "estimatedPitch": 5.094192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        },
+        {
+          "estimatedPitch": 5.095192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        }
+      ],
+      "sampledCells": 43264,
+      "mappedCells": 1297,
+      "unresolvedCells": 41967,
+      "counts": {
+        "A12": 18,
+        "A19": 21,
+        "A24": 2,
+        "B10": 4,
+        "B19": 5,
+        "B20": 1,
+        "B25": 75,
+        "B27": 146,
+        "B31": 1,
+        "B7": 9,
+        "C1": 1,
+        "C10": 76,
+        "C15": 420,
+        "C17": 26,
+        "C18": 96,
+        "C19": 315,
+        "C20": 3,
+        "C21": 1,
+        "C22": 30,
+        "C26": 2,
+        "C27": 4,
+        "C4": 14,
+        "D11": 2,
+        "D12": 11,
+        "D19": 8,
+        "D24": 1,
+        "E1": 5
+      },
+      "visibleReferenceItems": 64,
+      "visibleItemsPresentAndWithinTolerance": 1,
+      "comparison": {
+        "A6": {
+          "expected": 50,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A7": {
+          "expected": 1,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A12": {
+          "expected": 5,
+          "actual": 18,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A14": {
+          "expected": 24,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A16": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A19": {
+          "expected": 2,
+          "actual": 21,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A21": {
+          "expected": 892,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "A24": {
+          "expected": 10,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B2": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B5": {
+          "expected": 9,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B6": {
+          "expected": 5,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B7": {
+          "expected": 824,
+          "actual": 9,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B8": {
+          "expected": 1,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B9": {
+          "expected": 149,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B10": {
+          "expected": 280,
+          "actual": 4,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B11": {
+          "expected": 10,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B12": {
+          "expected": 43,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B19": {
+          "expected": 73,
+          "actual": 5,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B20": {
+          "expected": 91,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B21": {
+          "expected": 49,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B22": {
+          "expected": 65,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B24": {
+          "expected": 743,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B25": {
+          "expected": 10,
+          "actual": 75,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B27": {
+          "expected": 4,
+          "actual": 146,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B28": {
+          "expected": 68,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B31": {
+          "expected": 3,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": true
+        },
+        "C1": {
+          "expected": 64,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C2": {
+          "expected": 569,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C3": {
+          "expected": 270,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C4": {
+          "expected": 23,
+          "actual": 14,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C8": {
+          "expected": 706,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C10": {
+          "expected": 63,
+          "actual": 76,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C11": {
+          "expected": 1658,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C12": {
+          "expected": 200,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C13": {
+          "expected": 94,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C15": {
+          "expected": 2829,
+          "actual": 420,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C16": {
+          "expected": 2086,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C17": {
+          "expected": 749,
+          "actual": 26,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C18": {
+          "expected": 124,
+          "actual": 96,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C19": {
+          "expected": 2718,
+          "actual": 315,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C20": {
+          "expected": 505,
+          "actual": 3,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C21": {
+          "expected": 29,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C22": {
+          "expected": 429,
+          "actual": 30,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C23": {
+          "expected": 156,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C25": {
+          "expected": 157,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C26": {
+          "expected": 109,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C27": {
+          "expected": 37,
+          "actual": 4,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C29": {
+          "expected": 2024,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D2": {
+          "expected": 10,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D4": {
+          "expected": 331,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D5": {
+          "expected": 5,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D9": {
+          "expected": 6,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D10": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D11": {
+          "expected": 117,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D12": {
+          "expected": 226,
+          "actual": 11,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D16": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D17": {
+          "expected": 6,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D18": {
+          "expected": 24,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D19": {
+          "expected": 4931,
+          "actual": 8,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D22": {
+          "expected": 31,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D24": {
+          "expected": 15,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D26": {
+          "expected": 275,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "E1": {
+          "expected": 155,
+          "actual": 5,
+          "present": true,
+          "withinTolerance": false
+        },
+        "E2": {
+          "expected": 4,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        }
+      },
+      "acceptedForUsage": false
+    },
+    {
+      "method": "mixing",
+      "description": "中位数加黑白混色拟合",
+      "script": "/tmp/pindou-issue8-v05/color_census_mixing.py",
+      "rawResult": "/tmp/pindou-issue8-v05/old3/S03-colors-mixing.json",
+      "bodyRegion": [
+        10,
+        67,
+        1060,
+        1060
+      ],
+      "axes": [
+        {
+          "estimatedPitch": 5.094192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        },
+        {
+          "estimatedPitch": 5.095192307692324,
+          "count": 208,
+          "fittedPitch": 5.096153846153846
+        }
+      ],
+      "sampledCells": 43264,
+      "mappedCells": 19524,
+      "unresolvedCells": 23740,
+      "counts": {
+        "A12": 622,
+        "A14": 9,
+        "A16": 84,
+        "A19": 290,
+        "A21": 681,
+        "A24": 159,
+        "A6": 7,
+        "A7": 3,
+        "B10": 108,
+        "B11": 8,
+        "B12": 212,
+        "B19": 6,
+        "B20": 83,
+        "B21": 95,
+        "B22": 120,
+        "B24": 352,
+        "B25": 95,
+        "B27": 21,
+        "B28": 36,
+        "B31": 6,
+        "B5": 18,
+        "B6": 17,
+        "B7": 31,
+        "B8": 6,
+        "B9": 54,
+        "C1": 163,
+        "C10": 41,
+        "C12": 126,
+        "C13": 35,
+        "C15": 3340,
+        "C16": 32,
+        "C17": 161,
+        "C18": 1678,
+        "C19": 1232,
+        "C2": 51,
+        "C20": 20,
+        "C21": 31,
+        "C22": 275,
+        "C23": 30,
+        "C25": 88,
+        "C26": 30,
+        "C27": 245,
+        "C29": 555,
+        "C3": 47,
+        "C4": 44,
+        "C8": 161,
+        "D10": 79,
+        "D11": 14,
+        "D12": 93,
+        "D17": 79,
+        "D18": 4,
+        "D19": 5768,
+        "D2": 177,
+        "D22": 1,
+        "D24": 5,
+        "D26": 160,
+        "D4": 171,
+        "D5": 26,
+        "D9": 2,
+        "E1": 1270,
+        "E2": 167
+      },
+      "visibleReferenceItems": 64,
+      "visibleItemsPresentAndWithinTolerance": 5,
+      "comparison": {
+        "A6": {
+          "expected": 50,
+          "actual": 7,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A7": {
+          "expected": 1,
+          "actual": 3,
+          "present": true,
+          "withinTolerance": true
+        },
+        "A12": {
+          "expected": 5,
+          "actual": 622,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A14": {
+          "expected": 24,
+          "actual": 9,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A16": {
+          "expected": 37,
+          "actual": 84,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A19": {
+          "expected": 2,
+          "actual": 290,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A21": {
+          "expected": 892,
+          "actual": 681,
+          "present": true,
+          "withinTolerance": false
+        },
+        "A24": {
+          "expected": 10,
+          "actual": 159,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B2": {
+          "expected": 37,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "B5": {
+          "expected": 9,
+          "actual": 18,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B6": {
+          "expected": 5,
+          "actual": 17,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B7": {
+          "expected": 824,
+          "actual": 31,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B8": {
+          "expected": 1,
+          "actual": 6,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B9": {
+          "expected": 149,
+          "actual": 54,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B10": {
+          "expected": 280,
+          "actual": 108,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B11": {
+          "expected": 10,
+          "actual": 8,
+          "present": true,
+          "withinTolerance": true
+        },
+        "B12": {
+          "expected": 43,
+          "actual": 212,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B19": {
+          "expected": 73,
+          "actual": 6,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B20": {
+          "expected": 91,
+          "actual": 83,
+          "present": true,
+          "withinTolerance": true
+        },
+        "B21": {
+          "expected": 49,
+          "actual": 95,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B22": {
+          "expected": 65,
+          "actual": 120,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B24": {
+          "expected": 743,
+          "actual": 352,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B25": {
+          "expected": 10,
+          "actual": 95,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B27": {
+          "expected": 4,
+          "actual": 21,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B28": {
+          "expected": 68,
+          "actual": 36,
+          "present": true,
+          "withinTolerance": false
+        },
+        "B31": {
+          "expected": 3,
+          "actual": 6,
+          "present": true,
+          "withinTolerance": true
+        },
+        "C1": {
+          "expected": 64,
+          "actual": 163,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C2": {
+          "expected": 569,
+          "actual": 51,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C3": {
+          "expected": 270,
+          "actual": 47,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C4": {
+          "expected": 23,
+          "actual": 44,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C8": {
+          "expected": 706,
+          "actual": 161,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C10": {
+          "expected": 63,
+          "actual": 41,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C11": {
+          "expected": 1658,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "C12": {
+          "expected": 200,
+          "actual": 126,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C13": {
+          "expected": 94,
+          "actual": 35,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C15": {
+          "expected": 2829,
+          "actual": 3340,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C16": {
+          "expected": 2086,
+          "actual": 32,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C17": {
+          "expected": 749,
+          "actual": 161,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C18": {
+          "expected": 124,
+          "actual": 1678,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C19": {
+          "expected": 2718,
+          "actual": 1232,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C20": {
+          "expected": 505,
+          "actual": 20,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C21": {
+          "expected": 29,
+          "actual": 31,
+          "present": true,
+          "withinTolerance": true
+        },
+        "C22": {
+          "expected": 429,
+          "actual": 275,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C23": {
+          "expected": 156,
+          "actual": 30,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C25": {
+          "expected": 157,
+          "actual": 88,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C26": {
+          "expected": 109,
+          "actual": 30,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C27": {
+          "expected": 37,
+          "actual": 245,
+          "present": true,
+          "withinTolerance": false
+        },
+        "C29": {
+          "expected": 2024,
+          "actual": 555,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D2": {
+          "expected": 10,
+          "actual": 177,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D4": {
+          "expected": 331,
+          "actual": 171,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D5": {
+          "expected": 5,
+          "actual": 26,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D9": {
+          "expected": 6,
+          "actual": 2,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D10": {
+          "expected": 15,
+          "actual": 79,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D11": {
+          "expected": 117,
+          "actual": 14,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D12": {
+          "expected": 226,
+          "actual": 93,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D16": {
+          "expected": 15,
+          "actual": null,
+          "present": false,
+          "withinTolerance": false
+        },
+        "D17": {
+          "expected": 6,
+          "actual": 79,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D18": {
+          "expected": 24,
+          "actual": 4,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D19": {
+          "expected": 4931,
+          "actual": 5768,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D22": {
+          "expected": 31,
+          "actual": 1,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D24": {
+          "expected": 15,
+          "actual": 5,
+          "present": true,
+          "withinTolerance": false
+        },
+        "D26": {
+          "expected": 275,
+          "actual": 160,
+          "present": true,
+          "withinTolerance": false
+        },
+        "E1": {
+          "expected": 155,
+          "actual": 1270,
+          "present": true,
+          "withinTolerance": false
+        },
+        "E2": {
+          "expected": 4,
+          "actual": 167,
+          "present": true,
+          "withinTolerance": false
+        }
+      },
+      "acceptedForUsage": false
+    }
+  ],
+  "excludedExploration": "The earlier S03-color-census.json used a false y period near 4.655. The separate s03-colors/ agent probe had hand-entered labels/counts and is not automatic-recognition evidence. Quantized unresolved colour bins are omitted; they are not valid colours or bead quantities.",
+  "conclusion": "Sampling is possible. None of these variants separates the screenshot colours reliably enough; keep the independently read legend candidates and unresolved content visible. No sampled count was merged into recognize.py results."
+}

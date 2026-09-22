@@ -12,8 +12,11 @@ import numpy as np
 from PIL import Image, ImageOps
 
 from generate_glyphs import feature
+from layout_legend import crop_rgb, recognize_layout, make_preview
+from glyph_model import GlyphModel, SmallGlyphModel
+from grid_legend import refine_from_grid, refine_edge_codes, count_grid, find_grid_axes
 
-VERSION = 'pixel-glyph-0.1'
+VERSION = 'pixel-glyph-0.8-dev'
 PARAMETERS = {
     'glyph_error': .36, 'glyph_margin': .04, 'ink_contrast': 65,
     'shape_weight': .18, 'hole_weight': .15, 'grid_preview': 2000,
@@ -31,7 +34,6 @@ def color_codes():
 
 class GlyphReader:
     def __init__(self):
-        self.alpha = None
         source = json.loads(Path(__file__).with_name('glyphs.json').read_text())
         self.chars, shapes, ratios, holes = [], [], [], []
         for char, ratio, hole_count, encoded in source['templates']:
@@ -62,13 +64,14 @@ class GlyphReader:
                 'alternative': ranked[1][0],
                 'reliable': error <= PARAMETERS['glyph_error'] and margin >= PARAMETERS['glyph_margin']}
 
-    def read(self, rgb, region, pad_fraction, min_letter_height):
+    def read(self, image, region, pad_fraction, min_letter_height):
         x, y, w, h = region
+        rgb, transparent = crop_rgb(image, region)
         px, py = max(2, round(w * pad_fraction[0])), max(2, round(h * pad_fraction[1]))
-        tile = rgb[y+py:y+h-py, x+px:x+w-px]
+        tile = rgb[py:h-py, px:w-px]
         if not tile.size:
             return {'text': '', 'reliable': False, 'characters': [], 'blank': False}
-        background = np.median(tile.reshape(-1, 3), axis=0)
+        background = np.median(tile.reshape(-1, 3), axis=0).astype('float32')
         difference = np.max(abs(tile.astype('float32') - background), axis=2)
         mask = (difference > PARAMETERS['ink_contrast']).astype('uint8')
         _, labels, stats, _ = cv2.connectedComponentsWithStats(mask)
@@ -89,9 +92,12 @@ class GlyphReader:
             chars.append(match)
         # Read text broadly; verify empty background farther from cell-edge shadows.
         bx, by = max(2, round(w*.20)), max(2, round(h*.20))
-        blank_tile = rgb[y+by:y+h-by, x+bx:x+w-bx]
+        blank_tile = rgb[by:h-by, bx:w-bx]
         blank = not chars and not mask.any() and blank_tile.size > 0 and blank_texture(blank_tile)
-        if blank and self.alpha is not None and np.any(self.alpha[y:y+h, x:x+w] != 255):
+        if blank and np.ptp(blank_tile.reshape(-1, 3), axis=0).max() < 5:
+            # A plain center cannot hide faint content elsewhere in the reading area.
+            blank = np.ptp(tile.reshape(-1, 3), axis=0).max() < 5
+        if blank and transparent:
             blank = False  # Transparency alone cannot establish a non-production cell.
         return {'text': ''.join(c['char'] for c in chars),
                 'reliable': bool(chars) and all(c['reliable'] for c in chars),
@@ -117,25 +123,38 @@ def blank_texture(tile):
                for stripe in [u[:, 0], v[0]])
 
 
-def legend_boxes(rgb):
-    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
-    contours, _ = cv2.findContours(cv2.Canny(gray, 5, 15), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+def legend_boxes(image):
+    # Overlapping strips preserve original text geometry without full-image Canny buffers.
     boxes = []
-    for contour in contours:
-        x, y, w, h = cv2.boundingRect(contour)
-        if not (3 < w / h < 12 and w > rgb.shape[1] * .02 and h > 10):
-            continue
-        if cv2.contourArea(contour) < w * h * .85:
-            continue
-        box = [x, y, w, h]
-        if not any(max(abs(a-b) for a, b in zip(box, other)) <= 3 for other in boxes):
-            boxes.append(box)
-    return sorted(boxes, key=lambda b: (b[1] // 5, b[0]))
+    strip_height = min(image.height, max(32, min(512, 2_000_000//image.width)))
+    stride = max(1, strip_height//2)
+    for top in range(0, image.height, stride):
+        height = min(strip_height, image.height-top)
+        rgb, _ = crop_rgb(image, [0, top, image.width, height])
+        gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+        del rgb
+        contours, _ = cv2.findContours(cv2.Canny(gray, 5, 15), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        for contour in contours:
+            x, y, w, h = cv2.boundingRect(contour)
+            if (y <= 1 and top > 0) or (y+h >= height-1 and top+height < image.height):
+                continue
+            if not (3 < w/h < 12 and w > image.width*.02 and h > 10):
+                continue
+            if cv2.contourArea(contour) < w*h*.85:
+                continue
+            box = [x, top+y, w, h]
+            if not any(max(abs(a-b) for a, b in zip(box, other)) <= 3 for other in boxes):
+                boxes.append(box)
+        if top+height >= image.height:
+            break
+    return sorted(boxes, key=lambda b: (b[1]//5, b[0]))
 
 
-def axis_lines(edges, axis):
+def axis_lines(edges, axis, kernel_length=None):
     length = edges.shape[1-axis]
     kernel = (1, max(20, edges.shape[0]//8)) if axis == 0 else (max(20, edges.shape[1]//8), 1)
+    if kernel_length is not None:
+        kernel = (1, kernel_length) if axis == 0 else (kernel_length, 1)
     mask = cv2.morphologyEx(edges, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT, kernel))
     power = (mask > 0).sum(axis=axis)
     ids = np.flatnonzero(power > power.max() * .12)
@@ -171,13 +190,13 @@ def axis_lines(edges, axis):
     return {'start': float(start), 'end': float(end), 'step': float(step)}
 
 
-def grid_result(rgb, reader, allowed):
-    h, w = rgb.shape[:2]
-    small = Image.fromarray(rgb)
-    small.thumbnail((PARAMETERS['grid_preview'], PARAMETERS['grid_preview']), Image.Resampling.BICUBIC)
-    preview = np.asarray(small)
-    edges = np.maximum.reduce([cv2.Canny(preview[:, :, c], 5, 15) for c in range(3)])
+def grid_result(image, preview, reader, allowed):
+    w, h = image.size
+    edges = cv2.Canny(preview[:, :, 0], 5, 15)
+    for channel in (1, 2):
+        np.maximum(edges, cv2.Canny(preview[:, :, channel], 5, 15), out=edges)
     axes = [axis_lines(edges, i) for i in (0, 1)]
+    del edges
     failed = {'complete': False, 'counts': {}, 'cells': [], 'unknownCells': None,
               'reason': '网格或完整边界未可靠定位'}
     if any(a is None for a in axes):
@@ -199,7 +218,7 @@ def grid_result(rgb, reader, allowed):
         ex, ey = round(x['start']+(c+1)*x['step']), round(y['start']+(r+1)*y['step'])
         return [max(0, sx), max(0, sy), min(w, ex)-max(0, sx), min(h, ey)-max(0, sy)]
     def read(r, c, frame=False):
-        return reader.read(rgb, box(r, c), (.04, .08) if frame else (.10, .15), .18)
+        return reader.read(image, box(r, c), (.04, .08) if frame else (.10, .15), .18)
     for side in [[(0, c, c) for c in range(1, cols-1)],
                  [(rows-1, c, c) for c in range(1, cols-1)],
                  [(r, 0, r) for r in range(1, rows-1)],
@@ -236,12 +255,27 @@ def normalize_code(text, allowed):
     return code if code in allowed else None
 
 
+def grid_candidates(grid):
+    evidence, by_code = [], {}
+    for cell in grid['cells']:
+        key = f"cell-{cell['row']}-{cell['column']}"
+        evidence.append({'id': key, 'source': 'grid', **cell})
+        if cell['code']:
+            by_code.setdefault(cell['code'], []).append(key)
+    candidates = [{'code': code, 'quantity': quantity, 'source': 'grid',
+                   'evidenceIds': by_code[code]}
+                  for code, quantity in sorted(grid['counts'].items())]
+    return candidates, evidence
+
+
 def recognize(path):
     started = time.perf_counter()
     result = {'algorithm': VERSION, 'parameters': PARAMETERS, 'status': 'failed',
               'source': None, 'candidates': [], 'evidence': [], 'doubts': [],
               'total': None, 'titleTotal': None, 'manualInput': False,
               'brandVerification': 'not-verified'}
+    image = None
+    original = None
     try:
         path = Path(path)
         if path.stat().st_size > 20*1024*1024:
@@ -255,34 +289,23 @@ def recognize(path):
             if getattr(original, 'n_frames', 1) != 1:
                 raise ValueError('不支持动画图纸')
             original.verify()
-        with Image.open(path) as original:
-            orientation = original.getexif().get(274, 1)
-            original.load()
-            oriented = ImageOps.exif_transpose(original) if orientation != 1 else original
-            alpha = None
-            if 'A' in oriented.getbands() or 'transparency' in oriented.info:
-                rgba = oriented if oriented.mode == 'RGBA' else oriented.convert('RGBA')
-                channel = rgba.getchannel('A')
-                if channel.getextrema() != (255, 255):
-                    alpha = np.asarray(channel)
-                    image = Image.new('RGB', rgba.size, 'white')
-                    image.paste(rgba, mask=channel)
-                else:
-                    image = oriented.convert('RGB')
-                del rgba, channel
-            else:
-                image = oriented.convert('RGB')
-        rgb = np.asarray(image)
-        image.close()  # NumPy's buffer is independent; release the full-size Pillow raster.
-        result['image'] = {'format': fmt, 'width': image.width, 'height': image.height,
+        original = Image.open(path)
+        orientation = original.getexif().get(274, 1)
+        original.load()
+        image = ImageOps.exif_transpose(original) if orientation != 1 else original
+        if image is not original:
+            original.close()
+        width, height = image.size
+        preview = make_preview(image, PARAMETERS['grid_preview'])
+        result['image'] = {'format': fmt, 'width': width, 'height': height,
                            'sourceOrientation': orientation, 'coordinates': 'display-oriented-original'}
         reader, allowed = GlyphReader(), color_codes()
-        reader.alpha = alpha
-        boxes = legend_boxes(rgb)
+        boxes = legend_boxes(image)
         if len(boxes) > PARAMETERS['max_legend_boxes']:
             raise ValueError('图例候选过多，本版无法可靠处理')
+        invalid_number_regions = []
         for i, region in enumerate(boxes):
-            item = reader.read(rgb, region, (.012, .08), .28)
+            item = reader.read(image, region, (.012, .08), .28)
             evidence = {'id': f'legend-{i}', 'source': 'legend', 'rawText': item['text'],
                         'region': region, 'characters': item['characters'], 'score': None}
             result['evidence'].append(evidence)
@@ -290,7 +313,12 @@ def recognize(path):
             code = normalize_code(match[1], allowed) if match else None
             valid_quantity = bool(match and re.fullmatch(r'[0-9]+', match[2]))
             quantity = int(match[2]) if valid_quantity else None
-            clipped = region[0] <= 1 or region[1] <= 1 or region[0]+region[2] >= image.width-1 or region[1]+region[3] >= image.height-1
+            # A merged pair of digits can be the old template reader's low-score
+            # "minus"; only positively read punctuation blocks the newer reader.
+            if match and code and re.search(r'[-.]', match[2]) and any(
+                    c['char'] in '-.' and c['reliable'] for c in item['characters']):
+                invalid_number_regions.append((code, region))
+            clipped = region[0] <= 1 or region[1] <= 1 or region[0]+region[2] >= width-1 or region[1]+region[3] >= height-1
             if item['reliable'] and code and quantity is not None and quantity <= 1_000_000_000 and not clipped:
                 result['candidates'].append({'code': code, 'quantity': quantity,
                                              'source': 'legend', 'evidenceIds': [evidence['id']]})
@@ -303,7 +331,8 @@ def recognize(path):
         for code in sorted(duplicates):
             result['doubts'].append({'reason': '不同位置出现重复色号，未自动累加', 'code': code})
         result['candidates'] = [c for c in result['candidates'] if c['code'] not in duplicates]
-        grid = grid_result(rgb, reader, allowed)
+        rejected_legend = bool(result['doubts'])
+        grid = grid_result(image, preview, reader, allowed)
         result['grid'] = grid
         legend = {c['code']: c['quantity'] for c in result['candidates']}
         if legend:
@@ -316,25 +345,105 @@ def recognize(path):
                                          'gridReason': grid['reason'], 'gridCounts': grid['counts']})
         elif not boxes and grid['complete'] and grid['counts']:
             result['source'], result['status'] = 'grid', 'ready'
-            for code, quantity in sorted(grid['counts'].items()):
-                ids = []
-                for cell in grid['cells']:
-                    if cell['code'] == code:
-                        key = f"cell-{cell['row']}-{cell['column']}"
-                        ids.append(key)
-                        result['evidence'].append({'id': key, 'source': 'grid', **cell})
-                result['candidates'].append({'code': code, 'quantity': quantity, 'source': 'grid', 'evidenceIds': ids})
+            result['candidates'], evidence = grid_candidates(grid)
+            result['evidence'].extend(evidence)
         else:
             result['doubts'].append({'reason': '未取得可靠逐色用量', 'gridReason': grid['reason']})
+        if result['status'] != 'ready':
+            model = GlyphModel()
+            axes = find_grid_axes(preview, axis_lines)
+            layout = recognize_layout(image, preview, model, axes)
+            if axes is not None and any(it['tinyPrint'] for it in layout['items']):
+                refine_from_grid(image,preview,layout,SmallGlyphModel(model),axes,allowed)
+            if axes is not None:
+                refine_edge_codes(image, preview, layout, model, axes)
+            new_candidates, new_evidence, new_doubts = [], [], []
+            for i, item in enumerate(layout['items']):
+                key = f'layout-{i}'
+                new_evidence.append({'id': key, 'source': 'legend', 'rawText': item['code']['rawText'] +
+                                     (' / '+item['quantity']['rawText'] if item['quantity'] else ''), **item})
+                code = normalize_code(item['codeText'], allowed)
+                text = item['quantityText']
+                confidence = min(item['code'].get('interpretation',{}).get('score',item['code']['score']),
+                                 item['quantity'].get('interpretation',{}).get('score',item['quantity']['score']) if item['quantity'] else 1)
+                if item.get('gridVerification',{}).get('verifiedCode'):
+                    confidence = item['quantity'].get('interpretation',{}).get('score',0) if item['quantity'] else confidence
+                bx,by,bw,bh = item['region']
+                invalid_number = any(code == bad_code and
+                    max(0,min(bx+bw,rx+rw)-max(bx,rx))*max(0,min(by+bh,ry+rh)-max(by,ry)) > min(bw*bh,rw*rh)*.5
+                    for bad_code,(rx,ry,rw,rh) in invalid_number_regions)
+                if invalid_number or not code or not text or not re.fullmatch(r'[0-9]+', text) or confidence <= .35 or int(text) > 1_000_000_000:
+                    new_doubts.append({'reason': '图例字段未可靠读清，未记为零', 'evidenceId': key,
+                                       'region': item['region'], 'rawText': item['code']['rawText']})
+                    continue
+                new_candidates.append({'code': code, 'quantity': int(text), 'source': 'legend',
+                                       'evidenceIds': [key]})
+                verification = item.get('gridVerification', {})
+                if verification and verification['originalCode'] != code:
+                    new_doubts.append({'reason': '小字候选由同图重复格内文字或字形交叉解释，保留原文供核对',
+                                       'evidenceId': key, 'originalCode': verification['originalCode'], 'candidateCode': code})
+                if item.get('sameFontVerification'):
+                    new_doubts.append({'reason': '弱字段参考同图清楚字形解释，保留原文及对照位置供核对',
+                                       'evidenceId': key, **item['sameFontVerification']})
+                for field in [item['code'], item['quantity']]:
+                    if field and field.get('interpretation', {}).get('changes'):
+                        new_doubts.append({'reason': '存在字符歧义，候选按字段语法解释，仍需核对',
+                                           'evidenceId': key, 'changes': field['interpretation']['changes']})
+            repeated = {c['code'] for c in new_candidates if sum(d['code'] == c['code'] for d in new_candidates) > 1}
+            for code in sorted(repeated):
+                new_doubts.append({'reason': '不同位置出现重复色号，未自动累加', 'code': code})
+            new_candidates = [c for c in new_candidates if c['code'] not in repeated]
+            if new_candidates:
+                if grid['complete'] and any(grid['counts'].get(code) != quantity
+                                            for code, quantity in legend.items()):
+                    # A later reader omitting a field must not erase its conflict.
+                    new_evidence.extend(result['evidence'])
+                    new_doubts.append({'reason': '图例与完整本体数量冲突，保留原图例，不自动补全',
+                                       'legendCounts': legend, 'gridCounts': grid['counts'],
+                                       'evidenceIds': [e['id'] for e in result['evidence']]})
+                result.update(candidates=new_candidates, evidence=new_evidence, doubts=new_doubts,
+                              source='legend', status='partial')
+                # Reuse an already complete numbered grid, never add two counts
+                # or use incomplete cells to fill a missing legend quantity.
+                if (grid['complete'] and grid['unknownCells'] == 0 and not rejected_legend
+                        and not new_doubts and len(new_candidates) < len(grid['counts'])
+                        and all(grid['counts'].get(c['code']) == c['quantity'] for c in new_candidates)):
+                    result['candidates'], evidence = grid_candidates(grid)
+                    result['evidence'].extend(evidence)
+                    result['source'] = 'grid'
+                    result['doubts'].append({'reason': '图例未列全制作色号，采用独立完整逐格计数，保留图例供核对',
+                                            'gridCounts': grid['counts']})
+                else:
+                    result['doubts'].append({'reason': '图例与本体计数待核对',
+                                            'gridReason': grid['reason'], 'gridCounts': grid['counts']})
+                result['legendRegion'] = layout['region']
+            elif new_evidence:
+                result['evidence'].extend(new_evidence)
+                result['doubts'].extend(new_doubts)
+                result['legendRegion'] = layout['region']
+        if not result['candidates'] and not layout['items'] and not grid['cells']:
+            # Keep invalid/unreadable quantity legends visible; this path is for a
+            # grid that the older four-numbered-sides reader could not accept.
+            counted = count_grid(image, preview, SmallGlyphModel(model), axes, allowed, blank_texture, boxes)
+            if counted is not None:
+                result.update(grid=counted, source='grid', status='partial')
+                result['candidates'], evidence = grid_candidates(counted)
+                result['evidence'].extend(evidence)
+                result['doubts'].append({'reason': counted['reason'], 'unknownCells': counted['unknownCells']})
         if result['candidates']:
             total = sum(c['quantity'] for c in result['candidates'])
             if total > 2**53-1:
                 raise ValueError('合计超出安全整数范围')
             result['total'] = total
-        result['coverage'] = '已覆盖带四边编号的制作区域，并逐格读取；结果仍待用户核对' if result['status'] == 'ready' else '完整覆盖尚未证明；疑点可能影响用量'
+        result['coverage'] = '已覆盖带四边编号的制作区域，并逐格读取；结果仍待用户核对' if result['grid']['complete'] else '完整覆盖尚未证明；疑点可能影响用量'
     except (OSError, ValueError, SyntaxError, Image.DecompressionBombError, cv2.error) as error:
         result.update(status='failed', source=None, candidates=[], total=None)
         result['doubts'].append({'reason': str(error)})
+    finally:
+        if image is not None:
+            image.close()
+        if original is not None:
+            original.close()
     result['elapsedSeconds'] = round(time.perf_counter()-started, 3)
     return result
 
@@ -354,9 +463,12 @@ if __name__ == '__main__':
                          'system': platform.system(), 'machine': platform.machine(),
                          'peakRssBytes': int(peak if platform.system() == 'Darwin' else peak*1024),
                          'glyphBytes': Path(__file__).with_name('glyphs.json').stat().st_size}
-    encoded = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:
-        args.output.write_text(encoded+'\n')
+        with args.output.open('w', encoding='utf-8') as stream:
+            json.dump(result, stream, ensure_ascii=False, indent=2)
+            stream.write('\n')
         print(json.dumps({k: result[k] for k in ['status', 'source', 'total', 'candidates', 'elapsedSeconds']}, ensure_ascii=False))
     else:
-        print(encoded)
+        import sys
+        json.dump(result, sys.stdout, ensure_ascii=False, indent=2)
+        print()

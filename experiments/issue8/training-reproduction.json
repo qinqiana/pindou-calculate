@@ -1,0 +1,28 @@
+{
+  "date": "2026-09-20",
+  "method": "Direct NumPy array equality, no hashes computed",
+  "input": "Fonts only; no diagrams/references",
+  "stages": [
+    {
+      "stage": "base",
+      "parameterArraysEqual": true,
+      "parameterCount": 59160
+    },
+    {
+      "stage": "fine",
+      "parameterArraysEqual": true,
+      "parameterCount": 59160
+    },
+    {
+      "stage": "pixel",
+      "parameterArraysEqual": true,
+      "parameterCount": 59160
+    },
+    {
+      "stage": "stretch",
+      "parameterArraysEqual": true,
+      "parameterCount": 59160
+    }
+  ],
+  "runtimeTrainingDependency": "Existing PyTorch only; not an inference dependency"
+}

@@ -7,8 +7,9 @@
  *   信息，不静默吞错。
  * - 真机行为（系统选择器、作用域存储、相册可见性）以 Android 验收为准。
  */
-import { base64ToBytes } from '../ledger/image.ts'
+import { base64ToBytes, bytesToBase64 } from '../ledger/image.ts'
 import { MAX_IMAGE_BYTES } from '../ledger/numbers.ts'
+import { rememberNativeImage } from './image.ts'
 
 export type FileOutcome<T> = { ok: true; value: T } | { ok: false; cancelled?: boolean; message: string }
 
@@ -223,6 +224,7 @@ function pickImageDocument(android: PlusAny): Promise<FileOutcome<{ bytes: Uint8
           const bytes = new Uint8Array(size)
           let offset = 0
           for (const part of parts) { bytes.set(part, offset); offset += part.length }
+          rememberNativeImage(bytes, String(call(uri, 'toString')))
           resolve({ ok: true, value: { bytes, mime: String(call(resolver, 'getType', uri) || '') } })
         } catch {
           resolve(fail('读取图片失败，请重新选择可读取的本机文件；已有输入保留。'))
@@ -345,6 +347,8 @@ function pickViaAndroidIntent(plus: PlusAny): Promise<FileOutcome<{ text: string
 /** 把文本写入用户可取出的文件（下载目录；覆盖同名旧文件）。 */
 export async function writeTextToDownloads(filename: string, text: string): Promise<FileOutcome<{ path: string }>> {
   const plus = plusGlobal()
+  if (!filename || /[/\\\0]/.test(filename)) return fail('导出文件名无效')
+  if (plus?.android?.invoke) return writeAndroidDownload(plus.android, filename, text)
   if (!plus?.io?.requestFileSystem) return fail('当前环境不支持写入文件')
   return new Promise((resolve) => {
     plus.io.requestFileSystem(
@@ -379,50 +383,78 @@ export async function writeTextToDownloads(filename: string, text: string): Prom
   })
 }
 
+/** PUBLIC_DOWNLOADS is app-private on Android. Publish user exports through MediaStore. */
+function writeAndroidDownload(android: PlusAny, filename: string, text: string): FileOutcome<{ path: string }> {
+  const call = (object: PlusAny, method: string, ...args: PlusAny[]) => android.invoke(object, method, ...args)
+  let resolver: PlusAny, uri: PlusAny, output: PlusAny, writer: PlusAny, temporary: PlusAny
+  try {
+    const sdk = Number(android.importClass('android.os.Build$VERSION').SDK_INT)
+    if (!Number.isInteger(sdk)) throw new Error('Android version unavailable')
+    if (sdk >= 29) {
+      resolver = call(android.runtimeMainActivity(), 'getContentResolver')
+      const values = android.newObject('android.content.ContentValues')
+      call(values, 'put', '_display_name', filename)
+      call(values, 'put', 'mime_type', filename.endsWith('.csv') ? 'text/csv' : 'application/json')
+      call(values, 'put', 'relative_path', 'Download/豆计')
+      call(values, 'put', 'is_pending', android.newObject('java.lang.Integer', 1))
+      uri = call(resolver, 'insert', android.importClass('android.provider.MediaStore$Downloads').EXTERNAL_CONTENT_URI, values)
+      if (!uri) throw new Error('Unable to create export')
+      output = call(resolver, 'openOutputStream', uri, 'w')
+    } else {
+      const environment = android.importClass('android.os.Environment')
+      const directory = call('android.os.Environment', 'getExternalStoragePublicDirectory', environment.DIRECTORY_DOWNLOADS)
+      call(directory, 'mkdirs')
+      temporary = android.newObject('java.io.File', directory, filename + '.pending-' + Date.now())
+      output = android.newObject('java.io.FileOutputStream', temporary)
+    }
+    if (!output) throw new Error('Unable to open export')
+    writer = android.newObject('java.io.OutputStreamWriter', output, 'UTF-8')
+    call(writer, 'write', text)
+    call(writer, 'flush')
+    call(writer, 'close')
+    writer = null
+    output = null
+    if (uri) {
+      const ready = android.newObject('android.content.ContentValues')
+      call(ready, 'put', 'is_pending', android.newObject('java.lang.Integer', 0))
+      if (call(resolver, 'update', uri, ready, null, null) !== 1) throw new Error('Unable to publish export')
+    } else {
+      const target = android.newObject('java.io.File', call(temporary, 'getParentFile'), filename)
+      if (call(temporary, 'renameTo', target) !== true) throw new Error('Unable to finish export')
+      temporary = null
+    }
+    return { ok: true, value: { path: '下载/' + (sdk >= 29 ? '豆计/' : '') + filename } }
+  } catch {
+    // Only remove the new incomplete export; never delete a previous backup first.
+    if (uri) { try { call(resolver, 'delete', uri, null, null) } catch { /* Existing exports remain intact. */ } }
+    if (temporary) { try { call(temporary, 'delete') } catch { /* Never touch the previous target. */ } }
+    return fail('写入下载目录失败，请检查存储权限后重试；原账本未改。')
+  } finally {
+    if (writer) { try { call(writer, 'close') } catch { /* Preserve the write outcome. */ } }
+    else if (output) { try { call(output, 'close') } catch { /* Preserve the write outcome. */ } }
+  }
+}
+
 /** 把 PNG 字节写入应用目录并保存进系统相册（用户可直接取用）。 */
 export async function saveImageToGallery(filename: string, png: Uint8Array): Promise<FileOutcome<{ path: string }>> {
   const plus = plusGlobal()
-  if (!plus?.io?.requestFileSystem || !plus?.gallery?.save) return fail('当前环境不支持保存图片')
+  if (!plus?.io?.requestFileSystem || !plus?.nativeObj?.Bitmap || !plus?.gallery?.save) return fail('当前环境不支持保存图片')
   const relPath = '_doc/share/' + filename
-  return new Promise((resolve) => {
-    plus.io.requestFileSystem(
-      plus.io.PRIVATE_DOC,
-      (fs: PlusAny) => {
-        fs.root.getDirectory(
-          'share',
-          { create: true, exclusive: false },
-          (dir: PlusAny) => {
-            dir.getFile(
-              filename,
-              { create: true, exclusive: false },
-              (entry: PlusAny) => {
-                entry.createWriter(
-                  (writer: PlusAny) => {
-                    writer.onerror = () => resolve(fail('写入图片失败'))
-                    writer.onwriteend = () => {
-                      plus.gallery.save(
-                        relPath,
-                        () => resolve({ ok: true, value: { path: relPath } }),
-                        () => resolve(fail('图片已写入应用目录但未能加入相册，请检查相册权限后重试')),
-                      )
-                    }
-                    try {
-                      const blob = new Blob([png.buffer as ArrayBuffer], { type: 'image/png' })
-                      writer.write(blob)
-                    } catch {
-                      resolve(fail('写入图片失败'))
-                    }
-                  },
-                  () => resolve(fail('写入图片失败')),
-                )
-              },
-              () => resolve(fail('写入图片失败')),
-            )
-          },
-          () => resolve(fail('写入图片失败')),
-        )
-      },
-      () => resolve(fail('写入图片失败')),
-    )
-  })
+  let bitmap: PlusAny
+  let written = false
+  try {
+    await new Promise<void>((resolve, reject) => plus.io.requestFileSystem(plus.io.PRIVATE_DOC,
+      (fs: PlusAny) => fs.root.getDirectory('share', { create: true, exclusive: false }, () => resolve(), reject), reject))
+    bitmap = new plus.nativeObj.Bitmap('pindou-share-' + Date.now() + '-' + Math.random().toString(36).slice(2))
+    // HTML5+ FileWriter.write accepts text, not browser Blob objects.
+    await new Promise<void>((resolve, reject) => bitmap.loadBase64Data('data:image/png;base64,' + bytesToBase64(png), () => resolve(), reject))
+    await new Promise<void>((resolve, reject) => bitmap.save(relPath, { overwrite: true, format: 'png' }, () => resolve(), reject))
+    written = true
+    await new Promise<void>((resolve, reject) => plus.gallery.save(relPath, () => resolve(), reject))
+    return { ok: true, value: { path: relPath } }
+  } catch {
+    return fail(written ? '图片已写入应用目录但未能加入相册，请检查相册权限后重试' : '写入图片失败')
+  } finally {
+    if (bitmap) { try { bitmap.clear() } catch { /* Do not hide the save result. */ } }
+  }
 }

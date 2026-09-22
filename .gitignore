@@ -19,3 +19,4 @@ app/unpackage/
 .env.*
 __pycache__/
 *.pyc
+app/static/recognition/generated/

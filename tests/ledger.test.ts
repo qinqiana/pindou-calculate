@@ -4,10 +4,10 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { COLOR_CODES, PALETTE } from '../app/src/ledger/catalog.ts'
-import { TINY_PNG } from '../app/src/ledger/image.ts'
+import { TINY_PNG, bytesToBase64, sniffImage } from '../app/src/ledger/image.ts'
 import { Ledger } from '../app/src/ledger/operations.ts'
-import { APP_VERSION, MAX_QTY } from '../app/src/ledger/numbers.ts'
-import { LedgerStore, memorySink } from '../app/src/ledger/store.ts'
+import { APP_VERSION, MAX_QTY, canonical } from '../app/src/ledger/numbers.ts'
+import { LedgerStore, PersistError, memorySink } from '../app/src/ledger/store.ts'
 import { openNodeStore } from '../app/src/ledger/store-node.ts'
 
 function clock() {
@@ -278,6 +278,84 @@ test('title 148 vs per-color 130 keeps formal total 130', () => {
   assert.equal(gap.ok && gap.totalDemand, 130)
 })
 
+test('recognition provenance is derived, risk-gated, replay-safe, and does not spend stock', () => {
+  const l = ledger()
+  must(l.commitFirstEntry('stock', [{ code: 'A1', qty: 20 }], l.token()), 'stock')
+  const created = must(l.createPattern('provenance-pattern', { name: '识别来源', imageBytes: TINY_PNG }, l.token()), 'pattern')
+  const id = created.patternId
+  const recognition = {
+    source: 'legend',
+    algorithmVersion: 'legend-test-1',
+    originalStatus: 'partial',
+    candidateLines: [{ code: 'A1', qty: 5 }],
+    candidateTitleTotal: 5,
+    modified: false,
+    risks: [{ id: 'truncated', reason: '图例可能截断', raw: 'A1 5…', resolved: false }],
+    riskAcknowledged: true,
+  } as any
+  must(l.confirmUsage('recognized', id, { lines: [{ code: 'A1', qty: 4 }], titleTotal: 4, recognition }, l.token()), 'recognized')
+  assert.equal(l.getStock('A1')!.qty, 20)
+  const saved = l.getPattern(id)!.confirmed!
+  assert.equal(saved.inputMethod, 'legend')
+  assert.equal(saved.recognition!.source, 'legend')
+  assert.equal(saved.recognition!.modified, true)
+  assert.equal(saved.recognition!.originalStatus, 'partial')
+  assert.equal(saved.recognition!.riskAcknowledged, true)
+
+  const replay = l.confirmUsage('recognized', id, { lines: [{ code: 'A1', qty: 4 }], titleTotal: 4, recognition }, l.token())
+  assert.equal(replay.ok, true)
+  assert.equal(l.getPattern(id)!.confirmed!.version, 1)
+  const conflict = l.confirmUsage('recognized', id, { lines: [{ code: 'A1', qty: 4 }], titleTotal: 4, recognition: { ...recognition, source: 'grid' } }, l.token())
+  assert.equal(conflict.ok, false)
+  if (!conflict.ok) assert.equal(conflict.code, 'request-conflict')
+
+  const made = must(l.make('make-recognized', id, l.token()), 'make')
+  assert.equal(l.getStock('A1')!.qty, 16)
+  must(l.confirmUsage('manual-revision', id, { lines: [{ code: 'A1', qty: 2 }] }, l.token()), 'manual revision')
+  const second = must(l.make('make-manual', id, l.token()), 'manual make')
+  const makes = l.listMakes(id)
+  const versions = l.getPattern(id)!.versions
+  assert.deepEqual(versions.map((usage) => usage.version), [1, 2])
+  assert.equal(versions[0].inputMethod, 'legend')
+  assert.equal(versions[0].recognition!.source, 'legend')
+  assert.equal(versions[1].inputMethod, 'manual')
+  assert.equal(makes.find((m) => m.id === made.makeId)!.usageVersion, 1)
+  assert.equal(makes.find((m) => m.id === second.makeId)!.usageVersion, 2)
+  assert.deepEqual(makes.find((m) => m.id === made.makeId)!.linesSnapshot, [{ code: 'A1', qty: 4 }])
+
+  const restored = ledger()
+  must(restored.restoreReplace('restore-provenance', l.exportBackup(), restored.token()), 'restore provenance')
+  assert.deepEqual(restored.store.live().confirmedUsages.find((usage) => usage.patternId === id && usage.version === 1)!.recognition, saved.recognition)
+  assert.deepEqual(restored.listMakes().map((m) => m.linesSnapshot), makes.map((m) => m.linesSnapshot))
+})
+
+test('recognition provenance rejects empty or unacknowledged automatic evidence while manual zero remains valid', () => {
+  const l = ledger()
+  const created = must(l.createPattern('provenance-validation', { name: '识别校验', imageBytes: TINY_PNG }, l.token()), 'pattern')
+  const id = created.patternId
+  const base = {
+    source: 'grid',
+    algorithmVersion: 'grid-test-1',
+    originalStatus: 'ready',
+    candidateLines: [{ code: 'A1', qty: 1 }],
+    candidateTitleTotal: null,
+    modified: false,
+    risks: [],
+    riskAcknowledged: false,
+  } as any
+  const empty = l.confirmUsage('empty-candidate', id, { lines: [], recognition: { ...base, candidateLines: [] } }, l.token())
+  assert.equal(empty.ok, false)
+  if (!empty.ok) assert.equal(empty.code, 'invalid-provenance')
+  const unknown = l.confirmUsage('unknown-source', id, { lines: [{ code: 'A1', qty: 1 }], recognition: { ...base, source: 'failed' } }, l.token())
+  assert.equal(unknown.ok, false)
+  if (!unknown.ok) assert.equal(unknown.code, 'invalid-provenance')
+  const risk = l.confirmUsage('risk', id, { lines: [{ code: 'A1', qty: 1 }], recognition: { ...base, originalStatus: 'partial', risks: [{ id: 'r', reason: '缺覆盖', raw: '', resolved: true }] } }, l.token())
+  assert.equal(risk.ok, false)
+  if (!risk.ok) assert.equal(risk.code, 'recognition-risk')
+  must(l.confirmUsage('manual-zero', id, { lines: [] }, l.token()), 'manual zero')
+  assert.equal(l.getPattern(id)!.confirmed!.inputMethod, 'manual')
+})
+
 test('PNG and JPG import; cancel does not create; confirm does not change stock', () => {
   const l = ledger()
   const before = l.getStock('A1')!.qty
@@ -389,7 +467,7 @@ test('backup export validate cancel replace; truncated and unknown version rejec
   must(l.voidMake('v1', l.listMakes()[0].id, l.token()), 'void')
   must(l.commitCount('cnt', [{ code: 'A1', qty: 9 }], l.token()), 'count')
   const backup = l.exportBackup()
-  assert.equal(backup.formatVersion, 1)
+  assert.equal(backup.formatVersion, 2)
   assert.equal(backup.stock.length, 221)
   assert.equal(backup.makes.length, 2)
   assert.ok(backup.patterns[0].thumbnail.base64.length > 10)
@@ -434,6 +512,43 @@ test('备份版本与 manifest 一致，并拒绝损坏的嵌套结构', () => {
   const badRequest = JSON.parse(JSON.stringify(backup))
   badRequest.requests = [{ requestId: 'r', payloadCanonical: '{}', result: { ok: true } }]
   assert.equal(l.validateBackup(badRequest).ok, false)
+})
+
+test('genuine v1 backup migrates to v2; v2 provenance roundtrip and bad versions preserve live state', () => {
+  const l = ledger()
+  must(l.commitFirstEntry('backup-stock', [{ code: 'A1', qty: 9 }], l.token()), 'stock')
+  const created = must(l.createPattern('backup-pattern', { name: '备份来源', imageBytes: TINY_PNG }, l.token()), 'pattern')
+  const id = created.patternId
+  must(l.confirmUsage('backup-confirm', id, { lines: [{ code: 'A1', qty: 3 }] }, l.token()), 'confirm')
+  const backup = l.exportBackup()
+  assert.equal(backup.formatVersion, 2)
+
+  const v1 = JSON.parse(JSON.stringify(backup)) as any
+  v1.formatVersion = 1
+  for (const usage of v1.confirmedUsages) delete usage.recognition
+  const migrated = must(l.validateBackup(v1), 'v1 validate')
+  assert.equal(migrated.backup.formatVersion, 2)
+  const restored = ledger()
+  must(restored.restoreReplace('restore-v1', v1, restored.token()), 'v1 restore')
+  assert.deepEqual(restored.listPatterns(), l.listPatterns())
+  assert.deepEqual(restored.store.live().confirmedUsages, l.store.live().confirmedUsages.map((usage) => {
+    const copy = { ...usage }
+    delete (copy as any).recognition
+    return copy
+  }))
+
+  const v1WithRecognition = JSON.parse(JSON.stringify(v1))
+  v1WithRecognition.confirmedUsages[0].recognition = null
+  assert.equal(l.validateBackup(v1WithRecognition).ok, false)
+
+  const liveBefore = l.getStock('A1')!.qty
+  const future = { ...backup, formatVersion: 3 }
+  assert.equal(l.validateBackup(future).ok, false)
+  assert.equal(l.getStock('A1')!.qty, liveBefore)
+  const corrupt = JSON.parse(JSON.stringify(backup))
+  corrupt.confirmedUsages[0].lines[0].code = 'ZZ9'
+  assert.equal(l.validateBackup(corrupt).ok, false)
+  assert.equal(l.getStock('A1')!.qty, liveBefore)
 })
 
 test('restore interrupt leaves complete before or complete after', () => {
@@ -495,6 +610,218 @@ test('zero-change count/restock batches skip operation and write no movements', 
   assert.equal(replay.ok && replay.operationId, 'noop')
   assert.equal(l.getStock('A1')!.qty, 100)
   assert.equal(l.getStock('B1')!.qty, 10)
+})
+
+const LEAKED_IMAGE_KEYS = ['imageBytes', 'imageMime', 'uri', 'path', 'hash', 'thumbnailHistory', 'originalBytes', 'bytes', 'preview', 'snapshots']
+
+function leakedImageKeys(value: unknown, found = new Set<string>()): Set<string> {
+  if (Array.isArray(value)) {
+    for (const item of value) leakedImageKeys(item, found)
+    return found
+  }
+  if (!value || typeof value !== 'object') return found
+  for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+    if (LEAKED_IMAGE_KEYS.includes(key)) found.add(key)
+    leakedImageKeys(child, found)
+  }
+  return found
+}
+
+function assertNoOriginalImage(ledger: Ledger, original: Uint8Array) {
+  const marker = bytesToBase64(original)
+  const backup = ledger.exportBackup()
+  assert.equal(JSON.stringify(backup).includes(marker), false)
+  assert.deepEqual([...leakedImageKeys(backup)], [])
+  for (const request of backup.requests) {
+    const payload = JSON.parse(request.payloadCanonical) as unknown
+    assert.equal(JSON.stringify(payload).includes(marker), false)
+    assert.deepEqual([...leakedImageKeys(payload)], [])
+  }
+}
+
+function patternView(ledger: Ledger, patternId: string) {
+  const found = ledger.getPattern(patternId)
+  assert.ok(found)
+  return {
+    name: found.pattern.name,
+    sourceNote: found.pattern.sourceNote,
+    sizeNote: found.pattern.sizeNote,
+    thumbnail: found.pattern.thumbnail.base64,
+    confirmedVersion: found.pattern.confirmedVersion,
+    stock: ledger.getStock('A1')!.qty,
+    movements: ledger.movements().length,
+    operations: ledger.store.live().operations.length,
+    requests: ledger.store.live().requests.length,
+  }
+}
+
+test('atomic confirm stores name, notes, and a re-picked thumbnail in one confirm operation', () => {
+  const l = ledger()
+  must(l.commitFirstEntry('atomic-stock', [{ code: 'A1', qty: 40 }], l.token()), 'stock')
+  const created = must(l.createPattern('atomic-pattern', { name: '原名', sourceNote: '旧来源', sizeNote: '旧尺寸', imageBytes: TINY_PNG }, l.token()), 'pattern')
+  const id = created.patternId
+  const opening = patternView(l, id)
+  const replacement = jpeg1x1()
+  const saved = must(
+    l.confirmUsage(
+      'atomic-confirm',
+      id,
+      {
+        lines: [{ code: 'A1', qty: 2 }],
+        patternMeta: { name: '  新名称  ', sourceNote: ' 新来源 ', sizeNote: ' 12cm ', imageBytes: replacement },
+      },
+      l.token(),
+    ),
+    'confirm',
+  )
+  assert.equal(saved.ok && saved.version, 1)
+  assert.equal(saved.ok && saved.perColorSum, 2)
+  const stored = l.getPattern(id)!
+  assert.equal(stored.pattern.name, '新名称')
+  assert.equal(stored.pattern.sourceNote, '新来源')
+  assert.equal(stored.pattern.sizeNote, '12cm')
+  assert.notEqual(stored.pattern.thumbnail.base64, opening.thumbnail)
+  assert.equal(stored.pattern.thumbnail.mime, 'image/png')
+  assert.equal(stored.confirmed!.lines[0].qty, 2)
+  assert.equal(stored.confirmed!.version, 1)
+  const sniffed = sniffImage(replacement)
+  assert.equal(sniffed.ok, true)
+  if (sniffed.ok) {
+    const rotated = (sniffed.image.orientation ?? 1) >= 5
+    assert.equal(stored.pattern.pixelWidth, rotated ? sniffed.image.height : sniffed.image.width)
+    assert.equal(stored.pattern.pixelHeight, rotated ? sniffed.image.width : sniffed.image.height)
+  }
+  const ops = l.store.live().operations
+  assert.deepEqual(ops.map((op) => op.type).filter((type) => type === 'confirm-usage' || type === 'pattern-meta'), ['confirm-usage'])
+  assert.equal(l.store.live().requests.length, opening.requests + 1)
+  assert.equal(l.store.live().operations.length, opening.operations + 1)
+  assert.equal(l.getStock('A1')!.qty, 40)
+  assert.equal(l.movements().length, opening.movements)
+  const payload = JSON.parse(l.store.live().requests.find((request) => request.requestId === 'atomic-confirm')!.payloadCanonical)
+  assert.equal(payload.patternMeta.thumbnail.base64, stored.pattern.thumbnail.base64)
+  assert.equal(payload.patternMeta.name, '新名称')
+  assertNoOriginalImage(l, replacement)
+  const copy = ledger()
+  must(copy.restoreReplace('atomic-restore', l.exportBackup(), copy.token()), 'restore')
+  assert.equal(copy.getPattern(id)!.pattern.name, '新名称')
+  assert.equal(copy.getPattern(id)!.pattern.thumbnail.base64, stored.pattern.thumbnail.base64)
+  assert.equal(copy.getPattern(id)!.confirmed!.lines[0].qty, 2)
+  assert.equal(copy.movements().length, opening.movements)
+})
+
+test('title diff, unacknowledged risk, bad image, and persist failure do not partially save a confirm', () => {
+  const l = ledger()
+  must(l.commitFirstEntry('fail-stock', [{ code: 'A1', qty: 40 }], l.token()), 'stock')
+  const created = must(l.createPattern('fail-pattern', { name: '原名', sourceNote: '旧来源', sizeNote: '旧尺寸', imageBytes: TINY_PNG }, l.token()), 'pattern')
+  const id = created.patternId
+  must(l.saveDraft(id, [{ code: 'A1', qty: 1 }], 1), 'draft')
+  const before = patternView(l, id)
+  const replacement = jpeg1x1()
+  const meta = { name: '不应保存', sourceNote: '不应保存', sizeNote: '不应保存', imageBytes: replacement }
+  const same = () => assert.deepEqual(patternView(l, id), before)
+  const titleDiff = l.confirmUsage('fail-title', id, { lines: [{ code: 'A1', qty: 1 }], titleTotal: 9, patternMeta: meta }, l.token())
+  assert.equal(titleDiff.ok, false)
+  if (!titleDiff.ok) assert.equal(titleDiff.code, 'title-diff')
+  same()
+  const risk = l.confirmUsage(
+    'fail-risk',
+    id,
+    {
+      lines: [{ code: 'A1', qty: 1 }],
+      patternMeta: meta,
+      recognition: {
+        source: 'legend',
+        algorithmVersion: 'pixel-glyph-0.8-dev',
+        originalStatus: 'partial',
+        candidateLines: [{ code: 'A1', qty: 1 }],
+        candidateTitleTotal: null,
+        modified: false,
+        risks: [{ id: 'coverage', reason: '图例没有覆盖全图', raw: '', resolved: false }],
+        riskAcknowledged: false,
+      },
+    },
+    l.token(),
+  )
+  assert.equal(risk.ok, false)
+  if (!risk.ok) assert.equal(risk.code, 'recognition-risk')
+  same()
+  const badImage = l.confirmUsage(
+    'fail-image',
+    id,
+    { lines: [{ code: 'A1', qty: 1 }], patternMeta: { ...meta, imageBytes: new Uint8Array([1, 2, 3, 4]) } },
+    l.token(),
+  )
+  assert.equal(badImage.ok, false)
+  if (!badImage.ok) assert.equal(badImage.code, 'invalid-image')
+  same()
+  const badType = l.confirmUsage(
+    'fail-type',
+    id,
+    { lines: [{ code: 'A1', qty: 1 }], patternMeta: { name: '不应保存', sourceNote: 3, sizeNote: '' } as never },
+    l.token(),
+  )
+  assert.equal(badType.ok, false)
+  if (!badType.ok) assert.equal(badType.code, 'invalid-meta')
+  same()
+  l.store.sink = {
+    read: () => null,
+    write() {
+      throw new PersistError('full')
+    },
+  }
+  const persisted = l.confirmUsage('fail-persist', id, { lines: [{ code: 'A1', qty: 1 }], patternMeta: meta }, l.token())
+  assert.equal(persisted.ok, false)
+  if (!persisted.ok) assert.equal(persisted.code, 'persist-failed')
+  l.store.sink = null
+  same()
+  assert.equal(l.getPattern(id)!.confirmed, null)
+  assert.equal(l.getPattern(id)!.draft!.lines[0].qty, 1)
+})
+
+test('same confirm request rejects changed metadata or image and does not repeat an identical confirm', () => {
+  const l = ledger()
+  const created = must(l.createPattern('replay-pattern', { name: '原名', imageBytes: TINY_PNG }, l.token()), 'pattern')
+  const id = created.patternId
+  const image = jpeg1x1()
+  const input = {
+    lines: [{ code: 'A1', qty: 3 }],
+    patternMeta: { name: '一次', sourceNote: '来源', sizeNote: '9cm', imageBytes: image },
+  }
+  must(l.confirmUsage('replay-confirm', id, input, l.token()), 'first')
+  const after = patternView(l, id)
+  const replay = must(l.confirmUsage('replay-confirm', id, { ...input, patternMeta: { ...input.patternMeta, imageBytes: jpeg1x1() } }, l.token()), 'replay')
+  assert.equal(replay.ok && replay.version, 1)
+  assert.deepEqual(patternView(l, id), after)
+  assert.equal(l.getPattern(id)!.versions.length, 1)
+  const renamed = l.confirmUsage('replay-confirm', id, { ...input, patternMeta: { ...input.patternMeta, name: '另一次' } }, l.token())
+  assert.equal(renamed.ok, false)
+  if (!renamed.ok) assert.equal(renamed.code, 'request-conflict')
+  assert.deepEqual(patternView(l, id), after)
+  const otherImage = new Uint8Array(TINY_PNG)
+  const recolored = l.confirmUsage('replay-confirm', id, { ...input, patternMeta: { ...input.patternMeta, imageBytes: otherImage } }, l.token())
+  assert.equal(recolored.ok, false)
+  if (!recolored.ok) assert.equal(recolored.code, 'request-conflict')
+  assert.deepEqual(patternView(l, id), after)
+  assert.equal(l.getPattern(id)!.pattern.thumbnail.base64, after.thumbnail)
+})
+
+test('confirm without pattern metadata keeps the manual request canonical', () => {
+  const l = ledger()
+  const created = must(l.createPattern('manual-pattern', { name: '手工', imageBytes: TINY_PNG }, l.token()), 'pattern')
+  const id = created.patternId
+  const lines = [{ code: 'A1', qty: 6 }]
+  must(l.confirmUsage('manual-plain', id, { lines }, l.token()), 'plain')
+  const plain = l.store.live().requests.find((request) => request.requestId === 'manual-plain')!
+  assert.equal(plain.payloadCanonical, canonical({ kind: 'confirm-usage', patternId: id, lines, title: null, ack: false }))
+  const withNull = must(l.confirmUsage('manual-null', id, { lines: [{ code: 'A1', qty: 1 }], patternMeta: null }, l.token()), 'null meta')
+  assert.equal(withNull.ok && withNull.version, 2)
+  const nullable = l.store.live().requests.find((request) => request.requestId === 'manual-null')!
+  assert.equal(nullable.payloadCanonical, canonical({ kind: 'confirm-usage', patternId: id, lines: [{ code: 'A1', qty: 1 }], title: null, ack: false }))
+  const replay = must(l.confirmUsage('manual-plain', id, { lines }, l.token()), 'plain replay')
+  assert.equal(replay.ok && replay.version, 1)
+  assert.equal(l.getPattern(id)!.versions.length, 2)
+  assert.equal(l.getPattern(id)!.confirmed!.version, 2)
+  assert.equal(l.store.live().confirmedUsages.filter((usage) => usage.patternId === id && usage.version === 1).length, 1)
 })
 
 test('low-stock boundary compares as integers: exact threshold warns, one above does not', () => {

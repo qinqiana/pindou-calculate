@@ -384,45 +384,34 @@ test('writeTextToDownloads：不支持的环境明确失败', async () => {
   assert.equal(r.ok, false)
 })
 
-function fakeGalleryEnv(opts: { galleryFails?: boolean }) {
+function fakeGalleryEnv(opts: { galleryFails?: boolean; decodeFails?: boolean }) {
   const calls: string[] = []
-  const writer: any = {
-    onwriteend: null as null | (() => void),
-    onerror: null as null | (() => void),
-    write() {
-      calls.push('write-blob')
-      this.onwriteend!()
-    },
-  }
-  const fileEntry: any = {
-    createWriter(ok: (w: any) => void) {
-      ok(writer)
-    },
-  }
-  const dir: any = {
-    getFile(_name: string, _flags: unknown, ok: (e: any) => void) {
-      ok(fileEntry)
-    },
-  }
   const plus = {
     io: {
       PRIVATE_DOC: 2,
-      PUBLIC_DOWNLOADS: 4,
       requestFileSystem(_which: number, ok: (fs: any) => void) {
-        ok({
-          root: {
-            getDirectory(_name: string, _flags: unknown, ok: (d: any) => void) {
-              ok(dir)
-            },
-          },
-        })
+        ok({ root: { getDirectory(_name: string, _flags: unknown, ready: () => void) { ready() } } })
+      },
+    },
+    nativeObj: {
+      Bitmap: class {
+        loadBase64Data(data: string, ok: () => void, fail: () => void) {
+          assert.deepEqual(new Uint8Array(Buffer.from(data.split(',')[1], 'base64')), PNG_BYTES)
+          calls.push('decode-png')
+          opts.decodeFails ? fail() : ok()
+        }
+        save(path: string, options: unknown, ok: () => void) {
+          assert.deepEqual(options, { overwrite: true, format: 'png' })
+          calls.push('write-png:' + path)
+          ok()
+        }
+        clear() { calls.push('clear-bitmap') }
       },
     },
     gallery: {
       save(path: string, ok: () => void, fail: () => void) {
         calls.push('gallery:' + path)
-        if (opts.galleryFails) fail()
-        else ok()
+        opts.galleryFails ? fail() : ok()
       },
     },
   }
@@ -434,15 +423,20 @@ test('saveImageToGallery：写入应用目录后加入系统相册', async () =>
   const r = await withEnv({ plus }, () => saveImageToGallery('pindou-share-moments-classic.png', PNG_BYTES))
   assert.equal(r.ok, true)
   if (r.ok) assert.equal(r.value.path, '_doc/share/pindou-share-moments-classic.png')
-  assert.ok(calls.includes('write-blob'))
+  assert.ok(calls.includes('write-png:_doc/share/pindou-share-moments-classic.png'))
+  assert.equal(calls.at(-1), 'clear-bitmap')
   assert.ok(calls.includes('gallery:_doc/share/pindou-share-moments-classic.png'))
 })
 
 test('saveImageToGallery：相册保存失败明确报错（不谎称已可取用）', async () => {
-  const { plus } = fakeGalleryEnv({ galleryFails: true })
+  const { plus, calls } = fakeGalleryEnv({ galleryFails: true })
   const r = await withEnv({ plus }, () => saveImageToGallery('x.png', PNG_BYTES))
   assert.equal(r.ok, false)
   if (!r.ok) assert.match(r.message, /相册/)
+  assert.equal(calls.at(-1), 'clear-bitmap')
+  const bad = fakeGalleryEnv({ decodeFails: true })
+  assert.equal((await withEnv({ plus: bad.plus }, () => saveImageToGallery('bad.png', PNG_BYTES))).ok, false)
+  assert.deepEqual(bad.calls, ['decode-png', 'clear-bitmap'])
 })
 
 test('页面与门面不再使用 uni.getFileSystemManager', async () => {
@@ -456,5 +450,32 @@ test('页面与门面不再使用 uni.getFileSystemManager', async () => {
     'app/pages/stock/index.vue',
   ]) {
     assert.doesNotMatch(readFileSync(file, 'utf8'), /getFileSystemManager/, file)
+  }
+})
+
+test('Android exports publish in public Downloads and remove only their own unfinished item on failure', async () => {
+  for (const broken of [false, true]) {
+    const calls: string[] = []
+    const android = {
+      runtimeMainActivity: () => 'activity',
+      importClass: (name: string) => name.includes('VERSION') ? { SDK_INT: 35 } : { EXTERNAL_CONTENT_URI: 'downloads' },
+      newObject: (name: string, ...args: any[]) => ({ name, args }),
+      invoke(_target: unknown, method: string, ...args: any[]) {
+        calls.push(method + (method === 'put' ? ':' + args[0] : ''))
+        if (method === 'getContentResolver') return 'resolver'
+        if (method === 'insert') return 'content://downloads/this-new-export'
+        if (method === 'openOutputStream') return 'output'
+        if (method === 'write') { assert.equal(args[0], '{"测试":2}'); if (broken) throw Error('storage full') }
+        if (method === 'update') return 1
+        if (method === 'delete') assert.equal(args[0], 'content://downloads/this-new-export')
+      },
+    }
+    const result = await withEnv({ plus: { android } }, () => writeTextToDownloads('backup.json', '{"测试":2}'))
+    assert.equal(result.ok, !broken)
+    assert.ok(calls.includes('put:relative_path'))
+    assert.ok(calls.includes('close'))
+    assert.equal(calls.includes('delete'), broken)
+    assert.equal(calls.includes('update'), !broken)
+    if (result.ok) assert.equal(result.value.path, '下载/豆计/backup.json')
   }
 })

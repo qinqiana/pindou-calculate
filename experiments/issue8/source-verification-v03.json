@@ -1,0 +1,226 @@
+{
+  "purpose": "Independently verify source images match website reference grid, not recognition accuracy",
+  "siteExportGeometry": {
+    "left": 59,
+    "top": 46,
+    "pitch": 24
+  },
+  "samples": [
+    {
+      "id": "N09",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1432-original.png",
+      "sourceCells": 2300,
+      "productionCells": 1432,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N10",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1433-original.png",
+      "sourceCells": 144,
+      "productionCells": 73,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N11",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1434-original.png",
+      "sourceCells": 725,
+      "productionCells": 395,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N12",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1435-original.png",
+      "sourceCells": 1936,
+      "productionCells": 1220,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N13",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1436-original.png",
+      "sourceCells": 1892,
+      "productionCells": 1075,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N14",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1437-original.png",
+      "sourceCells": 2964,
+      "productionCells": 2118,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N15",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1438-original.png",
+      "sourceCells": 1221,
+      "productionCells": 472,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N16",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1439-original.png",
+      "sourceCells": 2704,
+      "productionCells": 1095,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N17",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1449-original.png",
+      "sourceCells": 1368,
+      "productionCells": 793,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N18",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1450-original.png",
+      "sourceCells": 3484,
+      "productionCells": 1700,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N19",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1452-original.png",
+      "sourceCells": 3348,
+      "productionCells": 1923,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N20",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1453-original.png",
+      "sourceCells": 832,
+      "productionCells": 271,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N21",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1454-original.png",
+      "sourceCells": 676,
+      "productionCells": 403,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N22",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1455-original.png",
+      "sourceCells": 1716,
+      "productionCells": 842,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N23",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1456-original.png",
+      "sourceCells": 360,
+      "productionCells": 200,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N24",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-1458-original.png",
+      "sourceCells": 1666,
+      "productionCells": 732,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N25",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-2001-original.png",
+      "sourceCells": 4131,
+      "productionCells": 325,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N26",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-2002-original.png",
+      "sourceCells": 2508,
+      "productionCells": 898,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N27",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-2007-original.png",
+      "sourceCells": 3025,
+      "productionCells": 1811,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N28",
+      "path": "/tmp/pindou-issue8-v02/new30-reviewed/inputs/bitbead-3001-original.png",
+      "sourceCells": 1419,
+      "productionCells": 725,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N31",
+      "path": "/tmp/pindou-issue8-v02/new30/bitbead-1441-labeled.png",
+      "sourceCells": 1599,
+      "productionCells": 988,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N32",
+      "path": "/tmp/pindou-issue8-v02/new30/bitbead-1442-labeled.png",
+      "sourceCells": 1638,
+      "productionCells": 1001,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N33",
+      "path": "/tmp/pindou-issue8-v02/new30/bitbead-1443-labeled.png",
+      "sourceCells": 1599,
+      "productionCells": 988,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N34",
+      "path": "/tmp/pindou-issue8-v02/new30/bitbead-1444-labeled.png",
+      "sourceCells": 1599,
+      "productionCells": 988,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N35",
+      "path": "/tmp/pindou-issue8-v02/new30/bitbead-1451-labeled.png",
+      "sourceCells": 2300,
+      "productionCells": 1432,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N36",
+      "path": "/tmp/pindou-issue8-v02/new30/bitbead-1457-labeled.png",
+      "sourceCells": 441,
+      "productionCells": 154,
+      "mismatchCount": 0,
+      "examples": []
+    },
+    {
+      "id": "N37",
+      "path": "/tmp/pindou-issue8-v02/new30/bitbead-1445-labeled.png",
+      "sourceCells": 1599,
+      "productionCells": 988,
+      "mismatchCount": 0,
+      "examples": []
+    }
+  ]
+}

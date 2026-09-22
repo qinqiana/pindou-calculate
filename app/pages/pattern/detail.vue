@@ -11,10 +11,17 @@
 
     <view v-if="detail && !detail.confirmed" class="card unconfirmed">
       <text class="section-title">尚未录入用量</text>
-      <text class="unconfirmed-text">图纸已经导入，但还没有确认逐色用量。请手工录入后再查看总需求和库存缺口。</text>
+      <text class="unconfirmed-text">图纸已经导入，但还没有确认逐色用量。请核对并确认用量后再查看总需求和库存缺口。</text>
       <button class="btn outline" @click="goEdit">录入逐色用量</button>
     </view>
 
+    <view v-if="detail.confirmed" class="card provenance">
+      <text class="section-title">确认版本 {{ detail.confirmed.version }}</text>
+      <text class="muted">{{ usageSourceLabel(detail.confirmed.inputMethod) }}{{ detail.confirmed.recognition?.modified ? ' · 已人工修改' : '' }}</text>
+      <text v-if="detail.confirmed.recognition" class="muted">原始结果：{{ detail.confirmed.recognition.originalStatus === 'partial' ? '部分识别' : '已取得候选' }}</text>
+      <text v-if="hasRecognitionRisk(detail.confirmed.recognition)" class="risk-note">按已确认用量计算，仍可能漏计。已知情保留识别风险。</text>
+      <text v-for="risk in detail.confirmed.recognition?.risks || []" :key="risk.id" class="muted">{{ risk.resolved ? '已核对：' : '仍需注意：' }}{{ risk.reason }}</text>
+    </view>
     <view v-if="gap" class="card stats">
       <view class="stat">
         <text class="stat-num">{{ gap.totalDemand }}</text>
@@ -27,7 +34,7 @@
       </view>
       <view class="stat-divider" />
       <view class="stat">
-        <text class="stat-num" :class="{ clay: !gap.canMake }">{{ gap.canMake ? '足量' : '有缺口' }}</text>
+        <text class="stat-num" :class="{ clay: !gap.canMake }">{{ gap.canMake ? (hasRecognitionRisk(detail.confirmed?.recognition) ? '当前足量' : '足量') : '有缺口' }}</text>
         <text class="stat-label">库存状态</text>
       </view>
     </view>
@@ -61,6 +68,7 @@
           <text class="make-status" :class="{ voided: m.voided }">{{ m.voided ? '已撤回' : '完成' }}</text>
           <text class="muted">{{ m.completedAt }}</text>
         </view>
+        <text class="muted">用量版本 {{ m.usageVersion }} · {{ makeSource(m.usageVersion) }}</text>
         <text class="make-lines">{{ m.linesSnapshot.map(l => l.code + '=' + l.qty).join(' ') || '零用量' }}</text>
         <button v-if="!m.voided" class="btn ghost small" @click="voidMake(m.id)">撤回这次</button>
       </view>
@@ -73,6 +81,7 @@
 <script setup lang="ts">
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import { hasRecognitionRisk, usageSourceLabel } from '../../src/recognition/result'
 import { colorByCode } from '../../src/ledger/catalog'
 import { appLedger, newRequestId } from '../../src/platform/app-ledger'
 import { writeTextToDownloads } from '../../src/platform/fs'
@@ -128,7 +137,15 @@ function voidMake(makeId: string) {
   reload()
 }
 
+function makeSource(version: number) {
+  const usage = detail.value?.versions.find(u => u.version === version)
+  return usage ? usageSourceLabel(usage.inputMethod) + (hasRecognitionRisk(usage.recognition) ? ' · 当时仍可能漏计' : '') : '未提供来源'
+}
 async function copyList() {
+  if (hasRecognitionRisk(detail.value?.confirmed?.recognition)) {
+    const proceed = await new Promise<boolean>(resolve => uni.showModal({ title: '补货清单的计算范围', content: '按已确认用量计算，仍可能漏计。清单只包含当前确认的色号与数量。', confirmText: '继续生成', success: ({confirm}) => resolve(confirm), fail: () => resolve(false) }))
+    if (!proceed) return
+  }
   const list = appLedger().exportRestockList(id.value)
   if (!list.ok) {
     error.value = list.message
@@ -169,6 +186,7 @@ function removePattern() {
 </script>
 
 <style>
+.risk-note { display: block; margin-top: 16rpx; padding: 16rpx; border-radius: 12rpx; background: #fff3de; color: #734400; font-size: 26rpx; line-height: 1.6; }
 .page { padding: 24rpx 24rpx 80rpx; }
 .card { background: #fffefb; border-radius: 24rpx; box-shadow: 0 2rpx 14rpx rgba(74, 62, 40, 0.06); padding: 28rpx 32rpx; margin-top: 24rpx; }
 .card:first-child { margin-top: 0; }

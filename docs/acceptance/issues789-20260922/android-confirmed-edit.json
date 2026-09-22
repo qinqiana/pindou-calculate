@@ -1,0 +1,101 @@
+{
+  "body": "148 离线真机\n无来源备注 · 尺寸 未提供 · 像素 5000×3820\n确认版本 1\n图例识别 · 已人工修改pixel-glyph-0.8-dev · 原始结果已取得候选\n149\n总需求（颗）\n9\n用色（种）\n有缺口\n库存状态\n逐色对照\nC2\n需 18 · 有 0\n缺 18\nC12\n需 4 · 有 0\n缺 4\nC16\n需 11 · 有 0\n缺 11\nC17\n需 12 · 有 0\n缺 12\nC19\n需 7 · 有 0\n缺 7\nC29\n需 18 · 有 0\n缺 18\nH2\n需 14 · 有 0\n缺 14\nH3\n需 5 · 有 0\n缺 5\nH7\n需 60 · 有 0\n缺 60\n已拼\n补货清单\n分享图片\n编辑用量\n移除图纸",
+  "usage": {
+    "patternId": "pattern-1a0c7617063-9e0644f73f3e6",
+    "version": 1,
+    "lines": [
+      {
+        "code": "C2",
+        "qty": 18
+      },
+      {
+        "code": "C12",
+        "qty": 4
+      },
+      {
+        "code": "C16",
+        "qty": 11
+      },
+      {
+        "code": "C17",
+        "qty": 12
+      },
+      {
+        "code": "C19",
+        "qty": 7
+      },
+      {
+        "code": "C29",
+        "qty": 18
+      },
+      {
+        "code": "H2",
+        "qty": 14
+      },
+      {
+        "code": "H3",
+        "qty": 5
+      },
+      {
+        "code": "H7",
+        "qty": 60
+      }
+    ],
+    "inputMethod": "legend",
+    "recognition": {
+      "source": "legend",
+      "algorithmVersion": "pixel-glyph-0.8-dev",
+      "originalStatus": "ready",
+      "candidateLines": [
+        {
+          "code": "C2",
+          "qty": 18
+        },
+        {
+          "code": "C12",
+          "qty": 3
+        },
+        {
+          "code": "C16",
+          "qty": 11
+        },
+        {
+          "code": "C17",
+          "qty": 12
+        },
+        {
+          "code": "C19",
+          "qty": 7
+        },
+        {
+          "code": "C29",
+          "qty": 18
+        },
+        {
+          "code": "H2",
+          "qty": 14
+        },
+        {
+          "code": "H3",
+          "qty": 5
+        },
+        {
+          "code": "H7",
+          "qty": 60
+        }
+      ],
+      "candidateTitleTotal": null,
+      "modified": true,
+      "risks": [],
+      "riskAcknowledged": false
+    },
+    "confirmedAt": "2026-09-22T04:32:54.913Z",
+    "titleTotal": null,
+    "titleDiff": null,
+    "titleDiffAcknowledged": false,
+    "rejectedItems": []
+  },
+  "stockTotal": 0,
+  "movements": 0,
+  "patterns": 22
+}

@@ -1,0 +1,40 @@
+// The parent passes packaged bytes, never URLs supplied by an image or a user.
+self.onmessage = async ({ data: { assets, image } }) => {
+  const urls = []
+  const moduleUrl = name => {
+    const url = URL.createObjectURL(new Blob([assets[name]], { type: 'text/javascript' }))
+    urls.push(url)
+    return url
+  }
+  try {
+    // A synthetic origin lets Pyodide use its normal loader inside a file:// WebView.
+    // Every fetch is intercepted; missing bundled files fail closed, with no network fallback.
+    globalThis.fetch = async input => {
+      const url = new URL(String(input))
+      const name = url.pathname.slice(1)
+      if (url.origin !== 'https://pindou.invalid' || !Object.hasOwn(assets, name)) throw Error('缺少离线识别资源：' + name)
+      return new Response(assets[name], { headers: { 'Content-Type': name.endsWith('.wasm') ? 'application/wasm' : 'application/octet-stream' } })
+    }
+    const { loadPyodide } = await import(moduleUrl('pyodide.mjs'))
+    const { default: createPyodideModule } = await import(moduleUrl('pyodide.asm.mjs'))
+    self.postMessage({ stage: 'loading', message: '正在准备手机离线识别…' })
+    const py = await loadPyodide({ indexURL: 'https://pindou.invalid/', createPyodideModule })
+    await py.loadPackage(['numpy', 'opencv-python', 'pillow'])
+    py.FS.mkdirTree('/app/experiments/issue8')
+    py.FS.mkdirTree('/app/app/src/ledger')
+    for (const [name, bytes] of Object.entries(assets)) {
+      if (name.endsWith('.py') || name.endsWith('.npz') || name === 'glyphs.json') py.FS.writeFile('/app/experiments/issue8/' + name, new Uint8Array(bytes))
+    }
+    py.FS.writeFile('/app/app/src/ledger/catalog.ts', new Uint8Array(assets['catalog.ts']))
+    py.FS.writeFile('/app/input', new Uint8Array(image))
+    self.postMessage({ stage: 'recognizing', message: '正在读取图例并检查制作区域…' })
+    const result = JSON.parse(py.runPython('import sys, json\nsys.path.insert(0, "/app/experiments/issue8")\nfrom recognize import recognize\njson.dumps(recognize("/app/input"), ensure_ascii=False)'))
+    // Keep per-region evidence for this session; full cell debugging stays in the experiment.
+    const evidence = result.evidence.map(e => ({ id: e.id, rawText: e.rawText ?? (typeof e.code === 'string' ? e.code : e.code?.rawText) ?? '', region: e.region }))
+    self.postMessage({ stage: 'result', result: { algorithm: result.algorithm, status: result.status, source: result.source, image: result.image, candidates: result.candidates, evidence, doubts: result.doubts, total: result.total, titleTotal: result.titleTotal, coverage: result.coverage, elapsedSeconds: result.elapsedSeconds } })
+  } catch (error) {
+    self.postMessage({ stage: 'error', message: '本次识别未能完成，可重试或手工录入。', detail: String(error) })
+  } finally {
+    for (const url of urls) URL.revokeObjectURL(url)
+  }
+}

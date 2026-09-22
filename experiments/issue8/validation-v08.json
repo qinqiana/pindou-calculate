@@ -1,0 +1,140 @@
+{
+  "foundation": {
+    "baselinePassed": 17,
+    "passed": 17,
+    "denominator": 18,
+    "regressions": [],
+    "states": {
+      "failed": 1,
+      "partial": 17,
+      "ready": 1
+    },
+    "changedCounts": [],
+    "improved": []
+  },
+  "37": {
+    "baselinePassed": 30,
+    "passed": 30,
+    "denominator": 37,
+    "regressions": [],
+    "states": {
+      "partial": 37
+    },
+    "changedCounts": [],
+    "improved": []
+  },
+  "old100": {
+    "baselinePassed": 71,
+    "passed": 71,
+    "denominator": 100,
+    "regressions": [],
+    "states": {
+      "partial": 98,
+      "failed": 2
+    },
+    "changedCounts": [
+      "L008",
+      "L010",
+      "L012",
+      "L016",
+      "L021",
+      "L030",
+      "L031",
+      "L033",
+      "L037",
+      "L042"
+    ],
+    "improved": []
+  },
+  "spot": {
+    "baselinePassed": 33,
+    "passed": 37,
+    "denominator": 100,
+    "regressions": [],
+    "states": {
+      "partial": 97,
+      "failed": 3
+    },
+    "changedCounts": [
+      "P001",
+      "P005",
+      "P006",
+      "P007",
+      "P009",
+      "P015",
+      "P022",
+      "P023",
+      "P029",
+      "P031",
+      "P034",
+      "P035",
+      "P036",
+      "P037",
+      "P038",
+      "P040",
+      "P045",
+      "P049",
+      "P051",
+      "P052",
+      "P054",
+      "P056",
+      "P058",
+      "P059",
+      "P060",
+      "P062",
+      "P069",
+      "P071",
+      "P073",
+      "P077",
+      "P081",
+      "P083",
+      "P092",
+      "P093"
+    ],
+    "improved": [
+      "P001",
+      "P015",
+      "P034",
+      "P040"
+    ],
+    "pure221": {
+      "passed": 37,
+      "denominator": 37,
+      "exact": 36
+    },
+    "supportedSubsetOnly": {
+      "passed": 97,
+      "denominator": 97,
+      "meaning": "Only MARD221 subset, not whole-diagram acceptance"
+    },
+    "emptySupportedInputs": [
+      "P029",
+      "P033",
+      "P036"
+    ],
+    "siteCounts": {
+      "BitBead": {
+        "passed": 16,
+        "total": 16
+      },
+      "石弦": {
+        "passed": 21,
+        "total": 21
+      }
+    }
+  },
+  "tests": {
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/kenbattle/apps/comfyui/comfyui-env/bin/python -m unittest discover -s experiments/issue8 -p test_recognize.py",
+    "passed": 23,
+    "log": "/tmp/pindou-algorithm-20260922/tests-final-v2.log"
+  },
+  "independentQA": {
+    "completed": false,
+    "model": "kimi/k3-256k",
+    "effort": "max",
+    "attempts": 3,
+    "failure": "unreadable_encrypted_agent_task",
+    "implementationBy": "main agent only",
+    "fallback": "self-review; no model substitution"
+  }
+}

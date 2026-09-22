@@ -1,0 +1,101 @@
+id,site,brand,title,width,height,passed,status,total,elapsedSeconds,peakRssMiB,missing,extra,outsideTolerance,outsideCatalog
+P001,石弦,mard_221,自嘲熊拼豆图纸·第5款,30,30,False,partial,80,0.318,96.78,,E5,,
+P002,石弦,mard_221,传统文化拼豆图纸·第51款,32,32,True,partial,1021,0.488,103.3,,,,
+P003,BitBead,mard,Bead pattern generator,27,32,True,partial,405,0.302,83.25,,,,
+P004,石弦,mard_221,蛋仔惊魂徽章7拼豆图纸,39,39,True,partial,1160,0.544,118.5,,,,
+P005,石弦,mard_221,敦煌蜻蜓拼豆图纸,51,51,False,failed,,0.402,141.63,A10 A21 A25 C5 F13 G13 P12 P16 R23 R7,,,P12 P16 R23 R7
+P006,石弦,mard_221,游戏角色拼豆图纸·第43款,53,53,False,partial,1013,4.483,139.76,P16 P5 R1 R22,F1,,P16 P5 R1 R22
+P007,石弦,mard_221,绿釉陶立狗拼豆图纸,59,59,False,partial,1392,3.522,144.09,R22 R23,E5,,R22 R23
+P008,石弦,mard_221,传统文化拼豆图纸·第35款,44,44,False,partial,655,0.525,128.7,R1,,,R1
+P009,石弦,mard_221,蛋仔惊魂灵媒拼豆图纸,56,56,False,partial,1467,1.091,141.92,P1 P12 Q3 R14 R23,E5,,P1 P12 Q3 R14 R23
+P010,石弦,mard_221,九色鹿拼豆图纸,50,50,False,partial,590,0.84,135.66,R22,,,R22
+P011,石弦,mard_221,传统文化拼豆图纸·第33款,35,35,False,partial,505,1.948,110.14,R1 R5,,,R1 R5
+P012,石弦,mard_221,柠檬冰饮拼豆图纸,77,77,False,partial,1280,1.553,162.29,P12 P6 Q3 R17 R5,,,P12 P6 Q3 R17 R5
+P013,石弦,mard_221,卡通人物拼豆图纸·第16款,41,41,False,partial,997,0.616,121.79,P22,,,P22
+P014,石弦,mard_221,水果系列拼豆图纸·第3款,53,53,False,partial,1239,4.132,139.62,P10 R5 R8,,,P10 R5 R8
+P015,石弦,mard_221,红楼梦林黛玉拼豆图纸,98,98,False,partial,2552,6.868,180.65,M1,,,
+P016,石弦,mard_221,火影忍者旗木卡卡西拼豆图纸,78,78,False,partial,2566,17.823,162.28,P15 P16 P2 P22 P9 R13,,,P15 P16 P2 P22 P9 R13
+P017,石弦,mard_221,鬼灭之刃拼豆图纸·第2款,45,45,True,partial,777,0.771,130.91,,,,
+P018,BitBead,mard,Bead pattern generator,33,33,True,partial,841,0.18,104.16,,,,
+P019,石弦,mard_221,敦煌蝶纹拼豆图纸,41,41,True,partial,736,0.577,121.5,,,,
+P020,石弦,mard_221,小老鼠与奶酪拼豆图纸,33,33,True,partial,277,0.33,104.33,,,,
+P021,石弦,mard_221,卡通人物拼豆图纸·第17款,38,38,True,partial,852,0.56,116.72,,,,
+P022,石弦,mard_221,琪琪的小黑猫拼豆图纸,36,36,False,partial,500,0.4,108.23,R13,E5,,R13
+P023,石弦,mard_221,卡通人物拼豆图纸·第6款,50,50,False,failed,,0.496,140.47,E1 E14 F14 G17 G3 H5 H6 H7 M14 R13 R22 R23 R25,,,R13 R22 R23 R25
+P024,BitBead,mard,Bead pattern generator,39,45,True,partial,1334,0.411,104.16,,,,
+P025,BitBead,mard,Bead pattern generator,51,35,True,partial,866,0.41,104.16,,,,
+P026,石弦,mard_221,卡通人物拼豆图纸·第2款,70,70,True,partial,1454,2.095,152.15,,,,
+P027,石弦,mard_221,知名IP拼豆图纸·第7款,46,46,True,partial,1251,0.581,133.96,,,,
+P028,石弦,mard_221,卡通人物拼豆图纸·第18款,39,39,False,partial,635,2.82,120.28,R22,,,R22
+P029,BitBead,perler,Bead pattern generator,74,102,False,partial,173,1.562,155.7,P1 P105 P17 P18 P181 P201 P208 P267 P92,M8,,P1 P105 P17 P18 P181 P201 P208 P267 P92
+P030,石弦,mard_221,红楼梦王熙凤拼豆图纸,82,82,False,partial,1689,14.379,170.96,P1 P16 P18 P2 P5 P9 R13 R21 Y2 ZG3,,,P1 P16 P18 P2 P5 P9 R13 R21 Y2 ZG3
+P031,石弦,mard_221,天空之城巴斯拼豆图纸,65,65,False,failed,,1.385,170.96,B15 B23 B25 B32 C20 C29 G1 G14 G16 G17 G2 G3 G4 H15 H3 H7 M9 R22,,,R22
+P032,BitBead,mard,Bead pattern generator,46,49,True,partial,1377,0.722,170.96,,,,
+P033,BitBead,artkal-mini,Bead pattern generator,52,54,False,failed,,0.938,170.96,MA17 MF11 MG10,,,MA17 MF11 MG10
+P034,石弦,mard_221,锦鲤拼豆图纸,89,89,False,partial,1998,4.342,172.6,,E5,,
+P035,石弦,mard_221,蛋仔惊魂徽章9拼豆图纸,36,36,False,partial,707,0.944,170.96,R14 R7,,,R14 R7
+P036,BitBead,perler,Bead pattern generator,40,33,False,partial,84,0.833,170.96,P1 P17 P181 P207 P208 P21,M8,,P1 P17 P181 P207 P208 P21
+P037,石弦,mard_221,鼎拼豆图纸,47,47,False,partial,30,0.754,170.96,B12 B15 B19 B22 B25 B27 B28 B32 B9 C1 C18 H7 M2 P6,E3,,P6
+P038,石弦,mard_221,蛋仔惊魂徽章10拼豆图纸,36,36,False,partial,665,0.958,170.96,R14 R7,M1 M7,,R14 R7
+P039,石弦,mard_221,枫叶小鹿拼豆图纸,42,42,False,partial,711,1.261,170.96,R1 R22,,,R1 R22
+P040,石弦,mard_221,蜡笔小新拼豆图纸,39,39,False,partial,772,0.479,170.96,,E5,,
+P041,石弦,mard_221,传统文化拼豆图纸·第50款,32,32,True,partial,680,0.367,170.96,,,,
+P042,BitBead,mard,Bead pattern generator,26,36,True,partial,488,0.362,170.96,,,,
+P043,石弦,mard_221,其他拼豆图纸·第23款,48,48,False,partial,704,0.632,170.96,P16 R1,,,P16 R1
+P044,石弦,mard_221,巧克力圣代拼豆图纸,36,36,False,partial,376,1.034,170.96,P12 R22,,,P12 R22
+P045,石弦,mard_221,幽灵公主阿席达卡拼豆图纸,70,70,False,partial,30,0.707,170.96,A23 C20 C29 D10 D7 E19 H13 H6 M12 M6 M9 ZG3,,H7,ZG3
+P046,石弦,mard_221,蛋仔惊魂报童拼豆图纸,56,50,False,partial,1868,1.042,170.96,R25,,,R25
+P047,石弦,mard_221,自嘲熊拼豆图纸·第8款,30,30,False,partial,290,0.434,170.96,P16 R23,,,P16 R23
+P048,BitBead,mard,Bead pattern generator,18,18,True,partial,224,0.194,170.96,,,,
+P049,石弦,mard_221,吉他粉兔拼豆图纸,46,46,False,partial,563,0.588,170.96,Q4 R13,E5,,Q4 R13
+P050,石弦,mard_221,自嘲熊拼豆图纸·第4款,30,30,True,partial,145,0.441,170.96,,,,
+P051,石弦,mard_221,水果系列拼豆图纸·第5款,53,53,False,partial,830,6.36,170.96,P16 P5 R1 R22 R5,A1,,P16 P5 R1 R22 R5
+P052,石弦,mard_221,卡通人物拼豆图纸·第23款,52,52,True,partial,2701,0.704,170.96,,,,
+P053,石弦,mard_221,鬼灭之刃拼豆图纸·第7款,45,45,True,partial,552,0.809,170.96,,,,
+P054,石弦,mard_221,水果系列拼豆图纸·第4款,60,60,False,failed,,0.604,170.96,A16 A2 B11 B13 B15 B17 B25 B27 B29 B32 B8 B9 E15 E19 E2 E4 F2 F21 F24 F3 F9 G12 G15 G7 G9 M2 R1 R22 R5,,,R1 R22 R5
+P055,石弦,mard_221,其他拼豆图纸·第24款,90,68,False,partial,1173,7.393,177.04,P16 P2 P9 R1,,,P16 P2 P9 R1
+P056,石弦,mard_221,传统文化拼豆图纸·第73款,41,41,False,partial,1267,1.178,170.96,P16 R1,,,P16 R1
+P057,BitBead,mard,Bead pattern generator,54,54,True,partial,2304,0.583,170.96,,,,
+P058,石弦,mard_221,红烧肉拼豆图纸,74,74,False,partial,1542,7.764,170.96,P18 R1 R22 R8,E5,,P18 R1 R22 R8
+P059,石弦,mard_221,蛋仔惊魂徽章15拼豆图纸,36,36,False,partial,688,0.957,170.96,R14 R7,,,R14 R7
+P060,石弦,mard_221,醒狮狮头拼豆图纸,57,57,False,partial,1672,6.054,170.96,M2 P5 R16,,,P5 R16
+P061,石弦,mard_221,芒果冰碗拼豆图纸,34,34,False,partial,594,1.201,170.96,P16 P5 R7,,,P16 P5 R7
+P062,石弦,mard_221,爱丽丝梦游仙境红皇后拼豆图纸,55,55,False,partial,2816,4.161,170.96,P9 R1 R24,,,P9 R1 R24
+P063,石弦,mard_221,鬼灭之刃拼豆图纸·第9款,45,45,False,partial,681,1.935,170.96,R22,,,R22
+P064,石弦,mard_221,元气少女缘结神巴卫拼豆图纸,60,60,True,partial,1514,0.982,170.96,,,,
+P065,石弦,mard_221,自嘲熊拼豆图纸·第18款,30,30,True,partial,103,0.302,170.96,,,,
+P066,石弦,mard_221,小白狗富贵拼豆图纸,38,34,True,partial,205,0.431,170.96,,,,
+P067,BitBead,mard,Bead pattern generator,64,78,True,partial,2766,1.183,170.96,,,,
+P068,石弦,mard_221,西瓜兔拼豆图纸,33,33,True,partial,217,0.414,170.96,,,,
+P069,石弦,mard_221,传统文化拼豆图纸·第42款,82,82,False,partial,3816,23.538,170.96,M1 M2 P2 P23 R13 R20 R22 R25 ZG2,,,P2 P23 R13 R20 R22 R25 ZG2
+P070,石弦,mard_221,传统文化拼豆图纸·第21款,72,72,False,partial,1588,1.575,177.87,P12 P18 P22 R22,,,P12 P18 P22 R22
+P071,石弦,mard_221,大白鹅与小鹅拼豆图纸,85,85,False,partial,1420,16.468,177.87,M1 P16 P2 P9 Q3 R13 R23 R5 R8 ZG3 ZG8,,,P16 P2 P9 Q3 R13 R23 R5 R8 ZG3 ZG8
+P072,BitBead,mard,Bead pattern generator,44,33,True,partial,1290,0.301,177.87,,,,
+P073,石弦,mard_221,自嘲熊拼豆图纸·第10款,30,30,False,partial,231,1.408,177.87,P12,G1,,P12
+P074,石弦,mard_221,糖醋排骨拼豆图纸,62,62,False,partial,1042,0.964,177.87,P5 R22 R23,,,P5 R22 R23
+P075,石弦,mard_221,万圣节南瓜灯拼豆图纸,40,40,False,partial,566,0.583,177.87,P5,,,P5
+P076,BitBead,mard,Bead pattern generator,8,8,True,partial,24,0.061,177.87,,,,
+P077,石弦,mard_221,国风狐女拼豆图纸,50,50,False,partial,1309,0.702,177.87,M2 P22,,,P22
+P078,BitBead,mard,Bead pattern generator,57,35,True,partial,1036,0.297,177.87,,,,
+P079,石弦,mard_221,蛋仔惊魂徽章4拼豆图纸,39,39,False,partial,1037,0.777,177.87,R14,,,R14
+P080,石弦,mard_221,红蟹拼豆图纸,55,55,False,partial,821,1.139,177.87,R1 R25,,,R1 R25
+P081,石弦,mard_221,宗介拼豆图纸,60,60,False,partial,1263,3.657,177.87,P22 R13,E5,,P22 R13
+P082,石弦,mard_221,阿尼亚拼豆图纸,60,60,False,partial,1076,0.903,177.87,P22 R5,,,P22 R5
+P083,石弦,mard_221,梅菜扣肉拼豆图纸,59,40,False,partial,1392,3.583,177.87,R22 R23,E5,,R22 R23
+P084,BitBead,mard,Bead pattern generator,62,53,True,partial,1774,0.753,177.87,,,,
+P085,BitBead,mard,Bead pattern generator,58,41,True,partial,1808,0.287,177.87,,,,
+P086,石弦,mard_221,兔子灯拼豆图纸,67,67,False,partial,1089,1.514,177.87,P16 P18 R1 R22,,,P16 P18 R1 R22
+P087,BitBead,mard,Bead pattern generator,43,45,True,partial,1059,0.339,177.87,,,,
+P088,石弦,mard_221,传统文化拼豆图纸·第47款,51,51,False,partial,1224,0.913,177.87,P6 R14,,,P6 R14
+P089,BitBead,mard,Bead pattern generator,63,100,True,partial,2714,0.775,177.87,,,,
+P090,石弦,mard_221,鬼灭之刃拼豆图纸·第12款,45,45,False,partial,527,0.567,177.87,R22,,,R22
+P091,石弦,mard_221,青苹果精灵拼豆图纸,45,45,False,partial,867,0.835,177.87,P3 R22 ZG2,,,P3 R22 ZG2
+P092,石弦,mard_221,龙拼豆图纸,44,44,False,partial,502,2.193,177.87,P16 P5 R23,E5,,P16 P5 R23
+P093,石弦,mard_221,杨昭君拼豆图纸,70,70,False,partial,140,0.782,177.87,B22 C18 E14 E21 F18 F6 G1 G17 G21 G3 G4 H6 H7 M7 P22 R22 R23,,A23 F11 F25 M3,P22 R22 R23
+P094,BitBead,mard-291,Bead pattern generator,37,49,False,partial,45,0.259,177.87,R1,,,R1
+P095,石弦,mard_221,可颂三明治拼豆图纸,69,69,False,partial,2046,8.383,177.87,P5 R1,,,P5 R1
+P096,石弦,mard_221,古风少年司二拼豆图纸,65,65,False,partial,1081,5.052,177.87,P22 R13 R8 ZG3,,,P22 R13 R8 ZG3
+P097,石弦,mard_221,小灰拼豆图纸,40,40,False,partial,351,0.519,177.87,R22,,,R22
+P098,石弦,mard_221,琪琪拼豆图纸,65,65,True,partial,1401,4.262,177.87,,,,
+P099,石弦,mard_221,哪吒之魔童降世哪吒拼豆图纸,44,44,False,partial,632,2.061,177.87,R1,,,R1
+P100,石弦,mard_221,自嘲熊拼豆图纸·第15款,31,31,False,partial,133,0.464,177.87,R1 R22 Y4,,,R1 R22 Y4

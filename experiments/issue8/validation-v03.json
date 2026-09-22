@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-20",
+  "algorithm": "pixel-glyph-0.3-dev",
+  "testsPassed": 12,
+  "testLog": "test_altered_quantity_is_not_corrected_from_answer_or_grid (test_recognize.RecognitionChecks.test_altered_quantity_is_not_corrected_from_answer_or_grid) ... ok\ntest_blank_image_does_not_become_zero_usage (test_recognize.RecognitionChecks.test_blank_image_does_not_become_zero_usage) ... ok\ntest_evaluation_requires_every_code_and_known_reference (test_recognize.RecognitionChecks.test_evaluation_requires_every_code_and_known_reference) ... ok\ntest_faint_text_near_cell_edge_is_unknown_not_blank (test_recognize.RecognitionChecks.test_faint_text_near_cell_edge_is_unknown_not_blank) ... ok\ntest_invalid_and_animated_files_preserve_failure (test_recognize.RecognitionChecks.test_invalid_and_animated_files_preserve_failure) ... ok\ntest_last_legend_row_cut_off_is_partial (test_recognize.RecognitionChecks.test_last_legend_row_cut_off_is_partial) ... ok\ntest_negative_decimal_and_duplicate_legend_are_not_counted (test_recognize.RecognitionChecks.test_negative_decimal_and_duplicate_legend_are_not_counted) ... ok\ntest_original_all_nine_codes_and_independent_cells (test_recognize.RecognitionChecks.test_original_all_nine_codes_and_independent_cells) ... ok\ntest_rotated_transparent_image_preserves_visible_legend (test_recognize.RecognitionChecks.test_rotated_transparent_image_preserves_visible_legend) ... ok\ntest_separate_quantity_fields_keep_minus_and_decimal (test_recognize.RecognitionChecks.test_separate_quantity_fields_keep_minus_and_decimal) ... ok\ntest_unnumbered_grid_counts_white_beads_and_keeps_unknown_cells (test_recognize.RecognitionChecks.test_unnumbered_grid_counts_white_beads_and_keeps_unknown_cells) ... ok\ntest_without_title_or_legend_uses_only_cells (test_recognize.RecognitionChecks.test_without_title_or_legend_uses_only_cells) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 20.462s\n\nOK\n",
+  "old18": "results-v03-foundation.json",
+  "new37": "results-v03.json",
+  "originalFrozen": "results-v03-frozen.json",
+  "sourceReferenceVerification": "source-verification-v03.json",
+  "memory": "memory-v03.json",
+  "qa": "自行复核，未做独立 QA；Luna only collected data",
+  "androidVerified": false,
+  "userAccepted": false,
+  "committed": false,
+  "pushed": false,
+  "dependencyInstalled": false,
+  "freezes": {
+    "foundation": "/tmp/pindou-issue8-v02/frozen-foundation",
+    "v03": "/tmp/pindou-issue8-v02/frozen-v03"
+  }
+}

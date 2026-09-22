@@ -1,6 +1,6 @@
 {
   "pages": [
-    { "path": "pages/stock/index", "style": { "navigationBarTitleText": "豆仓" } },
+    { "path": "pages/stock/index", "style": { "navigationStyle": "custom" } },
     { "path": "pages/stock/batch", "style": { "navigationBarTitleText": "批量录入" } },
     { "path": "pages/stock/history", "style": { "navigationBarTitleText": "库存变动" } },
     { "path": "pages/pattern/list", "style": { "navigationBarTitleText": "图纸" } },
@@ -15,14 +15,14 @@
     "backgroundColor": "#F7F3EA"
   },
   "tabBar": {
-    "color": "#A89D8C",
-    "selectedColor": "#566C4D",
-    "backgroundColor": "#FFFEFB",
+    "color": "#727278",
+    "selectedColor": "#0066CC",
+    "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
-      { "pagePath": "pages/stock/index", "text": "豆仓" },
-      { "pagePath": "pages/pattern/list", "text": "图纸" },
-      { "pagePath": "pages/settings/index", "text": "设置" }
+      { "pagePath": "pages/stock/index", "text": "豆仓", "iconPath": "static/tabs/stock.png", "selectedIconPath": "static/tabs/stock-selected.png" },
+      { "pagePath": "pages/pattern/list", "text": "图纸", "iconPath": "static/tabs/patterns.png", "selectedIconPath": "static/tabs/patterns-selected.png" },
+      { "pagePath": "pages/settings/index", "text": "设置", "iconPath": "static/tabs/settings.png", "selectedIconPath": "static/tabs/settings-selected.png" }
     ]
   }
 }
