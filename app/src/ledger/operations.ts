@@ -204,6 +204,7 @@ export class Ledger {
           thumbnail,
           confirmedVersion: null,
           createdSeq: state.seq + 1,
+          archivedAt: null,
         }
         state.patterns.push(pattern)
         const op = pushOp(state, requestId, 'create-pattern', this.clock(), '导入图纸', id)
@@ -230,6 +231,26 @@ export class Ledger {
       const op = pushOp(state, requestId, 'pattern-meta', this.clock(), '编辑图纸信息', patternId)
       return { operationId: op.id }
     })
+  }
+
+  archivePattern(requestId: string, patternId: string, token: Token): Ok<{ patternId: string; token: Token }> | Fail {
+    const payload = { kind: 'archive-pattern', patternId }
+    const replayed = this.existing(requestId, payload)
+    if (replayed) return replayed
+    const pattern = this.store.live().patterns.find((p) => p.id === patternId)
+    if (!pattern) return fail('missing-pattern', '找不到图纸')
+    if (pattern.archivedAt) return fail('already-archived', '图纸已从列表移除')
+    return this.write(
+      requestId,
+      payload,
+      token,
+      (state) => {
+        const current = state.patterns.find((p) => p.id === patternId)!
+        current.archivedAt = this.clock()
+        const op = pushOp(state, requestId, 'archive-pattern', this.clock(), '移除图纸', patternId)
+        return { operationId: op.id, patternId }
+      },
+    )
   }
 
   saveDraft(patternId: string, lines: { code: unknown; qty: unknown }[], titleTotal?: unknown): Ok<{ token: Token }> | Fail {
@@ -326,7 +347,7 @@ export class Ledger {
     hasDraft: boolean
     sizeLabel: string
   }[] {
-    return this.listPatterns().map((pattern) => {
+    return this.listPatterns().filter((pattern) => !pattern.archivedAt).map((pattern) => {
       const detail = this.getPattern(pattern.id)
       const gap = pattern.confirmedVersion != null ? this.previewGap(pattern.id) : null
       const makes = this.listMakes(pattern.id)
@@ -884,7 +905,7 @@ function stateToBackup(state: LedgerState, exportedAt: string): BackupFile {
     stock: COLOR_CODES.map((c) => clone(state.stock[c])),
     operations: clone(state.operations),
     movements: clone(state.movements),
-    patterns: clone(state.patterns),
+    patterns: clone(state.patterns).map((p) => ({ ...p, archivedAt: p.archivedAt ?? null })),
     confirmedUsages: clone(state.confirmedUsages),
     makes: clone(state.makes),
     requests: clone(state.requests),
@@ -962,7 +983,7 @@ function parseBackup(raw: unknown): Ok<{ backup: BackupFile }> | Fail {
       if (!COLOR_SET.has(line.code)) return fail('invalid-backup', '制作快照含未知色号：' + line.code)
     }
   }
-  if (data.patterns.some((p) => !p || typeof p !== 'object' || typeof p.id !== 'string' || typeof p.name !== 'string' || !p.thumbnail || typeof p.thumbnail !== 'object' || (p.thumbnail.mime !== 'image/png' && p.thumbnail.mime !== 'image/jpeg') || typeof p.thumbnail.base64 !== 'string' || p.thumbnail.base64.length === 0)) return fail('invalid-backup', '备份图纸记录无效')
+  if (data.patterns.some((p) => !p || typeof p !== 'object' || typeof p.id !== 'string' || typeof p.name !== 'string' || !p.thumbnail || typeof p.thumbnail !== 'object' || (p.thumbnail.mime !== 'image/png' && p.thumbnail.mime !== 'image/jpeg') || typeof p.thumbnail.base64 !== 'string' || p.thumbnail.base64.length === 0 || (p.archivedAt !== undefined && p.archivedAt !== null && (typeof p.archivedAt !== 'string' || p.archivedAt.trim() === '')))) return fail('invalid-backup', '备份图纸记录无效')
   const patternIds = new Set(data.patterns.map((p) => p.id))
   if (patternIds.size !== data.patterns.length) return fail('invalid-backup', '备份图纸标识重复')
   for (const u of data.confirmedUsages) {
@@ -1008,7 +1029,7 @@ function backupToState(backup: BackupFile): LedgerState {
     stock,
     operations: clone(backup.operations),
     movements: clone(backup.movements),
-    patterns: clone(backup.patterns).map((p) => ({ ...p, sizeNote: p.sizeNote ?? '' })),
+    patterns: clone(backup.patterns).map((p) => ({ ...p, sizeNote: p.sizeNote ?? '', archivedAt: p.archivedAt ?? null })),
     confirmedUsages: clone(backup.confirmedUsages),
     drafts: [],
     makes: clone(backup.makes),

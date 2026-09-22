@@ -11,6 +11,7 @@ export type OperationType =
   | 'create-pattern'
   | 'pattern-meta'
   | 'confirm-usage'
+  | 'archive-pattern'
   | 'restore'
 
 export type StockRow = {
@@ -60,6 +61,8 @@ export type Pattern = {
   thumbnail: Thumbnail
   confirmedVersion: number | null
   createdSeq: number
+  /** 从主列表移除的时间；旧账本缺失时视为未归档。 */
+  archivedAt?: string | null
 }
 
 export type UsageLine = { code: string; qty: number }

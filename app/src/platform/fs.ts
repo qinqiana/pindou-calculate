@@ -109,9 +109,20 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
                 if (Number(file.size) > MAX_IMAGE_BYTES) return resolve(fail('图片超过 20 MiB 上限，请选择较小的原图'))
                 const reader = new plus.io.FileReader()
                 let settled = false
+                const finish = (result: FileOutcome<{ bytes: Uint8Array; mime: string }>) => {
+                  if (settled) return
+                  settled = true
+                  reader.onload = null
+                  reader.onloadend = null
+                  reader.onerror = null
+                  resolve(result)
+                }
                 const next = () => {
                   if (settled) return
                   settled = true
+                  reader.onload = null
+                  reader.onloadend = null
+                  reader.onerror = null
                   nextPath()
                 }
                 const done = (e: PlusAny) => {
@@ -122,11 +133,9 @@ function readImageBytes(path: string): Promise<FileOutcome<{ bytes: Uint8Array; 
                   try {
                     const bytes = base64ToBytes(m[2])
                     if (bytes.length > MAX_IMAGE_BYTES) {
-                      settled = true
-                      return resolve(fail('图片超过 20 MiB 上限，请选择较小的原图'))
+                      return finish(fail('图片超过 20 MiB 上限，请选择较小的原图'))
                     }
-                    settled = true
-                    resolve({ ok: true, value: { bytes, mime: m[1] } })
+                    finish({ ok: true, value: { bytes, mime: m[1] } })
                   } catch {
                     next()
                   }

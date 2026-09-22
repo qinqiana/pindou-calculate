@@ -54,6 +54,73 @@ test('pickImageFile：App 优先使用 plus.gallery.pick 的系统图片路径',
   assert.deepEqual(paths, ['file:///storage/emulated/0/Pictures/pattern.png'])
 })
 
+test('pickImageFile：连续选择两张图片时读取状态彼此独立，重复回调也只完成一次', async () => {
+  const selectedPaths = ['file:///storage/emulated/0/Pictures/one.png', 'file:///storage/emulated/0/Pictures/two.png']
+  const resolvedPaths: string[] = []
+  let pickCount = 0
+  let readCount = 0
+  const plus = {
+    gallery: {
+      pick(ok: (path: string) => void) {
+        ok(selectedPaths[pickCount++])
+      },
+    },
+    io: {
+      resolveLocalFileSystemURL(path: string, ok: (e: any) => void) {
+        resolvedPaths.push(path)
+        ok({ file(cb: (f: any) => void) { cb({ name: path }) } })
+      },
+      FileReader: class {
+        onload: ((e: any) => void) | null = null
+        onloadend: ((e: any) => void) | null = null
+        onerror: (() => void) | null = null
+        readAsDataURL() {
+          const bytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, readCount++])
+          const event = { target: { result: 'data:image/png;base64,' + Buffer.from(bytes).toString('base64') } }
+          const onload = this.onload!
+          const onloadend = this.onloadend!
+          onload(event)
+          onloadend(event)
+        }
+      },
+    },
+  }
+  const result = await withEnv({ plus }, async () => [await pickImageFile(), await pickImageFile()])
+  assert.equal(result[0].ok, true)
+  assert.equal(result[1].ok, true)
+  assert.deepEqual(resolvedPaths, selectedPaths)
+  if (result[0].ok && result[1].ok) assert.notDeepEqual(Array.from(result[0].value.bytes), Array.from(result[1].value.bytes))
+})
+
+test('pickImageFile：一次读取失败后下一次选择仍可正常读取', async () => {
+  let pickCount = 0
+  const plus = {
+    gallery: {
+      pick(ok: (path: string) => void) {
+        ok(pickCount++ === 0 ? 'file:///bad.png' : 'file:///good.png')
+      },
+    },
+    io: {
+      resolveLocalFileSystemURL(path: string, ok: (e: any) => void, failPath: () => void) {
+        if (path === 'file:///bad.png') return failPath()
+        ok({ file(cb: (f: any) => void) { cb({ name: 'good.png' }) } })
+      },
+      FileReader: class {
+        onloadend: ((e: any) => void) | null = null
+        onerror: (() => void) | null = null
+        readAsDataURL() {
+          this.onloadend!({ target: { result: 'data:image/png;base64,' + Buffer.from(PNG_BYTES).toString('base64') } })
+        }
+      },
+    },
+  }
+  const result = await withEnv({ plus }, async () => [await pickImageFile(), await pickImageFile()])
+  assert.equal(result[0].ok, false)
+  assert.equal(result[1].ok, true)
+})
+
+// Android content URI selection is covered through OPEN_DOCUMENT in webp.test.ts.
+
 test('pickImageFile：chooseImage + plus.io 读出字节与 mime', async () => {
   const uni = {
     chooseImage(opts: any) {

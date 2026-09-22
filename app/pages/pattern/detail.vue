@@ -9,6 +9,12 @@
       </view>
     </view>
 
+    <view v-if="detail && !detail.confirmed" class="card unconfirmed">
+      <text class="section-title">尚未录入用量</text>
+      <text class="unconfirmed-text">图纸已经导入，但还没有确认逐色用量。请手工录入后再查看总需求和库存缺口。</text>
+      <button class="btn outline" @click="goEdit">录入逐色用量</button>
+    </view>
+
     <view v-if="gap" class="card stats">
       <view class="stat">
         <text class="stat-num">{{ gap.totalDemand }}</text>
@@ -45,6 +51,7 @@
       <button class="btn ghost" @click="copyList">补货清单</button>
       <button class="btn ghost" @click="goShare">分享图片</button>
       <button class="btn ghost" @click="goEdit">编辑用量</button>
+      <button class="btn ghost danger" @click="removePattern">移除图纸</button>
     </view>
 
     <view v-if="makes.length" class="card">
@@ -143,6 +150,22 @@ function goShare() {
 function goEdit() {
   uni.navigateTo({ url: '/pages/pattern/edit?id=' + id.value })
 }
+
+function removePattern() {
+  uni.showModal({
+    title: '移除图纸',
+    content: '图纸将从主列表移除，但确认用量、制作记录和备份会保留。',
+    success: ({ confirm }: { confirm: boolean }) => {
+      if (!confirm) return
+      const result = appLedger().archivePattern(newRequestId(), id.value, appLedger().token())
+      if (!result.ok) {
+        error.value = result.message
+        return
+      }
+      uni.navigateBack()
+    },
+  })
+}
 </script>
 
 <style>
@@ -156,6 +179,8 @@ function goEdit() {
 .muted { margin-top: 8rpx; font-size: 24rpx; color: #857c6e; }
 .draft-note { margin-top: 16rpx; background: #f9eae0; border-radius: 14rpx; padding: 16rpx 20rpx; }
 .draft-text { font-size: 24rpx; color: #8a4b2f; }
+.unconfirmed { background: #fbf8f0; }
+.unconfirmed-text { display: block; color: #857c6e; font-size: 26rpx; line-height: 1.6; }
 
 .stats { display: flex; align-items: center; padding: 24rpx 0; }
 .stat { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4rpx; }
@@ -175,13 +200,14 @@ function goEdit() {
 .gap-badge.left { color: #566c4d; background: #edf1e6; }
 
 .actions { margin-top: 28rpx; display: flex; flex-direction: column; gap: 20rpx; }
-.tools { display: flex; gap: 16rpx; margin-top: 20rpx; }
+.tools { display: flex; flex-wrap: wrap; gap: 16rpx; margin-top: 20rpx; }
 .btn { margin: 0; font-size: 30rpx; border-radius: 999rpx; }
 .btn::after { border: none; }
 .big { height: 104rpx; line-height: 104rpx; font-size: 32rpx; }
 .primary { background: #6b8260; color: #fff; font-weight: 700; }
 .outline { background: #fffefb; color: #566c4d; border: 2rpx solid #6b8260; font-weight: 600; }
 .ghost { flex: 1; background: #fffefb; color: #6e6353; border: 2rpx solid #d8cfbe; height: 84rpx; line-height: 84rpx; font-size: 26rpx; }
+.ghost.danger { color: #b65b38; border-color: #e3b9a5; }
 .ghost.small { flex: none; margin-top: 12rpx; padding: 0 32rpx; height: 64rpx; line-height: 64rpx; font-size: 24rpx; color: #b65b38; border-color: #e3b9a5; }
 
 .make { padding: 20rpx 0; border-bottom: 1rpx solid #f0e9da; }
