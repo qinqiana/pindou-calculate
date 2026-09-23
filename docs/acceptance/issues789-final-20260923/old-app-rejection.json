@@ -1,0 +1,15 @@
+{
+  "oldSource": "PR #4 merged application source",
+  "v1Accepted": true,
+  "v2Validation": {
+    "ok": false,
+    "code": "unsupported-backup",
+    "message": "不支持的备份格式版本：2"
+  },
+  "v2Restore": {
+    "ok": false,
+    "code": "unsupported-backup",
+    "message": "不支持的备份格式版本：2"
+  },
+  "oldLedgerUnchanged": true
+}

@@ -221,8 +221,10 @@ test('pickImageFile：无 chooseImage 的环境给出明确失败', async () => 
   assert.equal(r.ok, false)
 })
 
-function fakeAndroid(lines: string[], resultCode: number) {
+function fakeAndroid(lines: string[], resultCode: number, readFails = false) {
   const calls: string[] = []
+  const resolver = {}
+  const input = { close() { calls.push('input-close') } }
   class Intent {
     static ACTION_OPEN_DOCUMENT = 'android.intent.action.OPEN_DOCUMENT'
     static CATEGORY_OPENABLE = 'android.intent.category.OPENABLE'
@@ -244,9 +246,10 @@ function fakeAndroid(lines: string[], resultCode: number) {
   class BufferedReader {
     private rest = lines.slice()
     readLine(): string | null {
+      if (readFails) throw new Error('read interrupted')
       return this.rest.length ? this.rest.shift()! : null
     }
-    close() {}
+    close() { calls.push('reader-close') }
   }
   const main: any = {
     onActivityResult: null as null | ((rc: number, sc: number, data: any) => void),
@@ -255,17 +258,20 @@ function fakeAndroid(lines: string[], resultCode: number) {
       this.onActivityResult!(code, resultCode, resultCode === -1 ? { getData: () => 'content://backup/1' } : null)
     },
     getContentResolver() {
-      return {
-        openInputStream(uri: unknown) {
-          calls.push('open:' + String(uri))
-          return { uri }
-        },
-      }
+      // Real Native.js returns an opaque resolver without JS methods.
+      return resolver
     },
   }
   const plus = {
     android: {
       runtimeMainActivity: () => main,
+      invoke(object: any, method: string, ...args: any[]) {
+        if (object === resolver && method === 'openInputStream') {
+          calls.push('open:' + String(args[0]))
+          return input
+        }
+        return object[method](...args)
+      },
       importClass(name: string) {
         if (name === 'android.content.Intent') return Intent
         if (name === 'java.io.InputStreamReader') return InputStreamReader
@@ -284,6 +290,17 @@ test('pickTextDocument：Android 文档选择器读出文本内容', async () =>
   if (r.ok) assert.match(r.value.text, /formatVersion/)
   assert.ok(calls.some((c) => c.startsWith('start:9021')))
   assert.ok(calls.includes('open:content://backup/1'))
+  assert.ok(calls.includes('reader-close'))
+})
+
+test('pickTextDocument：读取中断关闭原生流，恢复原有回调并明确失败', async () => {
+  const { plus, main, calls } = fakeAndroid(['partial json'], -1, true)
+  const previous = () => {}
+  main.onActivityResult = previous
+  const result = await withEnv({ plus }, () => pickTextDocument())
+  assert.equal(result.ok, false)
+  assert.ok(calls.includes('reader-close'))
+  assert.equal(main.onActivityResult, previous)
 })
 
 test('pickTextDocument：用户取消系统选择器返回 cancelled', async () => {

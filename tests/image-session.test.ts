@@ -174,6 +174,37 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   assert.deepEqual(ledger.listStock(), stock)
 })
 
+test('recognition timeout and bridge errors cannot save an empty result as manual zero', () => {
+  for (const failure of ['timer', 'timeout', 'error', 'invalid-result']) {
+    const ledger = new Ledger()
+    const created = ledger.createPattern('failed-recognition', { name: '失败保护', imageBytes: TINY_PNG }, ledger.token())
+    assert.ok(created.ok)
+    const original = prepareOriginal(TINY_PNG)
+    assert.ok(original.ok)
+    handoffOriginal(created.patternId, ledger.token().epoch, original.original)
+    let timeout: Function = () => {}
+    const { api, hooks } = page('edit', ledger, {
+      setTimeout: (callback: Function, ms: number) => { assert.equal(ms, 30000); timeout = callback; return 1 },
+      uni: { redirectTo() {}, showModal: (options: any) => options.success({ confirm: true }) },
+    }, 'request, busy, lines, original, confirmAll, receiveRecognition, startManual, error')
+    hooks.load({ id: created.patternId })
+    hooks.ready()
+    const identity = api.request.value.identity
+    if (failure === 'timer') timeout()
+    else api.receiveRecognition({ identity, stage: failure === 'invalid-result' ? 'result' : failure, result: null, message: '识别失败，可重试' })
+    assert.equal(api.busy.value, false)
+    const before = JSON.stringify(ledger.store.live())
+    api.confirmAll()
+    assert.equal(JSON.stringify(ledger.store.live()), before, failure + ' must not create a confirmed zero version')
+    assert.match(api.error.value, /零用量/)
+    assert.ok(api.original.value, 'failure keeps the original for retry')
+    api.startManual()
+    api.confirmAll()
+    assert.equal(ledger.getPattern(created.patternId)!.confirmed!.lines.reduce((sum, line) => sum + line.qty, 0), 0, 'explicit manual zero remains valid')
+    assert.equal(ledger.getPattern(created.patternId)!.confirmed!.inputMethod, 'manual')
+  }
+})
+
 test('edit page confirm saves metadata once and does not treat the opening original as a re-pick', async () => {
   const ledger = new Ledger()
   assert.ok(ledger.commitFirstEntry('edit-stock', [{ code: 'A1', qty: 11 }], ledger.token()).ok)

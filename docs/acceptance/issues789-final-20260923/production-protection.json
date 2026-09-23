@@ -1,0 +1,7 @@
+{
+  "exactlyEqual": true,
+  "seq": 4,
+  "stockRows": 221,
+  "patterns": 2,
+  "page": "pages/stock/index[1]"
+}

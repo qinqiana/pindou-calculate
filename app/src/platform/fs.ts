@@ -310,6 +310,7 @@ export async function pickTextDocument(): Promise<FileOutcome<{ text: string }>>
 
 function pickViaAndroidIntent(plus: PlusAny): Promise<FileOutcome<{ text: string }>> {
   return new Promise((resolve) => {
+    const call = (object: PlusAny, method: string, ...args: PlusAny[]) => plus.android.invoke(object, method, ...args)
     let main: PlusAny
     let previous: PlusAny = null
     let handler: PlusAny = null
@@ -327,23 +328,28 @@ function pickViaAndroidIntent(plus: PlusAny): Promise<FileOutcome<{ text: string
         }
         if (main.onActivityResult === handler) main.onActivityResult = previous
         if (resultCode !== -1 || !data) return resolve(fail('已取消选择备份，原账本未改。', true))
+        let input: PlusAny, reader: PlusAny
         try {
-          const uri = data.getData()
-          const resolver = main.getContentResolver()
-          const input = resolver.openInputStream(uri)
+          const uri = call(data, 'getData')
+          const resolver = call(main, 'getContentResolver')
+          input = call(resolver, 'openInputStream', uri)
+          if (!input) throw new Error('无法打开备份')
           const InputStreamReader = plus.android.importClass('java.io.InputStreamReader')
           const BufferedReader = plus.android.importClass('java.io.BufferedReader')
-          const reader = new BufferedReader(new InputStreamReader(input, 'UTF-8'))
+          reader = new BufferedReader(new InputStreamReader(input, 'UTF-8'))
           let text = ''
-          let line = reader.readLine()
+          let line = call(reader, 'readLine')
           while (line !== null && line !== undefined) {
             text += line + '\n'
-            line = reader.readLine()
+            line = call(reader, 'readLine')
           }
-          reader.close()
           resolve({ ok: true, value: { text } })
         } catch {
           resolve(fail('无法读取备份文件，原账本未改。'))
+        } finally {
+          for (const stream of [reader, input]) {
+            if (stream) { try { call(stream, 'close') } catch { /* Keep the read outcome. */ } }
+          }
         }
       }
       main.onActivityResult = handler

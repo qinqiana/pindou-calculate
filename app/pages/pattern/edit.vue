@@ -16,7 +16,7 @@
       <text class="section-title">{{ busy ? '正在离线识别' : '用量核对' }}</text>
       <text class="hint">{{ recognitionMessage || '选择原图后自动识别，也可以直接手工录入。' }}</text>
       <button v-if="busy" class="small-button" @click="cancelRecognition">取消识别，继续手工</button>
-      <view v-else-if="original" class="image-actions"><button class="small-button" @click="startRecognition">重新识别</button><button v-if="adopted || candidate?.status === 'failed'" class="small-button" @click="startManual">手工录入</button></view>
+      <view v-else-if="original" class="image-actions"><button class="small-button" @click="startRecognition">重新识别</button><button v-if="adopted || recognitionFailed" class="small-button" @click="startManual">手工录入</button></view>
       <template v-if="candidate && candidate.status !== 'failed' && !candidateAdopted">
         <text class="candidate-total">候选 {{ candidate.lines.length }} 色 · {{ candidate.lines.reduce((n,l) => n + l.qty, 0) }} 颗</text>
         <text class="hint">采用后会替换当前逐色输入和标题总数；库存不会变化。</text>
@@ -106,6 +106,7 @@ const error = ref(''), diffHint = ref(''), needAck = ref(false), saving = ref(fa
 const original = ref<OriginalImage | null>(null), imagePreview = ref(''), zooming = ref(false)
 const request = ref<{ identity: RecognitionIdentity; image: string } | null>(null)
 const busy = ref(false), recognitionMessage = ref(''), candidate = ref<RecognitionResult | null>(null), candidateAdopted = ref(false)
+const recognitionFailed = ref(false)
 const adoptedEvidence = ref<RecognitionResult | null>(null)
 const adopted = ref<RecognitionProvenance | null>(null), riskAck = ref(false), editedAutomatic = ref(false)
 const focusRegion = ref<Region | null>(null), imageWidth = ref(0), imageHeight = ref(0)
@@ -152,9 +153,10 @@ function installOriginal(value: OriginalImage) {
 function startRecognition() {
   stopRecognition(); candidate.value = null; candidateAdopted.value = false
   if (!active || !original.value || epoch !== appLedger().token().epoch) return
+  recognitionFailed.value = false
   recognitionMessage.value = '正在准备手机离线识别…'; busy.value = true
   request.value = { identity: identity(newRequestId()), image: original.value.preview }
-  recognitionTimer = setTimeout(() => { stopRecognition(); recognitionMessage.value = '识别超过 30 秒，已停止。可以重试、换清晰原图或手工录入。' }, 30000)
+  recognitionTimer = setTimeout(() => { recognitionFailed.value = true; stopRecognition(); recognitionMessage.value = '识别超过 30 秒，已停止。可以重试、换清晰原图或手工录入。' }, 30000)
 }
 function receiveRecognition(event: any) {
   if (!active || !request.value || !sameRecognition(event.identity, request.value.identity) || !sameRecognition(event.identity, identity(event.identity.requestId))) return
@@ -162,11 +164,12 @@ function receiveRecognition(event: any) {
     try {
       const result = readRecognition(event.result)
       candidate.value = result
+      recognitionFailed.value = result.status === 'failed'
       recognitionMessage.value = result.status === 'failed' ? '没有取得可采用的用量。可换清晰原图或独立手工录入；不会生成零用量。' : result.status === 'partial' ? '已取得部分候选，请核对疑点和可能漏计的区域。' : '已取得候选，请结合原图核对后确认。'
       if (result.status !== 'failed' && lines.value.every(l => !l.code.trim() && l.qty === '') && !titleTotal.value && !adopted.value) adoptCandidate()
-    } catch (e) { error.value = e instanceof Error ? e.message : '识别结果无效，当前输入保留。' }
+    } catch (e) { recognitionFailed.value = true; error.value = (e instanceof Error ? e.message : '识别结果无效') + '，当前输入已保留，可重试或手工录入。' }
     stopRecognition()
-  } else if (['error', 'timeout'].includes(event.stage)) { recognitionMessage.value = event.message; stopRecognition() }
+  } else if (['error', 'timeout'].includes(event.stage)) { recognitionFailed.value = true; recognitionMessage.value = event.message; stopRecognition() }
   else recognitionMessage.value = event.message
 }
 function adoptCandidate() {
@@ -183,7 +186,7 @@ function toggleResolved(id: string) {
 function startManual() {
   uni.showModal({ title: '独立手工录入', content: '将清空当前逐色输入与标题总数，保留图纸信息。已保存的确认版本不受影响。', success: ({confirm}) => {
     if (!confirm) return
-    stopRecognition(); adopted.value = null; candidate.value = null; lines.value = [makeLine()]; titleTotal.value = ''; touchEdit(); recognitionMessage.value = '独立手工录入，尚未确认。'
+    stopRecognition(); recognitionFailed.value = false; adopted.value = null; candidate.value = null; lines.value = [makeLine()]; titleTotal.value = ''; touchEdit(); recognitionMessage.value = '独立手工录入，尚未确认。'
   } })
 }
 function riskRegion(id: string) { return (adopted.value ? adoptedEvidence.value : candidate.value)?.risks.find(r => r.id === id)?.region ?? null }
@@ -240,7 +243,7 @@ function confirmAll(ack = false) {
   try {
     const inputLines = lines.value.filter(l => !(l.code.trim() === '' && l.qty === ''))
     if (inputLines.some(l => lineError(l))) { error.value = '请修正标记的色号或数量，其他输入已保留。'; return }
-    if (!inputLines.length && candidate.value?.status === 'failed') { error.value = '失败结果不能确认为零用量。请手工填写，或先选择独立手工录入。'; return }
+    if (!inputLines.length && recognitionFailed.value) { error.value = '失败结果不能确认为零用量。请手工填写，或先选择独立手工录入。'; return }
     const recognition = adopted.value ? { ...adopted.value, riskAcknowledged: riskAck.value } : null
     const patternMeta: { name: string; sourceNote: string; sizeNote: string; imageBytes?: Uint8Array } = { name: name.value, sourceNote: note.value, sizeNote: sizeNote.value }
     if (imageChanged && original.value) patternMeta.imageBytes = original.value.bytes
