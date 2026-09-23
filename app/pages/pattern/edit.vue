@@ -48,6 +48,7 @@
           <button class="delete" @click="removeLine(i)">删除</button>
         </view>
         <text v-if="lineError(line)" class="field-error">{{ lineError(line) }}</text>
+        <button v-if="original && line.proof?.region" class="small-button line-proof" @click="previewRegion(line.proof.region)">图例原文：{{ line.proof.raw }} · 查看位置</button>
       </view>
       <button class="add" @click="addLine">＋ 增加色号</button>
       <view class="field">
@@ -100,7 +101,7 @@ import { hasRecognitionRisk, readRecognition, recognitionProvenance, sameRecogni
 
 const id = ref(''), name = ref(''), note = ref(''), sizeNote = ref(''), titleTotal = ref('')
 let nextLine = 0
-const makeLine = (code = '', qty: string | number = '') => ({ key: ++nextLine, code, qty })
+const makeLine = (code = '', qty: string | number = '', proof: RecognitionResult['evidence'][number] | null = null) => ({ key: ++nextLine, code, qty, proof })
 const lines = ref([makeLine()])
 const error = ref(''), diffHint = ref(''), needAck = ref(false), saving = ref(false), picking = ref(false)
 const original = ref<OriginalImage | null>(null), imagePreview = ref(''), zooming = ref(false)
@@ -147,6 +148,7 @@ function lineError(line: {code: string; qty: string | number}) {
 }
 function installOriginal(value: OriginalImage) {
   original.value = value; imagePreview.value = value.preview; imageSession++; adoptedEvidence.value = null
+  lines.value.forEach(line => { line.proof = null })
   const info = sniffImage(value.bytes)
   if (info.ok) { const rotated = (info.image.orientation ?? 1) >= 5; imageWidth.value = rotated ? info.image.height : info.image.width; imageHeight.value = rotated ? info.image.width : info.image.height }
 }
@@ -175,7 +177,7 @@ function receiveRecognition(event: any) {
 function adoptCandidate() {
   const result = candidate.value
   if (!result || result.status === 'failed' || epoch !== appLedger().token().epoch) return
-  lines.value = result.lines.map(l => makeLine(l.code, l.qty)); titleTotal.value = result.titleTotal === null ? '' : String(result.titleTotal)
+  lines.value = result.lines.map(l => makeLine(l.code, l.qty, result.evidence.find(e => e.codes.includes(l.code)) ?? null)); titleTotal.value = result.titleTotal === null ? '' : String(result.titleTotal)
   adopted.value = recognitionProvenance(result); adoptedEvidence.value = result; candidateAdopted.value = true; editedAutomatic.value = false
   revision++; riskAck.value = false; needAck.value = false; error.value = ''; stopRecognition()
 }
@@ -191,8 +193,11 @@ function startManual() {
 }
 function riskRegion(id: string) { return (adopted.value ? adoptedEvidence.value : candidate.value)?.risks.find(r => r.id === id)?.region ?? null }
 function previewOriginal(riskId?: string) {
+  previewRegion(riskId ? riskRegion(riskId) : null)
+}
+function previewRegion(region: Region | null) {
   if (!original.value) return
-  focusRegion.value = riskId ? riskRegion(riskId) : null
+  focusRegion.value = region
   zoomScale.value = 1; zoomX.value = 0; zoomY.value = focusRegion.value ? -Math.max(0, screenWidth * focusRegion.value[1] / imageWidth.value - 100) : 0
   zooming.value = true
 }
@@ -247,7 +252,7 @@ function confirmAll(ack = false) {
     const recognition = adopted.value ? { ...adopted.value, riskAcknowledged: riskAck.value } : null
     const patternMeta: { name: string; sourceNote: string; sizeNote: string; imageBytes?: Uint8Array } = { name: name.value, sourceNote: note.value, sizeNote: sizeNote.value }
     if (imageChanged && original.value) patternMeta.imageBytes = original.value.bytes
-    const result = appLedger().confirmUsage(newRequestId(), id.value, { lines: inputLines, titleTotal: titleTotal.value, acknowledgeTitleDiff: ack, recognition, patternMeta }, appLedger().token())
+    const result = appLedger().confirmUsage(newRequestId(), id.value, { lines: inputLines.map(({ code, qty }) => ({ code, qty })), titleTotal: titleTotal.value, acknowledgeTitleDiff: ack, recognition, patternMeta }, appLedger().token())
     if (!result.ok && result.code === 'title-diff') { needAck.value = true; diffHint.value = '标题 ' + result.titleTotal + '，逐色合计 ' + result.perColorSum + '，差 ' + result.difference + '。正式用量采用逐色合计。'; return }
     if (!result.ok) { error.value = result.message; return }
     confirmedVersion = result.version
@@ -283,6 +288,7 @@ button::after { border: none; }
 .qty-input { flex: 1; min-width: 80rpx; }
 .delete { color: #b23030; font-size: 26rpx; background: transparent; padding: 8rpx; margin: 0; }
 .field-error,.err { display: block; color: #b23030; font-size: 25rpx; margin-top: 12rpx; }
+.line-proof { text-align: left; width: 100%; margin-bottom: 0; }
 .add { background: #eef4fc; color: #0066cc; font-size: 28rpx; margin-top: 24rpx; border-radius: 16rpx; }
 .field { margin-top: 24rpx; }
 .field-label { display: block; color: #63636c; font-size: 26rpx; margin-bottom: 10rpx; }

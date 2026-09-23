@@ -7,8 +7,9 @@ test('recognition is tied to image/edit/version/epoch, while viewing and unrelat
   assert.ok(sameRecognition(issued, { ...issued }))
   for (const change of [{ requestId: 'r2' }, { imageSession: 2 }, { patternId: 'p2' }, { revision: 1 }, { confirmedVersion: 1 }, { epoch: 2 }]) assert.equal(sameRecognition(issued, { ...issued, ...change }), false)
   assert.equal(sameRecognition(issued, null), false)
-  const raw = { algorithm: 'pixel-glyph-test', status: 'partial', source: 'legend', image: { width: 100, height: 100 }, candidates: [{ code: 'C12', quantity: 3 }], evidence: [{ id: 'e1', rawText: 'C12 3', region: [10, 20, 30, 15] }], doubts: [{ reason: '图例可能截断', evidenceId: 'e1' }], titleTotal: null }
+  const raw = { algorithm: 'pixel-glyph-test', status: 'partial', source: 'legend', image: { width: 100, height: 100 }, candidates: [{ code: 'C12', quantity: 3, source: 'legend', evidenceIds: ['e1'] }], evidence: [{ id: 'e1', rawText: 'C12 3', region: [10, 20, 30, 15] }], doubts: [{ reason: '图例可能截断', evidenceId: 'e1' }], titleTotal: null }
   const candidate = readRecognition(raw)
+  assert.deepEqual(candidate.evidence[0].codes, ['C12'])
   assert.deepEqual(candidate.risks[1].region, [10, 20, 30, 15])
   const provenance = recognitionProvenance(candidate)
   assert.equal(provenance.riskAcknowledged, false)

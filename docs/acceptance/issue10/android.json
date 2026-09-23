@@ -1,0 +1,202 @@
+{
+  "device": "Xiaomi 14 Ultra / Android 15 / official HBuilder debug runtime",
+  "input": "Bundled original image bytes read with Android file API; actual offline worker and shipped editor handlers. No new system-picker test.",
+  "cases": [
+    {
+      "id": "S17",
+      "format": "jpg",
+      "automaticLines": [
+        {
+          "code": "A6",
+          "qty": 225
+        },
+        {
+          "code": "A11",
+          "qty": 154
+        },
+        {
+          "code": "F10",
+          "qty": 78
+        },
+        {
+          "code": "F23",
+          "qty": 14
+        },
+        {
+          "code": "G12",
+          "qty": 253
+        },
+        {
+          "code": "G15",
+          "qty": 42
+        },
+        {
+          "code": "G20",
+          "qty": 165
+        }
+      ],
+      "manualCorrections": 0,
+      "algorithmSeconds": 2.608,
+      "scriptedFlowSeconds": 21.505,
+      "stockUnchanged": true,
+      "makesUnchanged": true
+    },
+    {
+      "id": "S04",
+      "format": "webp",
+      "automaticLines": [
+        {
+          "code": "A17",
+          "qty": 23
+        },
+        {
+          "code": "B31",
+          "qty": 586
+        },
+        {
+          "code": "C2",
+          "qty": 27
+        },
+        {
+          "code": "D10",
+          "qty": 13
+        },
+        {
+          "code": "E8",
+          "qty": 95
+        },
+        {
+          "code": "E11",
+          "qty": 9
+        },
+        {
+          "code": "E15",
+          "qty": 3
+        },
+        {
+          "code": "E16",
+          "qty": 282
+        },
+        {
+          "code": "F19",
+          "qty": 26
+        },
+        {
+          "code": "F21",
+          "qty": 112
+        },
+        {
+          "code": "H2",
+          "qty": 153
+        },
+        {
+          "code": "H6",
+          "qty": 33
+        },
+        {
+          "code": "H7",
+          "qty": 556
+        },
+        {
+          "code": "M2",
+          "qty": 15
+        },
+        {
+          "code": "M12",
+          "qty": 3
+        }
+      ],
+      "manualCorrections": 0,
+      "algorithmSeconds": 4.457,
+      "scriptedFlowSeconds": 23.227,
+      "stockUnchanged": true,
+      "makesUnchanged": true
+    },
+    {
+      "id": "S01",
+      "format": "jpg",
+      "automaticLines": [
+        {
+          "code": "C2",
+          "qty": 401
+        },
+        {
+          "code": "C4",
+          "qty": 805
+        },
+        {
+          "code": "C6",
+          "qty": 78
+        },
+        {
+          "code": "C7",
+          "qty": 193
+        },
+        {
+          "code": "C17",
+          "qty": 90
+        },
+        {
+          "code": "C20",
+          "qty": 181
+        },
+        {
+          "code": "F3",
+          "qty": 41
+        },
+        {
+          "code": "F16",
+          "qty": 37
+        },
+        {
+          "code": "F19",
+          "qty": 15
+        },
+        {
+          "code": "G9",
+          "qty": 188
+        },
+        {
+          "code": "H2",
+          "qty": 347
+        },
+        {
+          "code": "H7",
+          "qty": 123
+        }
+      ],
+      "manualCorrections": 0,
+      "algorithmSeconds": 24.273,
+      "scriptedFlowSeconds": 44.739,
+      "stockUnchanged": true,
+      "makesUnchanged": true
+    }
+  ],
+  "edit": {
+    "version": 2,
+    "firstCode": "A6",
+    "confirmedQty": 224,
+    "originalCandidateQty": 225,
+    "proofKept": true,
+    "stockUnchanged": true,
+    "oldSnapshotUnchanged": true,
+    "modified": true
+  },
+  "persistence": {
+    "restarted": true,
+    "formatVersion": 2,
+    "restart": {
+      "stockEqual": true,
+      "patternsEqual": true,
+      "makesEqual": true
+    },
+    "restore": {
+      "stockEqual": true,
+      "patternsEqual": true,
+      "makesEqual": true
+    },
+    "productionUnchanged": true,
+    "productionUnchangedAfterProductRestore": true,
+    "productBuildHasTestBridge": false
+  }
+}

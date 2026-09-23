@@ -16,7 +16,7 @@ from layout_legend import crop_rgb, recognize_layout, make_preview
 from glyph_model import GlyphModel, SmallGlyphModel
 from grid_legend import refine_from_grid, refine_edge_codes, count_grid, find_grid_axes
 
-VERSION = 'pixel-glyph-0.8-dev'
+VERSION = 'pixel-glyph-0.9-dev'
 PARAMETERS = {
     'glyph_error': .36, 'glyph_margin': .04, 'ink_contrast': 65,
     'shape_weight': .18, 'hole_weight': .15, 'grid_preview': 2000,
@@ -268,6 +268,58 @@ def grid_candidates(grid):
     return candidates, evidence
 
 
+def overlapping_region(a, b):
+    x, y, w, h = a
+    u, v, s, t = b
+    return (max(0, min(x+w, u+s)-max(x, u)) * max(0, min(y+h, v+t)-max(y, v))
+            > min(w*h, s*t)*.8)
+
+
+def character_region(characters, fallback):
+    if not characters:
+        return fallback
+    boxes = [c['region'] for c in characters]
+    x, y = min(b[0] for b in boxes), min(b[1] for b in boxes)
+    return [x, y, max(b[0]+b[2] for b in boxes)-x, max(b[1]+b[3] for b in boxes)-y]
+
+
+def reject_duplicate_codes(candidates, evidence, doubts):
+    """Deduplicate repeat detections by location; keep separate printed entries."""
+    proofs = {e['id']: e for e in evidence}
+    positions = {e['id']: character_region(e.get('code', e).get('characters', []), e['region']) for e in evidence}
+    unique = []
+    for candidate in candidates:
+        proof = proofs[candidate['evidenceIds'][0]]
+        if any(c['code'] == candidate['code'] and c['quantity'] == candidate['quantity']
+               and overlapping_region(positions[c['evidenceIds'][0]], positions[proof['id']]) for c in unique):
+            continue
+        unique.append(candidate)
+    repeated = {c['code'] for c in unique if sum(d['code'] == c['code'] for d in unique) > 1}
+    for candidate in unique:
+        if candidate['code'] in repeated:
+            proof = proofs[candidate['evidenceIds'][0]]
+            doubts.append({'reason': '不同位置出现重复色号，未计入，未自动累加', 'code': candidate['code'],
+                           'evidenceId': proof['id'], 'region': proof['region'], 'rawText': proof['rawText']})
+    return [c for c in unique if c['code'] not in repeated]
+
+
+def reject_shared_quantities(candidates, evidence, doubts):
+    proofs = {e['id']: e for e in evidence}
+    fields = {}
+    for candidate in candidates:
+        key = candidate['evidenceIds'][0]
+        characters = (proofs[key].get('quantity') or {}).get('characters', [])
+        if characters:
+            fields[key] = character_region(characters, None)
+    ambiguous = {key for key, box in fields.items() if any(
+        other != key and overlapping_region(box, region) for other, region in fields.items())}
+    for key in sorted(ambiguous):
+        proof = proofs[key]
+        doubts.append({'reason': '同一数量可能对应多个色号，未计入，请核对配对',
+                       'evidenceId': key, 'region': proof['region'], 'rawText': proof['rawText']})
+    return [c for c in candidates if c['evidenceIds'][0] not in ambiguous]
+
+
 def recognize(path):
     started = time.perf_counter()
     result = {'algorithm': VERSION, 'parameters': PARAMETERS, 'status': 'failed',
@@ -326,11 +378,7 @@ def recognize(path):
                 result['doubts'].append({'reason': '图例文字、色号、数量或边界不可靠',
                                          'evidenceId': evidence['id'], 'region': region,
                                          'rawText': item['text'], 'quantity': None})
-        duplicates = {c['code'] for c in result['candidates']
-                      if sum(d['code'] == c['code'] for d in result['candidates']) > 1}
-        for code in sorted(duplicates):
-            result['doubts'].append({'reason': '不同位置出现重复色号，未自动累加', 'code': code})
-        result['candidates'] = [c for c in result['candidates'] if c['code'] not in duplicates]
+        result['candidates'] = reject_duplicate_codes(result['candidates'], result['evidence'], result['doubts'])
         rejected_legend = bool(result['doubts'])
         grid = grid_result(image, preview, reader, allowed)
         result['grid'] = grid
@@ -373,8 +421,8 @@ def recognize(path):
                     max(0,min(bx+bw,rx+rw)-max(bx,rx))*max(0,min(by+bh,ry+rh)-max(by,ry)) > min(bw*bh,rw*rh)*.5
                     for bad_code,(rx,ry,rw,rh) in invalid_number_regions)
                 if invalid_number or not code or not text or not re.fullmatch(r'[0-9]+', text) or confidence <= .35 or int(text) > 1_000_000_000:
-                    new_doubts.append({'reason': '图例字段未可靠读清，未记为零', 'evidenceId': key,
-                                       'region': item['region'], 'rawText': item['code']['rawText']})
+                    new_doubts.append({'reason': '图例字段未可靠读清，未计入，未记为零', 'evidenceId': key,
+                                       'region': item['region'], 'rawText': new_evidence[-1]['rawText']})
                     continue
                 new_candidates.append({'code': code, 'quantity': int(text), 'source': 'legend',
                                        'evidenceIds': [key]})
@@ -386,13 +434,25 @@ def recognize(path):
                     new_doubts.append({'reason': '弱字段参考同图清楚字形解释，保留原文及对照位置供核对',
                                        'evidenceId': key, **item['sameFontVerification']})
                 for field in [item['code'], item['quantity']]:
+                    variants = sorted({v['decoded'] for v in (field or {}).get('variants', [])
+                                       if v.get('decoded') and v['score'] > .8})
+                    if len(variants) > 1:
+                        new_doubts.append({'reason': '同一文字有不同读法，请核对原图', 'evidenceId': key,
+                                           'region': field['region'], 'rawText': ' / '.join(variants)})
                     if field and field.get('interpretation', {}).get('changes'):
                         new_doubts.append({'reason': '存在字符歧义，候选按字段语法解释，仍需核对',
                                            'evidenceId': key, 'changes': field['interpretation']['changes']})
-            repeated = {c['code'] for c in new_candidates if sum(d['code'] == c['code'] for d in new_candidates) > 1}
-            for code in sorted(repeated):
-                new_doubts.append({'reason': '不同位置出现重复色号，未自动累加', 'code': code})
-            new_candidates = [c for c in new_candidates if c['code'] not in repeated]
+            new_candidates = reject_duplicate_codes(new_candidates, new_evidence, new_doubts)
+            new_candidates = reject_shared_quantities(new_candidates, new_evidence, new_doubts)
+            # A newer parser may read other rows successfully while missing an
+            # earlier visible item. Only a matching source region supersedes it.
+            if layout.get('region'):
+                for proof in result['evidence']:
+                    if (proof.get('source') == 'legend' and overlapping_region(proof['region'], layout['region'])
+                            and not any(overlapping_region(proof['region'], e['region']) for e in new_evidence)):
+                        new_evidence.append(proof)
+                        new_doubts.append({'reason': '此处可见图例未可靠配对，未计入，请对照原图补充',
+                                           'evidenceId': proof['id'], 'region': proof['region'], 'rawText': proof['rawText']})
             if new_candidates:
                 if grid['complete'] and any(grid['counts'].get(code) != quantity
                                             for code, quantity in legend.items()):

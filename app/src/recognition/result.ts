@@ -22,7 +22,7 @@ export type RecognitionResult = {
   titleTotal: number | null
   width: number
   height: number
-  evidence: { id: string; raw: string; region: Region | null }[]
+  evidence: { id: string; raw: string; region: Region | null; codes: string[] }[]
   risks: { id: string; reason: string; raw: string; region: Region | null; resolved: boolean }[]
 }
 function region(value: unknown, width: number, height: number): Region | null {
@@ -45,7 +45,7 @@ export function readRecognition(raw: any): RecognitionResult {
   const width = raw.image?.width ?? 0, height = raw.image?.height ?? 0
   if (![width, height].every(n => Number.isSafeInteger(n) && n >= 0) || width * height > 32_000_000) throw Error('识别图片尺寸无效')
   if (raw.status !== 'failed' && (!width || !height)) throw Error('缺少识别原图尺寸')
-  const evidence = raw.evidence.map((e: any) => ({ id: String(e.id).slice(0, 100), raw: String(e.rawText ?? '').slice(0, 1000), region: region(e.region, width, height) }))
+  const evidence = raw.evidence.map((e: any) => ({ id: String(e.id).slice(0, 100), raw: String(e.rawText ?? '').slice(0, 1000), region: region(e.region, width, height), codes: raw.candidates.filter((c: any) => c.source === 'legend' && Array.isArray(c.evidenceIds) && c.evidenceIds.includes(e.id)).map((c: any) => c.code) }))
   const risks = raw.doubts.map((d: any, i: number) => {
     const proof = evidence.find(e => e.id === d.evidenceId || d.evidenceIds?.includes(e.id))
     return { id: 'risk-' + i, reason: String(d.reason ?? '此处需要人工核对').slice(0, 1000), raw: String(d.rawText ?? proof?.raw ?? '').slice(0, 1000), region: region(d.region, width, height) ?? proof?.region ?? null, resolved: false }

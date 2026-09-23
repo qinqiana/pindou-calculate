@@ -138,13 +138,13 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   const original = prepareOriginal(TINY_PNG)
   assert.ok(original.ok)
   handoffOriginal(created.patternId, ledger.token().epoch, original.original)
-  const { api, hooks } = page('edit', ledger, { uni: { redirectTo() {} } }, 'request, busy, lines, editLine, startRecognition, receiveRecognition, candidate, adoptCandidate, riskAck, adopted, confirmAll, error, previewOriginal')
+  const { api, hooks } = page('edit', ledger, { uni: { redirectTo() {} } }, 'request, busy, lines, editLine, startRecognition, receiveRecognition, candidate, adoptCandidate, riskAck, adopted, confirmAll, error, previewOriginal, previewRegion, focusRegion')
   hooks.load({ id: created.patternId })
   hooks.ready?.()
   const first = api.request.value.identity
   api.editLine(0, 'code', 'C12')
   api.editLine(0, 'qty', '9')
-  const raw = { algorithm: 'pixel-glyph-test', status: 'partial', source: 'legend', image: { width: 10, height: 10 }, candidates: [{ code: 'C12', quantity: 3 }], titleTotal: null, evidence: [{ id: 'e', rawText: 'C12 3', region: [1, 1, 4, 4] }], doubts: [{ reason: '下方可能被截断', evidenceId: 'e' }] }
+  const raw = { algorithm: 'pixel-glyph-test', status: 'partial', source: 'legend', image: { width: 10, height: 10 }, candidates: [{ code: 'C12', quantity: 3, source: 'legend', evidenceIds: ['e'] }], titleTotal: null, evidence: [{ id: 'e', rawText: 'C12 3', region: [1, 1, 4, 4] }], doubts: [{ reason: '下方可能被截断', evidenceId: 'e' }] }
   api.receiveRecognition({ identity: first, stage: 'result', result: raw })
   assert.equal(api.candidate.value, null)
   assert.equal(api.lines.value[0].qty, '9')
@@ -162,6 +162,10 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   assert.equal(ledger.getPattern(created.patternId)!.confirmed, null)
   api.riskAck.value = true
   api.editLine(0, 'qty', '4')
+  api.previewRegion(api.lines.value[0].proof.region)
+  assert.deepEqual(Array.from(api.focusRegion.value), [1, 1, 4, 4])
+  assert.equal(api.lines.value[0].proof.raw, 'C12 3', 'editing and viewing preserve the original evidence')
+  assert.equal(api.lines.value[0].qty, '4')
   assert.equal(api.riskAck.value, false, 'editing invalidates earlier acknowledgement')
   api.riskAck.value = true
   const stock = ledger.listStock()
@@ -172,6 +176,7 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   assert.equal(confirmed.recognition!.candidateLines[0].qty, 3)
   assert.equal(confirmed.lines[0].qty, 4)
   assert.deepEqual(ledger.listStock(), stock)
+  assert.equal(JSON.stringify(confirmed).includes('region'), false, 'source boxes stay in the image session, not the backup')
 })
 
 test('recognition timeout and bridge errors cannot save an empty result as manual zero', () => {

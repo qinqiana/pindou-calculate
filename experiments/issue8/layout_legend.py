@@ -262,7 +262,7 @@ def read_field(image, box, model, background=None, kind=None, split_candidates=F
         components.sort(key=lambda c: c[0])
         results = model.predict([c[4] for c in components])
         characters = [{'char': r[0]['char'], 'score': r[0]['score'], 'alternatives': r[1:],
-                       'region': [x+round(a/scale), y+round(b/scale), round(cw/scale), round(ch/scale)]}
+                       'region': [x+round(a/scale), y+round(b/scale), max(1, round(cw/scale)), max(1, round(ch/scale))]}
                       for r, (a, b, cw, ch, _) in zip(results, components)]
         numeric_symbols = []
         numeric_chars = characters if kind == 'number' else []
@@ -573,8 +573,20 @@ def recognize_layout(image, preview, model, axes=None):
             match = next((f for r, f in fits if f is not None and .8 < box[2]/f[2] < 1.2
                           and .8 < box[3]/f[3] < 1.2), None)
             if match:
-                fit = (*match[:4], float(box[1]))
+                # A sparse row may be centred or indented independently. Reuse
+                # measured field sizes, but anchor at this row's actual swatch.
+                fit = (float(box[0]), *match[1:4], float(box[1]))
         if fit is None:
+            # No trustworthy column spacing: keep the visible source area
+            # instead of dropping the row or pairing by text order.
+            if axes is None or start+row[0][1] > axes[1]['end']:
+                left, top = min(b[0] for b in row), min(b[1] for b in row)
+                right = max(b[0]+b[2] for b in row)
+                bottom = min(strip.shape[0], max(b[1]+b[3]*1.6 for b in row))
+                region = original([left, top, right-left, bottom-top])
+                items.append({'layout': 'unpaired', 'tinyPrint': False, 'swatchColor': None,
+                              'codeText': '', 'quantityText': None, 'quantity': None, 'region': region,
+                              'code': {'rawText': '', 'score': 0, 'characters': [], 'region': region}})
             continue
         phase, step, w, h, y = fit
         if axes is not None:
