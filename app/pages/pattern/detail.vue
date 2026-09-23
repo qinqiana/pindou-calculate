@@ -20,9 +20,9 @@
     <view v-if="detail.confirmed" class="card provenance">
       <text class="section-title">确认版本 {{ detail.confirmed.version }}</text>
       <text class="muted">{{ usageSourceLabel(detail.confirmed.inputMethod) }}{{ detail.confirmed.recognition?.modified ? ' · 已人工修改' : '' }}</text>
-      <text v-if="detail.confirmed.recognition" class="muted">原始结果：{{ detail.confirmed.recognition.originalStatus === 'partial' ? '部分识别' : '已取得候选' }}</text>
+      <text v-if="detail.confirmed.recognition" class="muted">原始结果：{{ detail.confirmed.recognition.originalStatus === 'failed' ? '未取得可用候选，后续手工补录' : detail.confirmed.recognition.originalStatus === 'partial' ? '部分识别' : '已取得候选' }}</text>
       <text v-if="hasRecognitionRisk(detail.confirmed.recognition)" class="risk-note">按已确认用量计算，仍可能漏计。已知情保留识别风险。</text>
-      <text v-for="risk in detail.confirmed.recognition?.risks || []" :key="risk.id" class="muted">{{ risk.resolved ? '已核对：' : '仍需注意：' }}{{ risk.reason }}</text>
+      <text v-for="risk in detail.confirmed.recognition?.risks || []" :key="risk.id" class="muted">{{ risk.resolved ? '已核对并修正：' : '仍需注意：' }}{{ risk.reason }}{{ risk.raw ? ' · 原始内容：' + risk.raw : '' }}</text>
     </view>
     <view v-if="gap" class="card stats">
       <view class="stat">
@@ -193,6 +193,7 @@ function removePattern() {
 
 <style>
 .risk-note { display: block; margin-top: 16rpx; padding: 16rpx; border-radius: 12rpx; background: #fff3de; color: #734400; font-size: 26rpx; line-height: 1.6; }
+.provenance .muted { display: block; margin-top: 12rpx; line-height: 1.6; }
 .page { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 .page-content { flex: 1; height: 0; min-height: 0; }
 .content { padding: 24rpx; }

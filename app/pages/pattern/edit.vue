@@ -1,6 +1,6 @@
 <template>
   <view class="page">
-    <scroll-view class="page-content" scroll-y>
+    <scroll-view class="page-content" scroll-y :scroll-into-view="scrollTarget">
     <view class="content">
     <RecognitionRunner :request="request" @result="receiveRecognition" />
     <view v-if="imagePreview" class="card image-card">
@@ -24,6 +24,8 @@
         <button class="btn primary" @click="adoptCandidate">采用这份候选</button>
       </template>
       <text v-if="adopted" class="source">来源：{{ usageSourceLabel(adopted.source) }}{{ editedAutomatic ? ' · 已人工修改' : '' }}</text>
+      <text v-if="candidate || adopted" class="hint">当前按 MARD 221 核对；未认证图片品牌或官方色值。疑点中的未计入项不参与合计。</text>
+      <button v-if="candidate?.status === 'failed' && candidate.evidence.length && !candidateAdopted" class="small-button" @click="correctFailedResult">保留疑点，手工补录</button>
       <view v-if="displayRisks.length" class="risks">
         <text class="section-title">需要核对 {{ displayRisks.length }} 处</text>
         <view v-for="risk in displayRisks" :key="risk.id" class="risk-row">
@@ -31,17 +33,18 @@
           <text v-if="risk.raw" class="raw">原始内容：{{ risk.raw }}</text>
           <view class="image-actions">
             <button v-if="original" class="small-button" @click="previewOriginal(risk.id)">{{ riskRegion(risk.id) ? '查看原图位置' : '查看整张原图' }}</button>
+            <button v-if="adopted && risk.id !== 'coverage'" class="small-button" @click="addRiskLine(risk.id)">补录此处用量</button>
             <button v-if="adopted && risk.id !== 'coverage'" class="small-button" @click="toggleResolved(risk.id)">{{ risk.resolved ? '已核对并修正 · 撤销' : '我已核对并修正此处' }}</button>
           </view>
         </view>
       </view>
-      <button v-if="adopted && requiresRiskAck" class="risk-ack" :class="{ checked: riskAck }" @click="riskAck = !riskAck">{{ riskAck ? '✓ ' : '○ ' }}已查看疑点，知晓仍可能漏计，按当前用量继续</button>
+      <button v-if="adopted && requiresRiskAck" class="risk-ack" :class="{ checked: riskAck }" @click="riskAck = !riskAck">{{ riskAck ? '✓ ' : '○ ' }}已查看疑点；未补录项保持未计入，知晓可能漏计或错号，按当前用量继续</button>
       <button v-if="adopted && !original" class="small-button" @click="startManual">独立手工录入</button>
     </view>
 
     <view class="card">
       <text class="section-title">逐色用量</text>
-      <view v-for="(line, i) in lines" :key="line.key" class="line-wrap">
+      <view v-for="(line, i) in lines" :id="'usage-' + line.key" :key="line.key" class="line-wrap">
         <view class="line">
           <input class="code-input" :value="line.code" placeholder="色号" aria-label="色号" @input="e => editLine(i, 'code', e.detail.value)" />
           <input class="qty-input" type="number" :value="String(line.qty)" placeholder="颗数" aria-label="用量颗数" @input="e => editLine(i, 'qty', e.detail.value)" />
@@ -88,7 +91,7 @@
 
 <script setup lang="ts">
 import { onBackPress, onHide, onLoad, onReady, onShow, onUnload } from '@dcloudio/uni-app'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import RecognitionRunner from '../../components/RecognitionRunner.vue'
 import { appLedger, newRequestId } from '../../src/platform/app-ledger'
 import { prepareOriginal, takeOriginal, type OriginalImage } from '../../src/platform/image'
@@ -97,12 +100,13 @@ import { sniffImage } from '../../src/ledger/image'
 import { normalizeColorCode } from '../../src/ledger/catalog'
 import { parseNonNegativeInt, qtyMessage } from '../../src/ledger/numbers'
 import type { RecognitionProvenance } from '../../src/ledger/types'
-import { hasRecognitionRisk, readRecognition, recognitionProvenance, sameRecognition, usageSourceLabel, type RecognitionIdentity, type RecognitionResult, type Region } from '../../src/recognition/result'
+import { hasRecognitionRisk, invalidateRiskReview, readRecognition, recognitionProvenance, sameRecognition, usageSourceLabel, type RecognitionIdentity, type RecognitionResult, type Region } from '../../src/recognition/result'
 
 const id = ref(''), name = ref(''), note = ref(''), sizeNote = ref(''), titleTotal = ref('')
 let nextLine = 0
 const makeLine = (code = '', qty: string | number = '', proof: RecognitionResult['evidence'][number] | null = null) => ({ key: ++nextLine, code, qty, proof })
 const lines = ref([makeLine()])
+const scrollTarget = ref('')
 const error = ref(''), diffHint = ref(''), needAck = ref(false), saving = ref(false), picking = ref(false)
 const original = ref<OriginalImage | null>(null), imagePreview = ref(''), zooming = ref(false)
 const request = ref<{ identity: RecognitionIdentity; image: string } | null>(null)
@@ -134,6 +138,7 @@ function stopRecognition() { clearTimeout(recognitionTimer); request.value = nul
 function cancelRecognition() { stopRecognition(); recognitionMessage.value = '已取消识别，当前输入保留。可以重试或手工录入。' }
 function touchEdit() {
   revision++; riskAck.value = false; needAck.value = false
+  invalidateRiskReview(adopted.value)
   if (adopted.value) editedAutomatic.value = true
   if (busy.value) { stopRecognition(); recognitionMessage.value = '已保留你的编辑并停止旧识别，可重新识别后选择是否采用。' }
 }
@@ -143,6 +148,7 @@ function removeLine(i: number) { lines.value.splice(i, 1); touchEdit() }
 function lineError(line: {code: string; qty: string | number}) {
   if (!line.code.trim() && line.qty === '') return ''
   if (!normalizeColorCode(line.code)) return '请输入 MARD 221 内的有效色号'
+  if (lines.value.filter(l => normalizeColorCode(l.code) === normalizeColorCode(line.code)).length > 1) return '色号重复，请核对后只保留一项'
   const q = parseNonNegativeInt(line.qty)
   return q.ok ? '' : qtyMessage(q.reason)
 }
@@ -183,7 +189,20 @@ function adoptCandidate() {
 }
 function toggleResolved(id: string) {
   const risk = adopted.value?.risks.find(r => r.id === id)
-  if (risk) { risk.resolved = !risk.resolved; riskAck.value = false; revision++ }
+  if (risk) { risk.resolved = !risk.resolved; riskAck.value = false; needAck.value = false; revision++ }
+}
+function correctFailedResult() {
+  const result = candidate.value
+  if (!result || result.status !== 'failed' || !result.evidence.length) return
+  adopted.value = recognitionProvenance(result, true); adoptedEvidence.value = result; candidateAdopted.value = true
+  touchEdit(); recognitionMessage.value = '原始自动结果没有可用用量。请按 MARD 221 手工补录；原文和未解决风险会一同保存。'
+}
+async function addRiskLine(id: string) {
+  const risk = adopted.value?.risks.find(r => r.id === id)
+  if (!risk) return
+  const line = makeLine('', '', { id, raw: risk.raw || risk.reason, region: riskRegion(id), codes: [] })
+  lines.value.push(line); touchEdit(); scrollTarget.value = ''
+  await nextTick(); scrollTarget.value = 'usage-' + line.key
 }
 function startManual() {
   uni.showModal({ title: '独立手工录入', content: '将清空当前逐色输入与标题总数，保留图纸信息。已保存的确认版本不受影响。', success: ({confirm}) => {

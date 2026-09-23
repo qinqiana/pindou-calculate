@@ -23,7 +23,7 @@ for (const [name, size] of Object.entries(files)) {
   await writeFile(path + '.part', bytes)
   await rename(path + '.part', path)
 }
-const algorithmFiles = ['recognize.py', 'generate_glyphs.py', 'layout_legend.py', 'glyph_model.py', 'grid_legend.py', 'glyphs.json', 'glyph-model.npz', 'glyph-small.npz']
+const algorithmFiles = ['recognize.py', 'generate_glyphs.py', 'layout_legend.py', 'glyph_model.py', 'grid_legend.py', 'source_marks.py', 'glyphs.json', 'glyph-model.npz', 'glyph-small.npz']
 for (const name of algorithmFiles) await copyFile(resolve(root, 'experiments/issue8', name), resolve(destination, name))
 await copyFile(resolve(root, 'app/src/ledger/catalog.ts'), resolve(destination, 'catalog.ts'))
 await writeFile(resolve(destination, 'assets.json'), JSON.stringify([...Object.keys(files), ...algorithmFiles, 'catalog.ts']))

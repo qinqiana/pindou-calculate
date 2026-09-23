@@ -15,8 +15,9 @@ from generate_glyphs import feature
 from layout_legend import crop_rgb, recognize_layout, make_preview
 from glyph_model import GlyphModel, SmallGlyphModel
 from grid_legend import refine_from_grid, refine_edge_codes, count_grid, find_grid_axes
+from source_marks import source_conflicts
 
-VERSION = 'pixel-glyph-0.9.2-dev'
+VERSION = 'pixel-glyph-0.10.0-dev'
 PARAMETERS = {
     'glyph_error': .36, 'glyph_margin': .04, 'ink_contrast': 65,
     'shape_weight': .18, 'hole_weight': .15, 'grid_preview': 2000,
@@ -397,6 +398,7 @@ def recognize(path):
             result['evidence'].extend(evidence)
         else:
             result['doubts'].append({'reason': '未取得可靠逐色用量', 'gridReason': grid['reason']})
+        model, axes = None, None
         if result['status'] != 'ready':
             model = GlyphModel()
             axes = find_grid_axes(preview, axis_lines)
@@ -472,7 +474,7 @@ def recognize(path):
                     result['evidence'].extend(evidence)
                     result['source'] = 'grid'
                     result['doubts'].append({'reason': '图例未列全制作色号，采用独立完整逐格计数，保留图例供核对',
-                                            'gridCounts': grid['counts']})
+                                            'region': layout['region'], 'gridCounts': grid['counts']})
                 else:
                     result['doubts'].append({'reason': '图例与本体计数待核对',
                                             'gridReason': grid['reason'], 'gridCounts': grid['counts']})
@@ -490,11 +492,34 @@ def recognize(path):
                 result['candidates'], evidence = grid_candidates(counted)
                 result['evidence'].extend(evidence)
                 result['doubts'].append({'reason': counted['reason'], 'unknownCells': counted['unknownCells']})
+        source_grid_region = grid.get('region')
+        if source_grid_region is None and axes is not None:
+            # The layout reader has already located this production rectangle,
+            # even when the older four-sided numbered-frame check failed.
+            ax, ay = axes
+            sx, sy = width/preview.shape[1], height/preview.shape[0]
+            source_grid_region = [ax['start']*sx, ay['start']*sy,
+                                  (ax['end']-ax['start'])*sx, (ay['end']-ay['start'])*sy]
+        marks = source_conflicts(image, preview, model or GlyphModel(), source_grid_region, result['evidence'])
+        if marks:
+            for i, mark in enumerate(marks):
+                key = f'source-{i}'
+                result['evidence'].append({'id': key, 'source': 'legend', **mark})
+                result['doubts'].append({'evidenceId': key, **mark})
+            # Keep all source text and quantities as excluded evidence. Legal
+            # MARD-looking codes in another brand's column are not adopted.
+            for candidate in result['candidates']:
+                result['doubts'].append({'reason': '来源存在冲突，此项未计入，需核对后手工补录',
+                                        'rawText': f"{candidate['code']} / {candidate['quantity']}",
+                                        'evidenceIds': candidate['evidenceIds']})
+            result.update(status='failed', source=None, candidates=[], brandVerification='conflict')
         if result['candidates']:
             total = sum(c['quantity'] for c in result['candidates'])
             if total > 2**53-1:
                 raise ValueError('合计超出安全整数范围')
             result['total'] = total
+        else:
+            result.update(status='failed', source=None)
         result['coverage'] = '已覆盖带四边编号的制作区域，并逐格读取；结果仍待用户核对' if result['grid']['complete'] else '完整覆盖尚未证明；疑点可能影响用量'
     except (OSError, ValueError, SyntaxError, Image.DecompressionBombError, cv2.error) as error:
         result.update(status='failed', source=None, candidates=[], total=None)

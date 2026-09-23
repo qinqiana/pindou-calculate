@@ -1,0 +1,74 @@
+{
+  "device": "Xiaomi 14 Ultra",
+  "system": "Android 15",
+  "appVersion": "0.2.0",
+  "algorithmVersion": "pixel-glyph-0.10.0-dev",
+  "formatVersion": 2,
+  "restart": {
+    "stockEqual": true,
+    "patternsEqual": true,
+    "makesEqual": true
+  },
+  "restore": {
+    "stockEqual": true,
+    "patternsEqual": true,
+    "makesEqual": true
+  },
+  "productionUnchanged": true,
+  "comparison": "逐字段/逐字比较，无哈希",
+  "csv": {
+    "header": "图纸名称,生成时间,色号,缺口颗数",
+    "dataRows": 8,
+    "readBackMatches": true
+  },
+  "largeTitleTotal": 1200000000,
+  "confirmed": [
+    {
+      "name": "Issue11-unknown",
+      "version": 2,
+      "source": "legend",
+      "originalStatus": "partial",
+      "modified": true,
+      "riskCount": 3
+    },
+    {
+      "name": "Issue11-foreign",
+      "version": 1,
+      "source": "assisted",
+      "originalStatus": "failed",
+      "modified": true,
+      "riskCount": 11
+    },
+    {
+      "name": "Issue11-S03",
+      "version": 1,
+      "source": "legend",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 14
+    },
+    {
+      "name": "Issue11-S04",
+      "version": 1,
+      "source": "legend",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 3
+    },
+    {
+      "name": "Issue11-S01",
+      "version": 1,
+      "source": "legend",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 22
+    },
+    {
+      "name": "Issue11-两色各6亿",
+      "version": 1,
+      "source": "manual"
+    }
+  ],
+  "productRestored": true,
+  "productionEqualAfterProductRestore": true
+}

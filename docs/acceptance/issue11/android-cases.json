@@ -1,0 +1,1650 @@
+[
+  {
+    "input": "unknown",
+    "status": "partial",
+    "algorithmSeconds": 8.913,
+    "automaticLines": [
+      {
+        "code": "C2",
+        "qty": 18
+      },
+      {
+        "code": "C12",
+        "qty": 3
+      },
+      {
+        "code": "C16",
+        "qty": 11
+      },
+      {
+        "code": "C17",
+        "qty": 12
+      },
+      {
+        "code": "C19",
+        "qty": 7
+      },
+      {
+        "code": "C29",
+        "qty": 18
+      },
+      {
+        "code": "H2",
+        "qty": 14
+      },
+      {
+        "code": "H3",
+        "qty": 5
+      }
+    ],
+    "finalLines": [
+      {
+        "code": "C2",
+        "qty": 18
+      },
+      {
+        "code": "C12",
+        "qty": 3
+      },
+      {
+        "code": "C16",
+        "qty": 11
+      },
+      {
+        "code": "C17",
+        "qty": 12
+      },
+      {
+        "code": "C19",
+        "qty": 7
+      },
+      {
+        "code": "C29",
+        "qty": 18
+      },
+      {
+        "code": "H2",
+        "qty": 14
+      },
+      {
+        "code": "H3",
+        "qty": 5
+      },
+      {
+        "code": "H7",
+        "qty": 60
+      }
+    ],
+    "provenance": {
+      "source": "legend",
+      "algorithmVersion": "pixel-glyph-0.10.0-dev",
+      "originalStatus": "partial",
+      "candidateLines": [
+        {
+          "code": "C2",
+          "qty": 18
+        },
+        {
+          "code": "C12",
+          "qty": 3
+        },
+        {
+          "code": "C16",
+          "qty": 11
+        },
+        {
+          "code": "C17",
+          "qty": 12
+        },
+        {
+          "code": "C19",
+          "qty": 7
+        },
+        {
+          "code": "C29",
+          "qty": 18
+        },
+        {
+          "code": "H2",
+          "qty": 14
+        },
+        {
+          "code": "H3",
+          "qty": 5
+        }
+      ],
+      "candidateTitleTotal": null,
+      "modified": true,
+      "risks": [
+        {
+          "id": "coverage",
+          "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+          "raw": "",
+          "resolved": false
+        },
+        {
+          "id": "risk-0",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "C30(60)",
+          "resolved": true
+        },
+        {
+          "id": "risk-1",
+          "reason": "图例与本体计数待核对",
+          "raw": "",
+          "resolved": false
+        }
+      ],
+      "riskAcknowledged": true
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true,
+    "review": {
+      "region": [
+        170,
+        3160,
+        585,
+        82
+      ],
+      "unchanged": true,
+      "raw": "C30(60)",
+      "blockedBeforeAcknowledgement": true,
+      "ackExpired": true,
+      "resolutionExpired": true
+    }
+  },
+  {
+    "input": "foreign",
+    "status": "failed",
+    "algorithmSeconds": 9.892,
+    "automaticLines": [],
+    "finalLines": [
+      {
+        "code": "H7",
+        "qty": 2
+      }
+    ],
+    "provenance": {
+      "source": "assisted",
+      "algorithmVersion": "pixel-glyph-0.10.0-dev",
+      "originalStatus": "failed",
+      "candidateLines": [],
+      "candidateTitleTotal": null,
+      "modified": true,
+      "risks": [
+        {
+          "id": "coverage",
+          "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+          "raw": "",
+          "resolved": false
+        },
+        {
+          "id": "risk-0",
+          "reason": "图中色卡标记与当前 MARD 221 不一致；候选未计入，请按原图核对来源后手工补录，不自动换色",
+          "raw": "ARTKAL",
+          "resolved": false
+        },
+        {
+          "id": "risk-1",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "C2 / 18",
+          "resolved": false
+        },
+        {
+          "id": "risk-2",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "C12 / 3",
+          "resolved": false
+        },
+        {
+          "id": "risk-3",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "C16 / 11",
+          "resolved": false
+        },
+        {
+          "id": "risk-4",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "C17 / 12",
+          "resolved": false
+        },
+        {
+          "id": "risk-5",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "C19 / 7",
+          "resolved": false
+        },
+        {
+          "id": "risk-6",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "C29 / 18",
+          "resolved": false
+        },
+        {
+          "id": "risk-7",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "H2 / 14",
+          "resolved": false
+        },
+        {
+          "id": "risk-8",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "H3 / 5",
+          "resolved": false
+        },
+        {
+          "id": "risk-9",
+          "reason": "来源存在冲突，此项未计入，需核对后手工补录",
+          "raw": "H7 / 60",
+          "resolved": false
+        }
+      ],
+      "riskAcknowledged": true
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true,
+    "review": {
+      "blocked": true,
+      "originalStatus": "failed",
+      "source": "assisted"
+    }
+  },
+  {
+    "input": "S03",
+    "status": "partial",
+    "algorithmSeconds": 11.948,
+    "automaticLines": [
+      {
+        "code": "A6",
+        "qty": 50
+      },
+      {
+        "code": "A7",
+        "qty": 1
+      },
+      {
+        "code": "A12",
+        "qty": 5
+      },
+      {
+        "code": "A14",
+        "qty": 24
+      },
+      {
+        "code": "A16",
+        "qty": 37
+      },
+      {
+        "code": "A19",
+        "qty": 2
+      },
+      {
+        "code": "A21",
+        "qty": 892
+      },
+      {
+        "code": "A24",
+        "qty": 10
+      },
+      {
+        "code": "B2",
+        "qty": 37
+      },
+      {
+        "code": "B5",
+        "qty": 9
+      },
+      {
+        "code": "B6",
+        "qty": 5
+      },
+      {
+        "code": "B7",
+        "qty": 824
+      },
+      {
+        "code": "B8",
+        "qty": 1
+      },
+      {
+        "code": "B9",
+        "qty": 149
+      },
+      {
+        "code": "B10",
+        "qty": 280
+      },
+      {
+        "code": "B11",
+        "qty": 10
+      },
+      {
+        "code": "B12",
+        "qty": 43
+      },
+      {
+        "code": "B19",
+        "qty": 73
+      },
+      {
+        "code": "B20",
+        "qty": 91
+      },
+      {
+        "code": "B21",
+        "qty": 49
+      },
+      {
+        "code": "B22",
+        "qty": 65
+      },
+      {
+        "code": "B24",
+        "qty": 743
+      },
+      {
+        "code": "B25",
+        "qty": 10
+      },
+      {
+        "code": "B27",
+        "qty": 4
+      },
+      {
+        "code": "B28",
+        "qty": 68
+      },
+      {
+        "code": "B31",
+        "qty": 3
+      },
+      {
+        "code": "C1",
+        "qty": 64
+      },
+      {
+        "code": "C2",
+        "qty": 569
+      },
+      {
+        "code": "C3",
+        "qty": 270
+      },
+      {
+        "code": "C4",
+        "qty": 23
+      },
+      {
+        "code": "C8",
+        "qty": 706
+      },
+      {
+        "code": "C10",
+        "qty": 63
+      },
+      {
+        "code": "C11",
+        "qty": 1658
+      },
+      {
+        "code": "C12",
+        "qty": 200
+      },
+      {
+        "code": "C13",
+        "qty": 94
+      },
+      {
+        "code": "C15",
+        "qty": 2829
+      },
+      {
+        "code": "C16",
+        "qty": 2086
+      },
+      {
+        "code": "C17",
+        "qty": 749
+      },
+      {
+        "code": "C18",
+        "qty": 124
+      },
+      {
+        "code": "C19",
+        "qty": 2718
+      },
+      {
+        "code": "C20",
+        "qty": 505
+      },
+      {
+        "code": "C21",
+        "qty": 29
+      },
+      {
+        "code": "C22",
+        "qty": 429
+      },
+      {
+        "code": "C23",
+        "qty": 156
+      },
+      {
+        "code": "C25",
+        "qty": 157
+      },
+      {
+        "code": "C26",
+        "qty": 109
+      },
+      {
+        "code": "C27",
+        "qty": 37
+      },
+      {
+        "code": "C29",
+        "qty": 2024
+      },
+      {
+        "code": "D2",
+        "qty": 10
+      },
+      {
+        "code": "D4",
+        "qty": 331
+      },
+      {
+        "code": "D5",
+        "qty": 5
+      },
+      {
+        "code": "D9",
+        "qty": 6
+      },
+      {
+        "code": "D10",
+        "qty": 15
+      },
+      {
+        "code": "D11",
+        "qty": 117
+      },
+      {
+        "code": "D12",
+        "qty": 226
+      },
+      {
+        "code": "D16",
+        "qty": 15
+      },
+      {
+        "code": "D17",
+        "qty": 6
+      },
+      {
+        "code": "D18",
+        "qty": 24
+      },
+      {
+        "code": "D19",
+        "qty": 4931
+      },
+      {
+        "code": "D22",
+        "qty": 31
+      },
+      {
+        "code": "D24",
+        "qty": 15
+      },
+      {
+        "code": "D26",
+        "qty": 275
+      },
+      {
+        "code": "E1",
+        "qty": 155
+      },
+      {
+        "code": "E2",
+        "qty": 4
+      }
+    ],
+    "finalLines": [
+      {
+        "code": "A6",
+        "qty": 50
+      },
+      {
+        "code": "A7",
+        "qty": 1
+      },
+      {
+        "code": "A12",
+        "qty": 5
+      },
+      {
+        "code": "A14",
+        "qty": 24
+      },
+      {
+        "code": "A16",
+        "qty": 37
+      },
+      {
+        "code": "A19",
+        "qty": 2
+      },
+      {
+        "code": "A21",
+        "qty": 892
+      },
+      {
+        "code": "A24",
+        "qty": 10
+      },
+      {
+        "code": "B2",
+        "qty": 37
+      },
+      {
+        "code": "B5",
+        "qty": 9
+      },
+      {
+        "code": "B6",
+        "qty": 5
+      },
+      {
+        "code": "B7",
+        "qty": 824
+      },
+      {
+        "code": "B8",
+        "qty": 1
+      },
+      {
+        "code": "B9",
+        "qty": 149
+      },
+      {
+        "code": "B10",
+        "qty": 280
+      },
+      {
+        "code": "B11",
+        "qty": 10
+      },
+      {
+        "code": "B12",
+        "qty": 43
+      },
+      {
+        "code": "B19",
+        "qty": 73
+      },
+      {
+        "code": "B20",
+        "qty": 91
+      },
+      {
+        "code": "B21",
+        "qty": 49
+      },
+      {
+        "code": "B22",
+        "qty": 65
+      },
+      {
+        "code": "B24",
+        "qty": 743
+      },
+      {
+        "code": "B25",
+        "qty": 10
+      },
+      {
+        "code": "B27",
+        "qty": 4
+      },
+      {
+        "code": "B28",
+        "qty": 68
+      },
+      {
+        "code": "B31",
+        "qty": 3
+      },
+      {
+        "code": "C1",
+        "qty": 64
+      },
+      {
+        "code": "C2",
+        "qty": 569
+      },
+      {
+        "code": "C3",
+        "qty": 270
+      },
+      {
+        "code": "C4",
+        "qty": 23
+      },
+      {
+        "code": "C8",
+        "qty": 706
+      },
+      {
+        "code": "C10",
+        "qty": 63
+      },
+      {
+        "code": "C11",
+        "qty": 1658
+      },
+      {
+        "code": "C12",
+        "qty": 200
+      },
+      {
+        "code": "C13",
+        "qty": 94
+      },
+      {
+        "code": "C15",
+        "qty": 2829
+      },
+      {
+        "code": "C16",
+        "qty": 2086
+      },
+      {
+        "code": "C17",
+        "qty": 749
+      },
+      {
+        "code": "C18",
+        "qty": 124
+      },
+      {
+        "code": "C19",
+        "qty": 2718
+      },
+      {
+        "code": "C20",
+        "qty": 505
+      },
+      {
+        "code": "C21",
+        "qty": 29
+      },
+      {
+        "code": "C22",
+        "qty": 429
+      },
+      {
+        "code": "C23",
+        "qty": 156
+      },
+      {
+        "code": "C25",
+        "qty": 157
+      },
+      {
+        "code": "C26",
+        "qty": 109
+      },
+      {
+        "code": "C27",
+        "qty": 37
+      },
+      {
+        "code": "C29",
+        "qty": 2024
+      },
+      {
+        "code": "D2",
+        "qty": 10
+      },
+      {
+        "code": "D4",
+        "qty": 331
+      },
+      {
+        "code": "D5",
+        "qty": 5
+      },
+      {
+        "code": "D9",
+        "qty": 6
+      },
+      {
+        "code": "D10",
+        "qty": 15
+      },
+      {
+        "code": "D11",
+        "qty": 117
+      },
+      {
+        "code": "D12",
+        "qty": 226
+      },
+      {
+        "code": "D16",
+        "qty": 15
+      },
+      {
+        "code": "D17",
+        "qty": 6
+      },
+      {
+        "code": "D18",
+        "qty": 24
+      },
+      {
+        "code": "D19",
+        "qty": 4931
+      },
+      {
+        "code": "D22",
+        "qty": 31
+      },
+      {
+        "code": "D24",
+        "qty": 15
+      },
+      {
+        "code": "D26",
+        "qty": 275
+      },
+      {
+        "code": "E1",
+        "qty": 155
+      },
+      {
+        "code": "E2",
+        "qty": 4
+      }
+    ],
+    "provenance": {
+      "source": "legend",
+      "algorithmVersion": "pixel-glyph-0.10.0-dev",
+      "originalStatus": "partial",
+      "candidateLines": [
+        {
+          "code": "A6",
+          "qty": 50
+        },
+        {
+          "code": "A7",
+          "qty": 1
+        },
+        {
+          "code": "A12",
+          "qty": 5
+        },
+        {
+          "code": "A14",
+          "qty": 24
+        },
+        {
+          "code": "A16",
+          "qty": 37
+        },
+        {
+          "code": "A19",
+          "qty": 2
+        },
+        {
+          "code": "A21",
+          "qty": 892
+        },
+        {
+          "code": "A24",
+          "qty": 10
+        },
+        {
+          "code": "B2",
+          "qty": 37
+        },
+        {
+          "code": "B5",
+          "qty": 9
+        },
+        {
+          "code": "B6",
+          "qty": 5
+        },
+        {
+          "code": "B7",
+          "qty": 824
+        },
+        {
+          "code": "B8",
+          "qty": 1
+        },
+        {
+          "code": "B9",
+          "qty": 149
+        },
+        {
+          "code": "B10",
+          "qty": 280
+        },
+        {
+          "code": "B11",
+          "qty": 10
+        },
+        {
+          "code": "B12",
+          "qty": 43
+        },
+        {
+          "code": "B19",
+          "qty": 73
+        },
+        {
+          "code": "B20",
+          "qty": 91
+        },
+        {
+          "code": "B21",
+          "qty": 49
+        },
+        {
+          "code": "B22",
+          "qty": 65
+        },
+        {
+          "code": "B24",
+          "qty": 743
+        },
+        {
+          "code": "B25",
+          "qty": 10
+        },
+        {
+          "code": "B27",
+          "qty": 4
+        },
+        {
+          "code": "B28",
+          "qty": 68
+        },
+        {
+          "code": "B31",
+          "qty": 3
+        },
+        {
+          "code": "C1",
+          "qty": 64
+        },
+        {
+          "code": "C2",
+          "qty": 569
+        },
+        {
+          "code": "C3",
+          "qty": 270
+        },
+        {
+          "code": "C4",
+          "qty": 23
+        },
+        {
+          "code": "C8",
+          "qty": 706
+        },
+        {
+          "code": "C10",
+          "qty": 63
+        },
+        {
+          "code": "C11",
+          "qty": 1658
+        },
+        {
+          "code": "C12",
+          "qty": 200
+        },
+        {
+          "code": "C13",
+          "qty": 94
+        },
+        {
+          "code": "C15",
+          "qty": 2829
+        },
+        {
+          "code": "C16",
+          "qty": 2086
+        },
+        {
+          "code": "C17",
+          "qty": 749
+        },
+        {
+          "code": "C18",
+          "qty": 124
+        },
+        {
+          "code": "C19",
+          "qty": 2718
+        },
+        {
+          "code": "C20",
+          "qty": 505
+        },
+        {
+          "code": "C21",
+          "qty": 29
+        },
+        {
+          "code": "C22",
+          "qty": 429
+        },
+        {
+          "code": "C23",
+          "qty": 156
+        },
+        {
+          "code": "C25",
+          "qty": 157
+        },
+        {
+          "code": "C26",
+          "qty": 109
+        },
+        {
+          "code": "C27",
+          "qty": 37
+        },
+        {
+          "code": "C29",
+          "qty": 2024
+        },
+        {
+          "code": "D2",
+          "qty": 10
+        },
+        {
+          "code": "D4",
+          "qty": 331
+        },
+        {
+          "code": "D5",
+          "qty": 5
+        },
+        {
+          "code": "D9",
+          "qty": 6
+        },
+        {
+          "code": "D10",
+          "qty": 15
+        },
+        {
+          "code": "D11",
+          "qty": 117
+        },
+        {
+          "code": "D12",
+          "qty": 226
+        },
+        {
+          "code": "D16",
+          "qty": 15
+        },
+        {
+          "code": "D17",
+          "qty": 6
+        },
+        {
+          "code": "D18",
+          "qty": 24
+        },
+        {
+          "code": "D19",
+          "qty": 4931
+        },
+        {
+          "code": "D22",
+          "qty": 31
+        },
+        {
+          "code": "D24",
+          "qty": 15
+        },
+        {
+          "code": "D26",
+          "qty": 275
+        },
+        {
+          "code": "E1",
+          "qty": 155
+        },
+        {
+          "code": "E2",
+          "qty": 4
+        }
+      ],
+      "candidateTitleTotal": null,
+      "modified": false,
+      "risks": [
+        {
+          "id": "coverage",
+          "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+          "raw": "",
+          "resolved": false
+        },
+        {
+          "id": "risk-0",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "A12(5) / A12(6)",
+          "resolved": false
+        },
+        {
+          "id": "risk-1",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "A19(2) / A28(2) / A29(2)",
+          "resolved": false
+        },
+        {
+          "id": "risk-2",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "B6(5) / B6(6)",
+          "resolved": false
+        },
+        {
+          "id": "risk-3",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "B19(73) / B19(78)",
+          "resolved": false
+        },
+        {
+          "id": "risk-4",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "B22(65) / B22(66)",
+          "resolved": false
+        },
+        {
+          "id": "risk-5",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "B25(10) / B26(10)",
+          "resolved": false
+        },
+        {
+          "id": "risk-6",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "C10(63) / C10(68)",
+          "resolved": false
+        },
+        {
+          "id": "risk-7",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "C15(2819) / C15(2829)",
+          "resolved": false
+        },
+        {
+          "id": "risk-8",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "C19(2714) / C19(2718)",
+          "resolved": false
+        },
+        {
+          "id": "risk-9",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "C29(2024) / P29(2024)",
+          "resolved": false
+        },
+        {
+          "id": "risk-10",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "D10(15) / D10(16)",
+          "resolved": false
+        },
+        {
+          "id": "risk-11",
+          "reason": "弱字段参考同图清楚字形解释，保留原文及对照位置供核对",
+          "raw": "O16(16)",
+          "resolved": false
+        },
+        {
+          "id": "risk-12",
+          "reason": "图例与本体计数待核对",
+          "raw": "",
+          "resolved": false
+        }
+      ],
+      "riskAcknowledged": true
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true,
+    "review": null
+  },
+  {
+    "input": "S04",
+    "status": "partial",
+    "algorithmSeconds": 5.379,
+    "automaticLines": [
+      {
+        "code": "A17",
+        "qty": 23
+      },
+      {
+        "code": "B31",
+        "qty": 586
+      },
+      {
+        "code": "C2",
+        "qty": 27
+      },
+      {
+        "code": "D10",
+        "qty": 13
+      },
+      {
+        "code": "E8",
+        "qty": 95
+      },
+      {
+        "code": "E11",
+        "qty": 9
+      },
+      {
+        "code": "E15",
+        "qty": 3
+      },
+      {
+        "code": "E16",
+        "qty": 282
+      },
+      {
+        "code": "F19",
+        "qty": 26
+      },
+      {
+        "code": "F21",
+        "qty": 112
+      },
+      {
+        "code": "H2",
+        "qty": 153
+      },
+      {
+        "code": "H6",
+        "qty": 33
+      },
+      {
+        "code": "H7",
+        "qty": 556
+      },
+      {
+        "code": "M2",
+        "qty": 15
+      },
+      {
+        "code": "M12",
+        "qty": 3
+      }
+    ],
+    "finalLines": [
+      {
+        "code": "A17",
+        "qty": 23
+      },
+      {
+        "code": "B31",
+        "qty": 586
+      },
+      {
+        "code": "C2",
+        "qty": 27
+      },
+      {
+        "code": "D10",
+        "qty": 13
+      },
+      {
+        "code": "E8",
+        "qty": 95
+      },
+      {
+        "code": "E11",
+        "qty": 9
+      },
+      {
+        "code": "E15",
+        "qty": 3
+      },
+      {
+        "code": "E16",
+        "qty": 282
+      },
+      {
+        "code": "F19",
+        "qty": 26
+      },
+      {
+        "code": "F21",
+        "qty": 112
+      },
+      {
+        "code": "H2",
+        "qty": 153
+      },
+      {
+        "code": "H6",
+        "qty": 33
+      },
+      {
+        "code": "H7",
+        "qty": 556
+      },
+      {
+        "code": "M2",
+        "qty": 15
+      },
+      {
+        "code": "M12",
+        "qty": 3
+      }
+    ],
+    "provenance": {
+      "source": "legend",
+      "algorithmVersion": "pixel-glyph-0.10.0-dev",
+      "originalStatus": "partial",
+      "candidateLines": [
+        {
+          "code": "A17",
+          "qty": 23
+        },
+        {
+          "code": "B31",
+          "qty": 586
+        },
+        {
+          "code": "C2",
+          "qty": 27
+        },
+        {
+          "code": "D10",
+          "qty": 13
+        },
+        {
+          "code": "E8",
+          "qty": 95
+        },
+        {
+          "code": "E11",
+          "qty": 9
+        },
+        {
+          "code": "E15",
+          "qty": 3
+        },
+        {
+          "code": "E16",
+          "qty": 282
+        },
+        {
+          "code": "F19",
+          "qty": 26
+        },
+        {
+          "code": "F21",
+          "qty": 112
+        },
+        {
+          "code": "H2",
+          "qty": 153
+        },
+        {
+          "code": "H6",
+          "qty": 33
+        },
+        {
+          "code": "H7",
+          "qty": 556
+        },
+        {
+          "code": "M2",
+          "qty": 15
+        },
+        {
+          "code": "M12",
+          "qty": 3
+        }
+      ],
+      "candidateTitleTotal": null,
+      "modified": false,
+      "risks": [
+        {
+          "id": "coverage",
+          "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+          "raw": "",
+          "resolved": false
+        },
+        {
+          "id": "risk-0",
+          "reason": "存在字符歧义，候选按字段语法解释，仍需核对",
+          "raw": "D1O / 13",
+          "resolved": false
+        },
+        {
+          "id": "risk-1",
+          "reason": "图例与本体计数待核对",
+          "raw": "",
+          "resolved": false
+        }
+      ],
+      "riskAcknowledged": true
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true,
+    "review": null
+  },
+  {
+    "input": "S01",
+    "status": "partial",
+    "algorithmSeconds": 20.597,
+    "automaticLines": [
+      {
+        "code": "C2",
+        "qty": 401
+      },
+      {
+        "code": "C4",
+        "qty": 805
+      },
+      {
+        "code": "C6",
+        "qty": 78
+      },
+      {
+        "code": "C7",
+        "qty": 193
+      },
+      {
+        "code": "C17",
+        "qty": 90
+      },
+      {
+        "code": "C20",
+        "qty": 181
+      },
+      {
+        "code": "F3",
+        "qty": 41
+      },
+      {
+        "code": "F16",
+        "qty": 37
+      },
+      {
+        "code": "F19",
+        "qty": 15
+      },
+      {
+        "code": "G9",
+        "qty": 188
+      },
+      {
+        "code": "H2",
+        "qty": 347
+      },
+      {
+        "code": "H7",
+        "qty": 123
+      }
+    ],
+    "finalLines": [
+      {
+        "code": "C2",
+        "qty": 401
+      },
+      {
+        "code": "C4",
+        "qty": 805
+      },
+      {
+        "code": "C6",
+        "qty": 78
+      },
+      {
+        "code": "C7",
+        "qty": 193
+      },
+      {
+        "code": "C17",
+        "qty": 90
+      },
+      {
+        "code": "C20",
+        "qty": 181
+      },
+      {
+        "code": "F3",
+        "qty": 41
+      },
+      {
+        "code": "F16",
+        "qty": 37
+      },
+      {
+        "code": "F19",
+        "qty": 15
+      },
+      {
+        "code": "G9",
+        "qty": 188
+      },
+      {
+        "code": "H2",
+        "qty": 347
+      },
+      {
+        "code": "H7",
+        "qty": 123
+      }
+    ],
+    "provenance": {
+      "source": "legend",
+      "algorithmVersion": "pixel-glyph-0.10.0-dev",
+      "originalStatus": "partial",
+      "candidateLines": [
+        {
+          "code": "C2",
+          "qty": 401
+        },
+        {
+          "code": "C4",
+          "qty": 805
+        },
+        {
+          "code": "C6",
+          "qty": 78
+        },
+        {
+          "code": "C7",
+          "qty": 193
+        },
+        {
+          "code": "C17",
+          "qty": 90
+        },
+        {
+          "code": "C20",
+          "qty": 181
+        },
+        {
+          "code": "F3",
+          "qty": 41
+        },
+        {
+          "code": "F16",
+          "qty": 37
+        },
+        {
+          "code": "F19",
+          "qty": 15
+        },
+        {
+          "code": "G9",
+          "qty": 188
+        },
+        {
+          "code": "H2",
+          "qty": 347
+        },
+        {
+          "code": "H7",
+          "qty": 123
+        }
+      ],
+      "candidateTitleTotal": null,
+      "modified": false,
+      "risks": [
+        {
+          "id": "coverage",
+          "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+          "raw": "",
+          "resolved": false
+        },
+        {
+          "id": "risk-0",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "",
+          "resolved": false
+        },
+        {
+          "id": "risk-1",
+          "reason": "小字候选由同图重复格内文字或字形交叉解释，保留原文供核对",
+          "raw": "C8 / 78",
+          "resolved": false
+        },
+        {
+          "id": "risk-2",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "C6 / C8",
+          "resolved": false
+        },
+        {
+          "id": "risk-3",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "7 / 78",
+          "resolved": false
+        },
+        {
+          "id": "risk-4",
+          "reason": "小字候选由同图重复格内文字或字形交叉解释，保留原文供核对",
+          "raw": "C28 / 181",
+          "resolved": false
+        },
+        {
+          "id": "risk-5",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "11 / 181",
+          "resolved": false
+        },
+        {
+          "id": "risk-6",
+          "reason": "小字候选由同图重复格内文字或字形交叉解释，保留原文供核对",
+          "raw": "F8 / 41",
+          "resolved": false
+        },
+        {
+          "id": "risk-7",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "1 / 188",
+          "resolved": false
+        },
+        {
+          "id": "risk-8",
+          "reason": "存在字符歧义，候选按字段语法解释，仍需核对",
+          "raw": "H2 / 3N7",
+          "resolved": false
+        },
+        {
+          "id": "risk-9",
+          "reason": "同一文字有不同读法，请核对原图",
+          "raw": "1 / 12 / 123",
+          "resolved": false
+        },
+        {
+          "id": "risk-10",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "4NC / 777",
+          "resolved": false
+        },
+        {
+          "id": "risk-11",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "(BA / 44",
+          "resolved": false
+        },
+        {
+          "id": "risk-12",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": " / N",
+          "resolved": false
+        },
+        {
+          "id": "risk-13",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": " / W",
+          "resolved": false
+        },
+        {
+          "id": "risk-14",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "581 / A",
+          "resolved": false
+        },
+        {
+          "id": "risk-15",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "JV-T / SNNS",
+          "resolved": false
+        },
+        {
+          "id": "risk-16",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": ". / Y8",
+          "resolved": false
+        },
+        {
+          "id": "risk-17",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "I.6 / ......",
+          "resolved": false
+        },
+        {
+          "id": "risk-18",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": "T11 / .....",
+          "resolved": false
+        },
+        {
+          "id": "risk-19",
+          "reason": "图例字段未可靠读清，未计入，未记为零",
+          "raw": ". / PK",
+          "resolved": false
+        },
+        {
+          "id": "risk-20",
+          "reason": "图例与本体计数待核对",
+          "raw": "",
+          "resolved": false
+        }
+      ],
+      "riskAcknowledged": true
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true,
+    "review": null
+  }
+]

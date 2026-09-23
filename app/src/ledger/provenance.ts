@@ -29,7 +29,7 @@ function validQty(value: unknown): value is number {
 }
 
 function parseCandidateLines(value: unknown): { ok: true; lines: UsageLine[] } | { ok: false; message: string } {
-  if (!Array.isArray(value) || value.length === 0) return { ok: false, message: '识别候选不能为空' }
+  if (!Array.isArray(value)) return { ok: false, message: '识别候选必须是列表' }
   if (value.length > 221) return { ok: false, message: '识别候选色号过多' }
   const seen = new Set<string>()
   const lines: UsageLine[] = []
@@ -73,7 +73,7 @@ export function normalizeRecognition(
   if (typeof source.algorithmVersion !== 'string' || source.algorithmVersion.trim() === '' || source.algorithmVersion.length > MAX_ALGORITHM_VERSION) {
     return { ok: false, code: 'invalid-provenance', message: '识别算法版本无效' }
   }
-  if (source.originalStatus !== 'ready' && source.originalStatus !== 'partial') {
+  if (!['ready', 'partial', 'failed'].includes(source.originalStatus as string)) {
     return { ok: false, code: 'invalid-provenance', message: '原始识别状态无效' }
   }
   if (typeof source.modified !== 'boolean') return { ok: false, code: 'invalid-provenance', message: '识别修改标记无效' }
@@ -81,7 +81,12 @@ export function normalizeRecognition(
 
   const candidates = parseCandidateLines(source.candidateLines)
   if (!candidates.ok) return { ok: false, code: 'invalid-provenance', message: candidates.message }
-  if (source.candidateTitleTotal !== null && !validQty(source.candidateTitleTotal)) {
+  if (source.originalStatus === 'failed'
+    ? source.source !== 'assisted' || candidates.lines.length !== 0
+    : candidates.lines.length === 0) {
+    return { ok: false, code: 'invalid-provenance', message: '识别状态与原始候选不一致' }
+  }
+  if (source.candidateTitleTotal !== null && (typeof source.candidateTitleTotal !== 'number' || !Number.isSafeInteger(source.candidateTitleTotal) || source.candidateTitleTotal < 0)) {
     return { ok: false, code: 'invalid-provenance', message: '识别候选标题总数无效' }
   }
 
@@ -102,7 +107,7 @@ export function normalizeRecognition(
     riskIds.add(risk.id)
     risks.push({ id: risk.id, reason: risk.reason, raw: risk.raw, resolved: risk.resolved })
   }
-  if ((source.originalStatus === 'partial' || risks.some((risk) => !risk.resolved)) && !source.riskAcknowledged) {
+  if ((source.originalStatus !== 'ready' || risks.some((risk) => !risk.resolved)) && !source.riskAcknowledged) {
     return { ok: false, code: 'recognition-risk', message: '识别结果仍有未解决风险，需要确认后继续' }
   }
 
@@ -115,7 +120,7 @@ export function normalizeRecognition(
     value: {
       source: source.source,
       algorithmVersion: source.algorithmVersion,
-      originalStatus: source.originalStatus,
+      originalStatus: source.originalStatus as RecognitionProvenance['originalStatus'],
       candidateLines: candidates.lines,
       candidateTitleTotal,
       modified,

@@ -72,7 +72,7 @@ export type RejectedItem = { raw: string; qty: number | null; note: string }
 export type RecognitionProvenance = {
   source: 'legend' | 'grid' | 'assisted'
   algorithmVersion: string
-  originalStatus: 'ready' | 'partial'
+  originalStatus: 'ready' | 'partial' | 'failed'
   candidateLines: UsageLine[]
   candidateTitleTotal: number | null
   modified: boolean

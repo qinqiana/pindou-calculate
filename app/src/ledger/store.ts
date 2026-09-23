@@ -127,7 +127,7 @@ function validPattern(value: unknown): value is Pattern {
 
 function validConfirmedUsage(value: unknown): value is ConfirmedUsage {
   const usage = record(value)
-  if (!usage || !text(usage.patternId, false) || !nonNegativeInt(usage.version) || !validUsageLines(usage.lines) || !text(usage.confirmedAt, false) || (usage.titleTotal !== null && !nonNegativeInt(usage.titleTotal, MAX_QTY)) || (usage.titleDiff !== null && !safeInt(usage.titleDiff)) || typeof usage.titleDiffAcknowledged !== 'boolean' || !Array.isArray(usage.rejectedItems)) return false
+  if (!usage || !text(usage.patternId, false) || !nonNegativeInt(usage.version) || !validUsageLines(usage.lines) || !text(usage.confirmedAt, false) || (usage.titleTotal !== null && !nonNegativeInt(usage.titleTotal)) || (usage.titleDiff !== null && !safeInt(usage.titleDiff)) || typeof usage.titleDiffAcknowledged !== 'boolean' || !Array.isArray(usage.rejectedItems)) return false
   if (usage.rejectedItems.length > 512 || !usage.rejectedItems.every((item) => {
     const rejected = record(item)
     return !!rejected && text(rejected.raw) && rejected.raw.length <= 1000 && (rejected.qty === null || nonNegativeInt(rejected.qty, MAX_QTY)) && text(rejected.note) && rejected.note.length <= 1000
@@ -139,7 +139,7 @@ function validConfirmedUsage(value: unknown): value is ConfirmedUsage {
 
 function validDraft(value: unknown): value is DraftUsage {
   const draft = record(value)
-  return !!draft && text(draft.patternId, false) && validUsageLines(draft.lines) && (draft.titleTotal === null || nonNegativeInt(draft.titleTotal, MAX_QTY))
+  return !!draft && text(draft.patternId, false) && validUsageLines(draft.lines) && (draft.titleTotal === null || nonNegativeInt(draft.titleTotal))
 }
 
 function validMake(value: unknown): value is MakeRecord {

@@ -9,7 +9,7 @@ import { handoffOriginal, prepareOriginal, takeOriginal } from '../app/src/platf
 
 import { normalizeColorCode } from '../app/src/ledger/catalog.ts'
 import { parseNonNegativeInt, qtyMessage } from '../app/src/ledger/numbers.ts'
-import { hasRecognitionRisk, readRecognition, recognitionProvenance, sameRecognition, usageSourceLabel } from '../app/src/recognition/result.ts'
+import { hasRecognitionRisk, invalidateRiskReview, readRecognition, recognitionProvenance, sameRecognition, usageSourceLabel } from '../app/src/recognition/result.ts'
 
 let requestSerial = 0
 
@@ -21,7 +21,8 @@ function page(name: string, ledger: Ledger, extras: Record<string, any>, expose:
     setTimeout: () => 0, clearTimeout: () => {},
     ref: (value: any) => ({ value }),
     computed: (fn: Function) => ({ get value() { return fn() } }),
-    sniffImage, normalizeColorCode, parseNonNegativeInt, qtyMessage, hasRecognitionRisk, readRecognition, recognitionProvenance, sameRecognition, usageSourceLabel,
+    nextTick: () => Promise.resolve(),
+    sniffImage, normalizeColorCode, parseNonNegativeInt, qtyMessage, hasRecognitionRisk, invalidateRiskReview, readRecognition, recognitionProvenance, sameRecognition, usageSourceLabel,
     onLoad: (fn: Function) => hooks.load = fn,
     onReady: (fn: Function) => hooks.ready = fn,
     onShow: (fn: Function) => hooks.show = fn,
@@ -138,7 +139,7 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   const original = prepareOriginal(TINY_PNG)
   assert.ok(original.ok)
   handoffOriginal(created.patternId, ledger.token().epoch, original.original)
-  const { api, hooks } = page('edit', ledger, { uni: { redirectTo() {} } }, 'request, busy, lines, editLine, startRecognition, receiveRecognition, candidate, adoptCandidate, riskAck, adopted, confirmAll, error, previewOriginal, previewRegion, focusRegion')
+  const { api, hooks } = page('edit', ledger, { uni: { redirectTo() {} } }, 'request, busy, lines, editLine, startRecognition, receiveRecognition, candidate, adoptCandidate, riskAck, adopted, confirmAll, error, previewOriginal, previewRegion, focusRegion, toggleResolved')
   hooks.load({ id: created.patternId })
   hooks.ready?.()
   const first = api.request.value.identity
@@ -161,7 +162,10 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   assert.match(api.error.value, /风险/)
   assert.equal(ledger.getPattern(created.patternId)!.confirmed, null)
   api.riskAck.value = true
+  api.toggleResolved('risk-0')
+  assert.equal(api.adopted.value.risks[1].resolved, true)
   api.editLine(0, 'qty', '4')
+  assert.equal(api.adopted.value.risks[1].resolved, false, 'editing invalidates the earlier correction as well as acknowledgement')
   api.previewRegion(api.lines.value[0].proof.region)
   assert.deepEqual(Array.from(api.focusRegion.value), [1, 1, 4, 4])
   assert.equal(api.lines.value[0].proof.raw, 'C12 3', 'editing and viewing preserve the original evidence')

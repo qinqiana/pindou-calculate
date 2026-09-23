@@ -261,7 +261,7 @@ export class Ledger {
     if (!parsed.ok) return parsed
     let title: number | null = null
     if (titleTotal !== undefined && titleTotal !== null && String(titleTotal).trim() !== '') {
-      const t = parseNonNegativeInt(titleTotal)
+      const t = parseNonNegativeInt(titleTotal, Number.MAX_SAFE_INTEGER)
       if (!t.ok) return fail('invalid-number', qtyMessage(t.reason, '标题总数'))
       title = t.value
     }
@@ -307,7 +307,7 @@ export class Ledger {
     if (!meta.ok) return meta
     let title: number | null = null
     if (input.titleTotal !== undefined && input.titleTotal !== null && String(input.titleTotal).trim() !== '') {
-      const t = parseNonNegativeInt(input.titleTotal)
+      const t = parseNonNegativeInt(input.titleTotal, Number.MAX_SAFE_INTEGER)
       if (!t.ok) return fail('invalid-number', qtyMessage(t.reason, '标题总数'))
       title = t.value
     }

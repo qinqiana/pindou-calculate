@@ -10,7 +10,7 @@ export const DEFAULT_LOW_STOCK_PERCENT = 10
 export type QtyOk = { ok: true; value: number }
 export type QtyErr = { ok: false; reason: 'empty' | 'negative' | 'decimal' | 'overflow' | 'invalid' }
 
-export function parseNonNegativeInt(value: unknown): QtyOk | QtyErr {
+export function parseNonNegativeInt(value: unknown, maximum = MAX_QTY): QtyOk | QtyErr {
   if (value === null || value === undefined) return { ok: false, reason: 'empty' }
   if (typeof value === 'string') {
     const trimmed = value.trim()
@@ -23,14 +23,14 @@ export function parseNonNegativeInt(value: unknown): QtyOk | QtyErr {
     if (trimmed.length > 1 && trimmed.startsWith('0')) return { ok: false, reason: 'invalid' }
     const n = Number(trimmed)
     if (!Number.isSafeInteger(n)) return { ok: false, reason: 'overflow' }
-    if (n > MAX_QTY) return { ok: false, reason: 'overflow' }
+    if (n > maximum) return { ok: false, reason: 'overflow' }
     return { ok: true, value: n }
   }
   if (typeof value === 'number') {
     if (!Number.isFinite(value)) return { ok: false, reason: 'invalid' }
     if (value < 0) return { ok: false, reason: 'negative' }
     if (!Number.isInteger(value)) return { ok: false, reason: 'decimal' }
-    if (value > MAX_QTY) return { ok: false, reason: 'overflow' }
+    if (!Number.isSafeInteger(value) || value > maximum) return { ok: false, reason: 'overflow' }
     return { ok: true, value: value }
   }
   return { ok: false, reason: 'invalid' }
