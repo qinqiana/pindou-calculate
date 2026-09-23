@@ -22,7 +22,7 @@
     { "name": "启动并初始化空账", "result": "pass" },
     { "name": "SQLite 写入、杀进程、重启读回", "result": "pass", "testQty": 100 },
     { "name": "库存页面展示保存结果", "result": "pass", "testCode": "A1", "testQty": 100 },
-    { "name": "下载目录写出备份", "result": "pass", "bytes": 20 },
+    { "name": "原生下载接口写出测试文本（非完整备份）", "result": "pass", "bytes": 20 },
     { "name": "Pictures/豆计 写出 PNG", "result": "pass", "bytes": 72 },
     { "name": "N25 原图解码、离线识别、确认", "result": "pass", "colors": 11, "beads": 325, "stockChanged": false }
   ],
@@ -32,7 +32,9 @@
     "note": "已打开 Android 系统文件选择器；当前设备禁止 adb 注入触控，未继续模拟选取。"
   },
   "pending": [
+    "Release 包实际安装",
     "系统选择器选取 WebP 的新容器复验",
+    "新容器完整备份恢复和分享模板复验",
     "同包名同签名覆盖更新",
     "人工核对成本对照",
     "用户体验与审美验收"
