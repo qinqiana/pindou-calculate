@@ -1,0 +1,107 @@
+{
+  "pattern": {
+    "name": "148 系统选图复测",
+    "w": 5000,
+    "h": 3820,
+    "version": 1
+  },
+  "usages": [
+    {
+      "version": 1,
+      "total": 148,
+      "lines": [
+        {
+          "code": "C2",
+          "qty": 18
+        },
+        {
+          "code": "C12",
+          "qty": 3
+        },
+        {
+          "code": "C16",
+          "qty": 11
+        },
+        {
+          "code": "C17",
+          "qty": 12
+        },
+        {
+          "code": "C19",
+          "qty": 7
+        },
+        {
+          "code": "C29",
+          "qty": 18
+        },
+        {
+          "code": "H2",
+          "qty": 14
+        },
+        {
+          "code": "H3",
+          "qty": 5
+        },
+        {
+          "code": "H7",
+          "qty": 60
+        }
+      ],
+      "titleTotal": 999,
+      "inputMethod": "legend",
+      "recognition": {
+        "source": "legend",
+        "algorithmVersion": "pixel-glyph-0.8-dev",
+        "originalStatus": "ready",
+        "candidateLines": [
+          {
+            "code": "C2",
+            "qty": 18
+          },
+          {
+            "code": "C12",
+            "qty": 3
+          },
+          {
+            "code": "C16",
+            "qty": 11
+          },
+          {
+            "code": "C17",
+            "qty": 12
+          },
+          {
+            "code": "C19",
+            "qty": 7
+          },
+          {
+            "code": "C29",
+            "qty": 18
+          },
+          {
+            "code": "H2",
+            "qty": 14
+          },
+          {
+            "code": "H3",
+            "qty": 5
+          },
+          {
+            "code": "H7",
+            "qty": 60
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": true,
+        "risks": [],
+        "riskAcknowledged": false
+      }
+    }
+  ],
+  "stock": {
+    "C2": 1000,
+    "H7": 1000
+  },
+  "makes": 1,
+  "text": "148 系统选图复测\n无来源备注 · 尺寸 未提供 · 像素 5000×3820\n确认版本 1\n图例识别 · 已人工修改原始结果：已取得候选\n148\n总需求（颗）\n9\n用色（种）\n足量\n库存状态\n逐色对照\nC2\n需 18 · 有 1000\n余 982\nC12\n需 3 · 有 1000\n余 997\nC16\n需 11 · 有 1000\n余 989\nC17\n需 12 · 有 1000\n余 988\nC19\n需 7 · 有 1000\n余 993\n"
+}

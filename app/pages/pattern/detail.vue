@@ -1,5 +1,7 @@
 <template>
   <view class="page" v-if="detail">
+    <scroll-view class="page-content" scroll-y>
+    <view class="content">
     <view class="card head">
       <image class="thumb" :src="'data:' + detail.pattern.thumbnail.mime + ';base64,' + detail.pattern.thumbnail.base64" mode="aspectFit" />
       <text class="name">{{ detail.pattern.name }}</text>
@@ -50,17 +52,6 @@
       </view>
     </view>
 
-    <view class="actions">
-      <button class="btn primary big" @click="doMake('make')">已拼</button>
-      <button v-if="makes.length" class="btn outline big" @click="doMake('remake')">再拼一次</button>
-    </view>
-    <view class="tools">
-      <button class="btn ghost" @click="copyList">补货清单</button>
-      <button class="btn ghost" @click="goShare">分享图片</button>
-      <button class="btn ghost" @click="goEdit">编辑用量</button>
-      <button class="btn ghost danger" @click="removePattern">移除图纸</button>
-    </view>
-
     <view v-if="makes.length" class="card">
       <text class="section-title">制作记录</text>
       <view v-for="m in makes" :key="m.id" class="make">
@@ -73,8 +64,23 @@
         <button v-if="!m.voided" class="btn ghost small" @click="voidMake(m.id)">撤回这次</button>
       </view>
     </view>
+    </view>
+    </scroll-view>
 
-    <text v-if="error" class="err">{{ error }}</text>
+    <view class="dock">
+      <text v-if="error" class="err">{{ error }}</text>
+      <view class="actions">
+        <button class="btn primary big" @click="doMake('make')">已拼</button>
+        <button v-if="makes.length" class="btn outline big" @click="doMake('remake')">再拼一次</button>
+      </view>
+      <view class="tools">
+        <button class="btn ghost" @click="copyList">补货清单</button>
+        <button class="btn ghost" @click="goShare">分享图片</button>
+        <button class="btn ghost" @click="goEdit">编辑用量</button>
+        <button class="btn ghost danger" @click="removePattern">移除图纸</button>
+      </view>
+    </view>
+
   </view>
 </template>
 
@@ -187,7 +193,12 @@ function removePattern() {
 
 <style>
 .risk-note { display: block; margin-top: 16rpx; padding: 16rpx; border-radius: 12rpx; background: #fff3de; color: #734400; font-size: 26rpx; line-height: 1.6; }
-.page { padding: 24rpx 24rpx 80rpx; }
+.page { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.page-content { flex: 1; height: 0; min-height: 0; }
+.content { padding: 24rpx; }
+.dock { flex-shrink: 0; z-index: 5; padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06); }
+.dock .actions { margin-top: 0; }
+.dock .err { margin-top: 0; margin-bottom: 12rpx; }
 .card { background: #fffefb; border-radius: 24rpx; box-shadow: 0 2rpx 14rpx rgba(74, 62, 40, 0.06); padding: 28rpx 32rpx; margin-top: 24rpx; }
 .card:first-child { margin-top: 0; }
 

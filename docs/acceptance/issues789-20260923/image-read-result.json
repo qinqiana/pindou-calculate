@@ -1,0 +1,14 @@
+{
+  "oldSingle64KiBArrayTransferMs": 2122.1,
+  "newWholeImageRead": {
+    "size": 3000021,
+    "chunks": 46,
+    "decodedBytes": 3000021,
+    "readMs": 1439.8999999761581
+  },
+  "selectedOriginalComparison": {
+    "selectedBytes": 3000021,
+    "referenceBytes": 3000021,
+    "byteForByteEqual": true
+  }
+}

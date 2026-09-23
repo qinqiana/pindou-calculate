@@ -1,5 +1,7 @@
 <template>
   <view class="page">
+    <scroll-view class="page-content" scroll-y>
+    <view class="content">
     <RecognitionRunner :request="request" @result="receiveRecognition" />
     <view v-if="imagePreview" class="card image-card">
       <image class="original-image" :src="imagePreview" mode="aspectFit" @click="previewOriginal()" />
@@ -61,10 +63,14 @@
       <view class="field"><text class="field-label">来源备注（可选）</text><input class="field-input" v-model="note" placeholder="图纸作者或来源" /></view>
       <view class="field"><text class="field-label">制作尺寸（可选）</text><input class="field-input" v-model="sizeNote" placeholder="未提供" /></view>
     </view>
-    <text class="hint">确认不会扣库存。只有记录「已拼」才扣减。</text>
-    <view v-if="needAck" class="card diff-card"><text>{{ diffHint }}</text><button class="btn warn" @click="confirmAll(true)">已知差异，仍用逐色合计</button></view>
-    <button class="btn primary" :disabled="saving || busy || picking" @click="confirmAll()">确认全部用量</button>
-    <text v-if="error" class="err">{{ error }}</text>
+    </view>
+    </scroll-view>
+    <view class="dock">
+      <text v-if="error" class="err">{{ error }}</text>
+      <text class="hint">确认不会扣库存。只有记录「已拼」才扣减。</text>
+      <view v-if="needAck" class="diff-card"><text>{{ diffHint }}</text></view>
+      <button class="btn" :class="needAck ? 'warn' : 'primary'" :disabled="saving || busy || picking" @click="confirmAll(needAck)">{{ needAck ? '已知差异，仍用逐色合计' : '确认全部用量' }}</button>
+    </view>
 
     <view v-if="zooming && original" class="image-zoom">
       <text class="zoom-caption">{{ focusRegion ? '标记处为识别证据，可缩放拖动核对。' : '可双指缩放、拖动查看整张原图。' }}</text>
@@ -249,7 +255,9 @@ function confirmAll(ack = false) {
 
 <style>
 page { background: #f2f2f7; color: #202124; }
-.page { padding: 24rpx 24rpx 72rpx; }
+.page { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.page-content { flex: 1; height: 0; min-height: 0; }
+.content { padding: 24rpx; }
 .card { background: white; border-radius: 24rpx; padding: 28rpx; margin-bottom: 24rpx; }
 .image-card { padding: 16rpx 24rpx 24rpx; }
 .original-image { width: 100%; height: 260rpx; background: #fff; }
@@ -275,11 +283,14 @@ button::after { border: none; }
 .add { background: #eef4fc; color: #0066cc; font-size: 28rpx; margin-top: 24rpx; border-radius: 16rpx; }
 .field { margin-top: 24rpx; }
 .field-label { display: block; color: #63636c; font-size: 26rpx; margin-bottom: 10rpx; }
+.dock { flex-shrink: 0; z-index: 5; padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06); }
+.dock .btn { margin-top: 12rpx; }
+.dock .hint { margin-top: 0; }
 .btn { font-size: 30rpx; border-radius: 18rpx; min-height: 96rpx; line-height: 1.5; padding: 25rpx 18rpx; margin-top: 24rpx; }
 .primary,.close-zoom { background: #0066cc; color: white; font-weight: 600; }
 .primary[disabled] { background: #b7c8de; color: #fff; }
 .warn { background: #925400; color: white; }
-.diff-card { background: #fff3de; margin-top: 24rpx; }
+.diff-card { background: #fff3de; margin-top: 12rpx; padding: 12rpx; border-radius: 12rpx; font-size: 26rpx; line-height: 1.5; }
 .image-zoom { position: fixed; inset: 0; z-index: 20; background: #fff; padding-top: var(--status-bar-height); }
 .zoom-caption { display: block; padding: 20rpx; font-size: 25rpx; color: #63636c; }
 .zoom-area { width: 100%; height: calc(100% - 260rpx); overflow: hidden; }

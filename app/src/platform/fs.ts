@@ -199,14 +199,19 @@ function pickImageDocument(android: PlusAny): Promise<FileOutcome<{ bytes: Uint8
         if (resultCode !== -1 || !data) return resolve(fail('已取消选图，已有输入保留。', true))
         let input: PlusAny
         let channel: PlusAny
+        let output: PlusAny
+        let encoder: PlusAny
+        let encodedChannel: PlusAny
         try {
           const resolver = call(main, 'getContentResolver')
           const uri = call(data, 'getData')
           input = call(resolver, 'openInputStream', uri)
           if (!input) throw new Error('无法打开文件')
           channel = call('java.nio.channels.Channels', 'newChannel', input)
+          output = android.newObject('java.io.ByteArrayOutputStream')
+          encoder = android.newObject('android.util.Base64OutputStream', output, 2)
+          encodedChannel = call('java.nio.channels.Channels', 'newChannel', encoder)
           const buffer = call('java.nio.ByteBuffer', 'allocate', 65536)
-          const parts: Uint8Array[] = []
           let size = 0
           while (true) {
             call(buffer, 'clear')
@@ -215,22 +220,28 @@ function pickImageDocument(android: PlusAny): Promise<FileOutcome<{ bytes: Uint8
             if (!Number.isInteger(count) || count <= 0 || count > 65536) throw new Error('无法完整读取文件')
             size += count
             if (size > MAX_IMAGE_BYTES) return resolve(fail('图片超过 20 MiB 上限，请选择较小的原图'))
-            const encoded = call('android.util.Base64', 'encodeToString', call(buffer, 'array'), 0, count, 2)
-            if (typeof encoded !== 'string') throw new Error('无法读取文件字节')
-            const part = base64ToBytes(encoded)
-            if (part.length !== count) throw new Error('文件读取不完整')
-            parts.push(part)
+            // Keep raw bytes in Java. Native.js serializes byte[] element by element,
+            // which stalls large imports even when each read is only 64 KiB.
+            call(buffer, 'flip')
+            while (call(buffer, 'hasRemaining')) {
+              const written = call(encodedChannel, 'write', buffer)
+              if (!Number.isInteger(written) || written <= 0) throw new Error('无法完整读取文件')
+            }
           }
-          const bytes = new Uint8Array(size)
-          let offset = 0
-          for (const part of parts) { bytes.set(part, offset); offset += part.length }
+          call(encodedChannel, 'close') // Finish base64 padding before reading the string.
+          encodedChannel = null
+          const encoded = call(output, 'toString', 'US-ASCII')
+          if (typeof encoded !== 'string') throw new Error('无法读取文件字节')
+          const bytes = base64ToBytes(encoded)
+          if (bytes.length !== size) throw new Error('文件读取不完整')
           rememberNativeImage(bytes, String(call(uri, 'toString')))
           resolve({ ok: true, value: { bytes, mime: String(call(resolver, 'getType', uri) || '') } })
         } catch {
           resolve(fail('读取图片失败，请重新选择可读取的本机文件；已有输入保留。'))
         } finally {
-          if (channel) call(channel, 'close')
-          if (input) call(input, 'close')
+          for (const stream of [encodedChannel, encoder, output, channel, input]) {
+            if (stream) { try { call(stream, 'close') } catch { /* Preserve the read outcome. */ } }
+          }
         }
       }
       main.onActivityResult = handler

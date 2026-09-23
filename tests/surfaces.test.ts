@@ -58,8 +58,18 @@ test('user-facing pages exist and call shipped Ledger entry', () => {
   assert.match(batch, /GROUP_ORDER/)
   assert.match(batch, /全选未录入/)
   assert.match(batch, /选本组/)
+  assert.match(batch, /填入已选/)
+  assert.match(batch, /applyBatchQty/)
+  assert.match(batch, /class="dock"/)
+  assert.match(batch, /expandedGroups\[section\.group\]/)
+  assert.doesNotMatch(batch, /mode !== 'first-entry' \|\| expandedGroups/)
   assert.match(batch, /expandedGroups/)
   assert.match(batch, /isLocked/)
+  const edit = readFileSync('app/pages/pattern/edit.vue', 'utf8')
+  assert.match(edit, /class="dock"[\s\S]*确认全部用量/)
+  const detailPage = readFileSync('app/pages/pattern/detail.vue', 'utf8')
+  assert.match(detailPage, /class="dock"[\s\S]*已拼/)
+  assert.match(detailPage, /class="dock"[\s\S]*补货清单/)
   // 存储不可用时的错误状态与重试入口（三个主 tab 页）
   for (const file of ['app/pages/stock/index.vue', 'app/pages/pattern/list.vue', 'app/pages/settings/index.vue']) {
     const text = readFileSync(file, 'utf8')

@@ -183,43 +183,63 @@ test('animated, corrupt container, truncated, oversized and bad compressed data 
   })
 })
 
-test('Android document picker preserves exact original bytes, closes streams and restores callbacks', async () => {
-  const bytes = fixture('transparent.webp')
-  let closed = 0
-  let offset = 0
+test('Android document picker preserves bytes without bridging raw arrays; partial writes, limits and errors close streams', async () => {
+  const bytes = new Uint8Array(readFileSync('参考样例/豆画-Mard-148图纸样例.png'))
+  const closed = new Set<any>()
+  const opened: any[] = []
   let cancelled = false
   let failed = false
+  let oversized = false
   const prior = () => {}
   const main: any = {
     onActivityResult: prior,
     startActivityForResult(_intent: any, code: number) { this.onActivityResult(code, cancelled ? 0 : -1, {}) },
   }
+  const keep = (object: any) => { opened.push(object); return object }
   const android = {
     runtimeMainActivity: () => main,
     importClass() {},
-    newObject: () => ({}),
+    newObject(name: string, output: any) {
+      if (name === 'java.io.ByteArrayOutputStream') return keep({ kind: 'output', parts: [] })
+      if (name === 'android.util.Base64OutputStream') return keep({ kind: 'encoder', output })
+      return {}
+    },
     invoke(obj: any, method: string, ...args: any[]) {
-      if (method === 'getData') return 'content://test/source.webp'
-      if (method === 'getContentResolver' || method === 'newChannel' || method === 'openInputStream') return {}
-      if (method === 'allocate') return { bytes: new Uint8Array(65536) }
+      if (method === 'getData') return 'content://test/source.png'
+      if (method === 'getContentResolver') return {}
+      if (method === 'openInputStream') return keep({ kind: 'input', offset: 0 })
+      if (method === 'newChannel') return keep({ stream: args[0] })
+      if (method === 'allocate') return { bytes: new Uint8Array(args[0]), count: 0, position: 0 }
+      if (method === 'clear') { obj.count = 0; obj.position = 0 }
       if (method === 'read') {
         if (failed) throw new Error('permission revoked')
-        if (offset === bytes.length) return -1
-        const count = Math.min(17, bytes.length - offset)
-        args[0].bytes.set(bytes.subarray(offset, offset + count)); offset += count
+        const size = oversized ? MAX_IMAGE_BYTES + 1 : bytes.length
+        if (obj.stream.offset === size) return -1
+        const count = Math.min(65536, size - obj.stream.offset)
+        if (!oversized) args[0].bytes.set(bytes.subarray(obj.stream.offset, obj.stream.offset + count))
+        args[0].count = count; obj.stream.offset += count
         return count
       }
-      if (method === 'array') return obj.bytes
-      if (method === 'encodeToString') return Buffer.from(args[0].subarray(args[1], args[1] + args[2])).toString('base64')
+      if (method === 'flip') obj.position = 0
+      if (method === 'hasRemaining') return obj.position < obj.count
+      if (method === 'write') {
+        const buffer = args[0]
+        const count = Math.min(16384, buffer.count - buffer.position)
+        obj.stream.output.parts.push(Buffer.from(buffer.bytes.subarray(buffer.position, buffer.position + count)))
+        buffer.position += count
+        return count
+      }
+      if (method === 'array' || method === 'toByteArray') throw new Error('raw native arrays must not cross the bridge')
+      if (method === 'toString') return obj.kind === 'output' ? Buffer.concat(obj.parts).toString('base64') : String(obj)
       if (method === 'getType') return 'application/octet-stream'
-      if (method === 'close') closed++
+      if (method === 'close') { closed.add(obj); if (obj.stream) closed.add(obj.stream) }
     },
   }
   await withAndroid(android, async () => {
     const selected = await pickImageFile()
     assert.ok(selected.ok)
     assert.deepEqual(selected.value.bytes, bytes)
-    assert.equal(closed, 2)
+    assert.ok(opened.every(o => closed.has(o)), 'every opened stream is closed')
     assert.equal(main.onActivityResult, prior)
     cancelled = true
     const cancel = await pickImageFile()
@@ -229,6 +249,11 @@ test('Android document picker preserves exact original bytes, closes streams and
     const fail = await pickImageFile()
     assert.ok(!fail.ok && !fail.cancelled)
     assert.equal(main.onActivityResult, prior)
-    assert.equal(closed, 4)
+    assert.ok(opened.every(o => closed.has(o)))
+    failed = false; oversized = true
+    const large = await pickImageFile()
+    assert.ok(!large.ok && /20 MiB/.test(large.message))
+    assert.ok(opened.every(o => closed.has(o)))
+    assert.equal(main.onActivityResult, prior)
   })
 })

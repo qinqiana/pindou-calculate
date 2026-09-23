@@ -1,23 +1,23 @@
 <template>
   <view class="page">
+    <scroll-view class="page-content" scroll-y :scroll-into-view="scrollTarget" scroll-with-animation>
+    <view class="content">
     <view class="card head">
       <text class="title">{{ title }}</text>
-      <text class="hint">预填 1000 只出现在首次录入表单；未选入的色号保存后仍为 0。点选色号行加入本批，提交前会先预览整批变更。</text>
+      <text class="hint">首次录入的空格预填 1000。先勾选色号，再填一个数套到已选；没选中的不会入账。预览和保存在屏幕底部。</text>
     </view>
 
-    <view v-if="mode === 'first-entry'" class="selection-tools card">
+    <view class="selection-tools card">
       <button class="btn outline" :disabled="availableCount === 0" @click="toggleAll">
-        {{ allAvailableSelected ? '取消全选' : '全选未录入' }}
+        {{ allAvailableSelected ? '取消全选' : mode === 'first-entry' ? '全选未录入' : '全选' }}
       </button>
       <text class="available-note">可选 {{ availableCount }} 色</text>
+      <input class="qty-input batch-input" type="number" :value="batchQty" placeholder="统一颗数" @input="onBatchQty" />
+      <button class="btn outline" :disabled="selectedCount === 0 || batchQty.trim() === ''" @click="applyBatchQty">填入已选</button>
     </view>
 
-    <view class="picked">
-      <text class="picked-text">已选 <text class="picked-num">{{ selectedCount }}</text> 色</text>
-    </view>
-
-    <view v-for="section in sections" :key="section.group || 'all'" :class="mode === 'first-entry' ? 'group card' : 'flat-group'">
-      <view v-if="mode === 'first-entry'" class="group-head" @click="toggleGroup(section.group)">
+    <view v-for="section in sections" :key="section.group" class="group card">
+      <view v-if="section.group" class="group-head" @click="toggleGroup(section.group)">
         <view class="group-title">
           <text class="group-name">{{ section.group }} 组</text>
           <text class="group-count">{{ section.selectedCount }}/{{ section.availableCount }} 已选</text>
@@ -28,7 +28,7 @@
         <text class="group-chevron">{{ expandedGroups[section.group] ? '⌃' : '⌄' }}</text>
       </view>
 
-      <view v-if="mode !== 'first-entry' || expandedGroups[section.group]" class="group-lines">
+      <view v-if="expandedGroups[section.group]" class="group-lines">
         <view
           v-for="line in section.lines"
           :key="line.code"
@@ -52,30 +52,38 @@
       </view>
     </view>
 
-    <view class="footer">
-      <button class="btn primary" @click="preview">预览本批变更</button>
-    </view>
-
-    <view v-if="previewLines.length" class="card preview">
+    <view v-if="previewLines.length" id="batch-preview" class="card preview">
       <text class="preview-title">本批变更 {{ previewLines.length }} 项</text>
       <view v-for="p in previewLines" :key="p.code" class="preview-line">
         <text class="preview-code">{{ p.code }}</text>
-        <text class="preview-diff">{{ p.qtyBefore }} → {{ p.qtyAfter }}</text>
+        <view class="preview-diff">
+          <text>{{ p.qtyBefore }} → {{ p.qtyAfter }}</text>
+          <text class="preview-precision">{{ p.estimatedBefore ? '估算' : '精确' }} → {{ p.estimatedAfter ? '估算' : '精确' }}</text>
+        </view>
         <text class="preview-delta" :class="{ neg: p.delta < 0 }">{{ p.delta > 0 ? '+' : '' }}{{ p.delta }}</text>
       </view>
-      <button class="btn primary" @click="save">保存整批</button>
     </view>
 
-    <text v-if="error" class="err">{{ error }}</text>
+    </view>
+    </scroll-view>
+    <view class="dock">
+      <text v-if="error" class="err">{{ error }}</text>
+      <view class="dock-row">
+        <text class="picked-text">已选 <text class="picked-num">{{ selectedCount }}</text> 色</text>
+        <button class="btn outline" @click="preview">预览</button>
+        <button class="btn primary" :disabled="previewLines.length === 0" @click="save">保存整批</button>
+      </view>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { colorByCode, GROUP_ORDER } from '../../src/ledger/catalog'
 import { DEFAULT_FIRST_ENTRY } from '../../src/ledger/numbers'
 import type { Ledger } from '../../src/ledger/operations'
+import type { BatchPreviewLine } from '../../src/ledger/types'
 import { appLedger, newRequestId } from '../../src/platform/app-ledger'
 import { bindPreview, previewStillValid, type BatchInputItem, type PreviewBinding } from '../../src/platform/batch-preview'
 
@@ -87,21 +95,20 @@ type BatchLine = { code: string; qty: string | number; estimated: boolean; selec
 type GroupSection = { group: string; lines: BatchLine[]; availableCount: number; selectedCount: number; allSelected: boolean }
 
 const lines = ref<BatchLine[]>([])
-const previewLines = ref<{ code: string; qtyBefore: number; qtyAfter: number; delta: number }[]>([])
+const previewLines = ref<BatchPreviewLine[]>([])
 const error = ref('')
+const batchQty = ref('')
+const scrollTarget = ref('')
 const expandedGroups = ref<Record<string, boolean>>(defaultExpandedGroups())
 let binding: PreviewBinding<Token> | null = null
 
 const selectedCount = computed(() => lines.value.filter((l) => l.selected).length)
-const availableCount = computed(() => (mode.value === 'first-entry' ? lines.value.filter((l) => !l.entered).length : 0))
-const allAvailableSelected = computed(() => availableCount.value > 0 && lines.value.filter((l) => !l.entered).every((l) => l.selected))
+const availableCount = computed(() => lines.value.filter((l) => !isLocked(l)).length)
+const allAvailableSelected = computed(() => availableCount.value > 0 && lines.value.filter((l) => !isLocked(l)).every((l) => l.selected))
 const sections = computed<GroupSection[]>(() => {
-  if (mode.value !== 'first-entry') {
-    return [{ group: '', lines: lines.value, availableCount: 0, selectedCount: selectedCount.value, allSelected: false }]
-  }
   return GROUP_ORDER.map((group) => {
     const groupLines = lines.value.filter((line) => line.code.startsWith(group))
-    const available = groupLines.filter((line) => !line.entered)
+    const available = groupLines.filter((line) => !isLocked(line))
     return {
       group,
       lines: groupLines,
@@ -151,20 +158,31 @@ function toggleSelect(line: BatchLine) {
 }
 
 function toggleGroup(group: string) {
-  if (mode.value === 'first-entry') expandedGroups.value[group] = !expandedGroups.value[group]
+  expandedGroups.value[group] = !expandedGroups.value[group]
 }
 
 function toggleAll() {
-  if (mode.value !== 'first-entry' || availableCount.value === 0) return
+  if (availableCount.value === 0) return
   const selected = !allAvailableSelected.value
-  for (const line of lines.value) if (!line.entered) line.selected = selected
+  for (const line of lines.value) if (!isLocked(line)) line.selected = selected
   invalidate()
 }
 
 function toggleGroupSelection(section: GroupSection) {
-  if (mode.value !== 'first-entry' || section.availableCount === 0) return
+  if (section.availableCount === 0) return
   const selected = !section.allSelected
-  for (const line of section.lines) if (!line.entered) line.selected = selected
+  for (const line of section.lines) if (!isLocked(line)) line.selected = selected
+  invalidate()
+}
+
+function onBatchQty(e: { detail: { value: string } }) {
+  batchQty.value = e.detail.value
+}
+
+function applyBatchQty() {
+  const qty = batchQty.value.trim()
+  if (!qty || selectedCount.value === 0) return
+  for (const line of lines.value) if (line.selected && !isLocked(line)) line.qty = qty
   invalidate()
 }
 
@@ -194,8 +212,9 @@ function commitFn() {
   return mode.value === 'count' ? l.commitCount.bind(l) : mode.value === 'restock' ? l.commitRestock.bind(l) : l.commitFirstEntry.bind(l)
 }
 
-function preview() {
+async function preview() {
   error.value = ''
+  scrollTarget.value = ''
   const result = previewFn()(selectedItems())
   if (!result.ok) {
     error.value = result.message
@@ -205,6 +224,9 @@ function preview() {
   }
   binding = bindPreview(selectedItems(), result.token)
   previewLines.value = result.lines
+  if (!result.lines.length) { error.value = '所选色号的数量和估算标记没有变化，无需保存。'; return }
+  await nextTick()
+  scrollTarget.value = 'batch-preview'
 }
 
 function save() {
@@ -231,20 +253,22 @@ function save() {
 </script>
 
 <style>
-.page { padding: 24rpx 24rpx 80rpx; }
+.page { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.page-content { flex: 1; height: 0; min-height: 0; }
+.content { padding: 24rpx; }
 .card { background: #fffefb; border-radius: 24rpx; box-shadow: 0 2rpx 14rpx rgba(74, 62, 40, 0.06); }
 
 .head { padding: 28rpx 32rpx; }
 .title { display: block; font-size: 36rpx; font-weight: 700; }
 .hint { display: block; margin-top: 12rpx; font-size: 24rpx; color: #857c6e; line-height: 1.6; }
 
-.selection-tools { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-top: 16rpx; padding: 16rpx 20rpx; }
+.selection-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 16rpx; margin-top: 16rpx; padding: 16rpx 20rpx; }
 .selection-tools .btn { height: 72rpx; line-height: 72rpx; padding: 0 24rpx; font-size: 26rpx; }
+.batch-input { width: 180rpx; flex: none; }
 .outline { background: #edf1e6; color: #566c4d; border: 2rpx solid #cfd9c4; }
 .available-note { color: #857c6e; font-size: 24rpx; }
 
-.picked { display: flex; justify-content: flex-end; padding: 20rpx 8rpx 4rpx; }
-.picked-text { font-size: 24rpx; color: #857c6e; }
+.picked-text { font-size: 24rpx; color: #857c6e; flex-shrink: 0; }
 .picked-num { color: #566c4d; font-weight: 700; font-size: 28rpx; }
 
 .group { margin-top: 16rpx; padding: 0 20rpx 20rpx; overflow: hidden; }
@@ -272,7 +296,10 @@ function save() {
 .est.exact { color: #566c4d; border-color: #9db28c; background: #edf1e6; }
 .est.locked { color: #857c6e; background: #f5f1e8; }
 
-.footer { margin-top: 28rpx; }
+.dock { flex-shrink: 0; z-index: 5; padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom)); background: #fffefb; box-shadow: 0 -4rpx 20rpx rgba(74, 62, 40, 0.08); }
+.dock-row { display: flex; align-items: center; gap: 16rpx; }
+.dock .btn { flex: 1; height: 80rpx; line-height: 80rpx; font-size: 28rpx; }
+.dock .primary[disabled] { background: #c5d0bc; color: #fff; }
 .btn { margin: 0; font-size: 30rpx; border-radius: 999rpx; height: 96rpx; line-height: 96rpx; }
 .btn::after { border: none; }
 .primary { background: #6b8260; color: #fff; font-weight: 600; }
@@ -282,9 +309,8 @@ function save() {
 .preview-line { display: flex; align-items: center; gap: 20rpx; padding: 12rpx 0; border-bottom: 1rpx solid #f0e9da; }
 .preview-code { width: 80rpx; font-weight: 700; }
 .preview-diff { flex: 1; color: #6e6353; font-variant-numeric: tabular-nums; }
+.preview-precision { display: block; color: #857c6e; font-size: 24rpx; margin-top: 4rpx; }
 .preview-delta { color: #566c4d; font-weight: 700; font-variant-numeric: tabular-nums; }
 .preview-delta.neg { color: #b65b38; }
-.preview .btn { margin-top: 24rpx; }
-
-.err { display: block; margin-top: 24rpx; color: #b65b38; font-size: 26rpx; }
+.err { display: block; margin-bottom: 12rpx; color: #b65b38; font-size: 26rpx; }
 </style>
