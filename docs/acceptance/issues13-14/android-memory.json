@@ -1,0 +1,130 @@
+{
+  "scope": "sampled io.dcloud.HBuilder process PSS, not a guaranteed total application peak",
+  "samples": [
+    {
+      "stage": "N25.png-recognizing",
+      "time": 1790152838252,
+      "pssKiB": 227213
+    },
+    {
+      "stage": "N25.png-after",
+      "time": 1790152845299,
+      "pssKiB": 215787
+    },
+    {
+      "stage": "long-5.png-recognizing",
+      "time": 1790152851693,
+      "pssKiB": 202727
+    },
+    {
+      "stage": "long-5.png-after",
+      "time": 1790152858271,
+      "pssKiB": 224243
+    },
+    {
+      "stage": "rectangular.png-recognizing",
+      "time": 1790152864648,
+      "pssKiB": 238601
+    },
+    {
+      "stage": "rectangular.png-after",
+      "time": 1790152873901,
+      "pssKiB": 231896
+    },
+    {
+      "stage": "compressed.webp-recognizing",
+      "time": 1790152883859,
+      "pssKiB": 246339
+    },
+    {
+      "stage": "compressed.webp-recognizing",
+      "time": 1790152894614,
+      "pssKiB": 198095
+    },
+    {
+      "stage": "compressed.webp-recognizing",
+      "time": 1790152908967,
+      "pssKiB": 204551
+    },
+    {
+      "stage": "compressed.webp-after",
+      "time": 1790152912600,
+      "pssKiB": 236037
+    },
+    {
+      "stage": "S14-body.png-recognizing",
+      "time": 1790152925973,
+      "pssKiB": 257491
+    },
+    {
+      "stage": "S14-body.png-recognizing",
+      "time": 1790152936828,
+      "pssKiB": 216429
+    },
+    {
+      "stage": "S14-body.png-recognizing",
+      "time": 1790152951117,
+      "pssKiB": 218633
+    },
+    {
+      "stage": "S14-body.png-recognizing",
+      "time": 1790153138659,
+      "pssKiB": 274821
+    },
+    {
+      "stage": "S14-body.png-recognizing",
+      "time": 1790153149687,
+      "pssKiB": 218010
+    },
+    {
+      "stage": "S14-body.png-after",
+      "time": 1790153169419,
+      "pssKiB": 249684
+    },
+    {
+      "stage": "S14.webp-recognizing",
+      "time": 1790153180135,
+      "pssKiB": 278146
+    },
+    {
+      "stage": "S14.webp-after",
+      "time": 1790153191279,
+      "pssKiB": 244299
+    },
+    {
+      "stage": "S04.webp-recognizing",
+      "time": 1790153205027,
+      "pssKiB": 220341
+    },
+    {
+      "stage": "S04.webp-after",
+      "time": 1790153214607,
+      "pssKiB": 241921
+    },
+    {
+      "stage": "S17.jpg-recognizing",
+      "time": 1790153230310,
+      "pssKiB": 243472
+    },
+    {
+      "stage": "S17.jpg-after",
+      "time": 1790153237545,
+      "pssKiB": 242648
+    },
+    {
+      "stage": "S01.jpg-recognizing",
+      "time": 1790153255340,
+      "pssKiB": 229385
+    },
+    {
+      "stage": "S01.jpg-recognizing",
+      "time": 1790153266248,
+      "pssKiB": 219947
+    },
+    {
+      "stage": "S01.jpg-after",
+      "time": 1790153282234,
+      "pssKiB": 230303
+    }
+  ]
+}

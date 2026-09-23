@@ -1,0 +1,40 @@
+{
+  "date": "2026-09-23",
+  "package": "com.pindou.ledger.debug",
+  "releasePackage": "com.pindou.ledger",
+  "versionName": "0.2.0",
+  "versionCode": 200,
+  "device": "Xiaomi 14 Ultra / Android 15",
+  "container": {
+    "webViewOrigin": "https://pindou.invalid",
+    "networkPermission": false,
+    "nativeLibraries": 0,
+    "dcloudMobileRuntime": false,
+    "offlineAppKey": false
+  },
+  "build": {
+    "debug": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "release": "artifacts/pindou-0.2.0-release.apk",
+    "releaseSignature": "apksigner v2 verified",
+    "privateMaterialInApk": false
+  },
+  "cases": [
+    { "name": "启动并初始化空账", "result": "pass" },
+    { "name": "SQLite 写入、杀进程、重启读回", "result": "pass", "testQty": 100 },
+    { "name": "库存页面展示保存结果", "result": "pass", "testCode": "A1", "testQty": 100 },
+    { "name": "下载目录写出备份", "result": "pass", "bytes": 20 },
+    { "name": "Pictures/豆计 写出 PNG", "result": "pass", "bytes": 72 },
+    { "name": "N25 原图解码、离线识别、确认", "result": "pass", "colors": 11, "beads": 325, "stockChanged": false }
+  ],
+  "systemPicker": {
+    "opened": true,
+    "fileSelectionCompleted": false,
+    "note": "已打开 Android 系统文件选择器；当前设备禁止 adb 注入触控，未继续模拟选取。"
+  },
+  "pending": [
+    "系统选择器选取 WebP 的新容器复验",
+    "同包名同签名覆盖更新",
+    "人工核对成本对照",
+    "用户体验与审美验收"
+  ]
+}

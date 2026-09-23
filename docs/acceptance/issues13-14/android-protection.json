@@ -1,0 +1,130 @@
+{
+  "cancel": {
+    "responseMs": 1,
+    "busy": false,
+    "retained": true,
+    "message": "已取消识别。已保留本次已读部分，可核对采用、重试或手工补充。"
+  },
+  "edit": {
+    "responseMs": 1,
+    "busy": false,
+    "message": "已保留你的编辑并停止旧识别，可重新识别后选择是否采用。"
+  },
+  "retryKeepsManual": true,
+  "restoreRejectsOldSession": true,
+  "paleLegend": [
+    {
+      "code": "H6",
+      "qty": 361
+    },
+    {
+      "code": "C1",
+      "qty": 344
+    },
+    {
+      "code": "H9",
+      "qty": 319
+    }
+  ],
+  "ledger": {
+    "first": {
+      "ok": true,
+      "token": {
+        "epoch": 2,
+        "seq": 27
+      },
+      "operationId": "op-1a0cd7d03bc-c4c9ececea9a4",
+      "makeId": "make-1a0cd7d03bc-b38ceb8cb7188"
+    },
+    "again": {
+      "ok": true,
+      "operationId": "op-1a0cd7d03bc-c4c9ececea9a4",
+      "token": {
+        "epoch": 2,
+        "seq": 27
+      },
+      "makeId": "make-1a0cd7d03bc-b38ceb8cb7188"
+    },
+    "undo": {
+      "ok": true,
+      "token": {
+        "epoch": 2,
+        "seq": 29
+      },
+      "operationId": "op-1a0cd7d04c7-ad9d29d28d4d5"
+    },
+    "undoAgain": {
+      "ok": false,
+      "code": "already-voided",
+      "message": "该制作已经撤回"
+    },
+    "z1": {
+      "ok": true,
+      "token": {
+        "epoch": 2,
+        "seq": 32
+      },
+      "operationId": "op-1a0cd7d1c41-203eca88cad77",
+      "makeId": "make-1a0cd7d1c41-58288f301e255"
+    },
+    "z2": {
+      "ok": true,
+      "operationId": "op-1a0cd7d1c41-203eca88cad77",
+      "token": {
+        "epoch": 2,
+        "seq": 32
+      },
+      "makeId": "make-1a0cd7d1c41-58288f301e255"
+    },
+    "snapshotUnchanged": true,
+    "bad": {
+      "ok": false,
+      "code": "invalid-backup",
+      "message": "备份不是合法 JSON（可能已截断）"
+    },
+    "future": {
+      "ok": false,
+      "code": "unsupported-backup",
+      "message": "不支持的备份格式版本：999"
+    },
+    "stock": {
+      "code": "H2",
+      "qty": 100,
+      "estimated": true,
+      "baseline": 100,
+      "entered": true
+    },
+    "makes": [
+      {
+        "id": "make-1a0cd7d03bc-b38ceb8cb7188",
+        "patternId": "pattern-1a0cd7d0229-4520a9d887304",
+        "usageVersion": 1,
+        "nameSnapshot": "Ledger-cross-check",
+        "sourceNoteSnapshot": "",
+        "linesSnapshot": [
+          {
+            "code": "H2",
+            "qty": 10
+          }
+        ],
+        "completedAt": "2026-09-23T08:58:37.372Z",
+        "voided": true,
+        "voidedAt": "2026-09-23T08:58:37.639Z",
+        "requestId": "req-1790153917353-01301332905e6"
+      },
+      {
+        "id": "make-1a0cd7d1c41-58288f301e255",
+        "patternId": "pattern-1a0cd7d1b27-e0616eac0faa2",
+        "usageVersion": 1,
+        "nameSnapshot": "Zero",
+        "sourceNoteSnapshot": "",
+        "linesSnapshot": [],
+        "completedAt": "2026-09-23T08:58:43.649Z",
+        "voided": false,
+        "voidedAt": null,
+        "requestId": "req-1790153923629-3c731c3e6b4b3"
+      }
+    ],
+    "backupUnchanged": true
+  }
+}

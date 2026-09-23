@@ -1,10 +1,10 @@
 {
   "pages": [
     { "path": "pages/stock/index", "style": { "navigationStyle": "custom" } },
-    { "path": "pages/stock/batch", "style": { "navigationBarTitleText": "批量录入", "app-plus": { "softinputMode": "adjustResize" } } },
+    { "path": "pages/stock/batch", "style": { "navigationBarTitleText": "批量录入" } },
     { "path": "pages/stock/history", "style": { "navigationBarTitleText": "库存变动" } },
     { "path": "pages/pattern/list", "style": { "navigationBarTitleText": "图纸" } },
-    { "path": "pages/pattern/edit", "style": { "navigationBarTitleText": "确认用量", "app-plus": { "softinputMode": "adjustResize" } } },
+    { "path": "pages/pattern/edit", "style": { "navigationBarTitleText": "确认用量" } },
     { "path": "pages/pattern/detail", "style": { "navigationBarTitleText": "图纸详情" } },
     { "path": "pages/pattern/share", "style": { "navigationBarTitleText": "分享图片" } },
     { "path": "pages/settings/index", "style": { "navigationBarTitleText": "设置" } }

@@ -1,0 +1,2748 @@
+[
+  {
+    "input": "N25.png",
+    "patternId": "pattern-1a0cd6c78ae-47134f5ba0301",
+    "automatic": [
+      {
+        "code": "C25",
+        "qty": 33
+      },
+      {
+        "code": "C3",
+        "qty": 78
+      },
+      {
+        "code": "F10",
+        "qty": 12
+      },
+      {
+        "code": "G11",
+        "qty": 2
+      },
+      {
+        "code": "H11",
+        "qty": 1
+      },
+      {
+        "code": "H14",
+        "qty": 10
+      },
+      {
+        "code": "H6",
+        "qty": 88
+      },
+      {
+        "code": "H7",
+        "qty": 67
+      },
+      {
+        "code": "H9",
+        "qty": 9
+      },
+      {
+        "code": "M4",
+        "qty": 8
+      },
+      {
+        "code": "M7",
+        "qty": 17
+      }
+    ],
+    "exactRequired": true,
+    "exact": true,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 5.114,
+    "wallMs": 13408,
+    "message": "已取得部分候选，请核对疑点和可能漏计的区域。",
+    "events": [
+      {
+        "stage": "progress",
+        "time": 1790152841329,
+        "progress": {
+          "completed": 2,
+          "total": 17
+        },
+        "total": 16
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841372,
+        "progress": {
+          "completed": 3,
+          "total": 17
+        },
+        "total": 31
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841397,
+        "progress": {
+          "completed": 4,
+          "total": 17
+        },
+        "total": 45
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841425,
+        "progress": {
+          "completed": 5,
+          "total": 17
+        },
+        "total": 60
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841475,
+        "progress": {
+          "completed": 6,
+          "total": 17
+        },
+        "total": 75
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841520,
+        "progress": {
+          "completed": 7,
+          "total": 17
+        },
+        "total": 89
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841545,
+        "progress": {
+          "completed": 8,
+          "total": 17
+        },
+        "total": 102
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841565,
+        "progress": {
+          "completed": 9,
+          "total": 17
+        },
+        "total": 117
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841585,
+        "progress": {
+          "completed": 10,
+          "total": 17
+        },
+        "total": 132
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841609,
+        "progress": {
+          "completed": 11,
+          "total": 17
+        },
+        "total": 153
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841745,
+        "progress": {
+          "completed": 12,
+          "total": 17
+        },
+        "total": 182
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841864,
+        "progress": {
+          "completed": 13,
+          "total": 17
+        },
+        "total": 205
+      },
+      {
+        "stage": "progress",
+        "time": 1790152841962,
+        "progress": {
+          "completed": 14,
+          "total": 17
+        },
+        "total": 261
+      },
+      {
+        "stage": "progress",
+        "time": 1790152842032,
+        "progress": {
+          "completed": 15,
+          "total": 17
+        },
+        "total": 313
+      },
+      {
+        "stage": "progress",
+        "time": 1790152842070,
+        "progress": {
+          "completed": 16,
+          "total": 17
+        },
+        "total": 325
+      },
+      {
+        "stage": "progress",
+        "time": 1790152842076,
+        "progress": {
+          "completed": 17,
+          "total": 17
+        },
+        "total": 325
+      },
+      {
+        "stage": "result",
+        "time": 1790152842080,
+        "progress": null,
+        "total": 325
+      }
+    ],
+    "location": {
+      "region": [
+        59,
+        46,
+        1224,
+        1945
+      ],
+      "raw": "已读制作格 325；空白格 3806；未知格 0；未处理格 0；外围未覆盖数量未知"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd6c78ae-47134f5ba0301",
+      "version": 1,
+      "lines": [
+        {
+          "code": "C3",
+          "qty": 78
+        },
+        {
+          "code": "C25",
+          "qty": 33
+        },
+        {
+          "code": "F10",
+          "qty": 12
+        },
+        {
+          "code": "G11",
+          "qty": 2
+        },
+        {
+          "code": "H6",
+          "qty": 88
+        },
+        {
+          "code": "H7",
+          "qty": 67
+        },
+        {
+          "code": "H9",
+          "qty": 9
+        },
+        {
+          "code": "H11",
+          "qty": 1
+        },
+        {
+          "code": "H14",
+          "qty": 10
+        },
+        {
+          "code": "M4",
+          "qty": 8
+        },
+        {
+          "code": "M7",
+          "qty": 17
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "C3",
+            "qty": 78
+          },
+          {
+            "code": "C25",
+            "qty": 33
+          },
+          {
+            "code": "F10",
+            "qty": 12
+          },
+          {
+            "code": "G11",
+            "qty": 2
+          },
+          {
+            "code": "H6",
+            "qty": 88
+          },
+          {
+            "code": "H7",
+            "qty": 67
+          },
+          {
+            "code": "H9",
+            "qty": 9
+          },
+          {
+            "code": "H11",
+            "qty": 1
+          },
+          {
+            "code": "H14",
+            "qty": 10
+          },
+          {
+            "code": "M4",
+            "qty": 8
+          },
+          {
+            "code": "M7",
+            "qty": 17
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 325；空白格 3806；未知格 0；未处理格 0；外围未覆盖数量未知",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:40:44.077Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "long-5.png",
+    "patternId": "pattern-1a0cd6cad2f-9514a3a016147",
+    "automatic": [
+      {
+        "code": "B8",
+        "qty": 540
+      },
+      {
+        "code": "F21",
+        "qty": 540
+      },
+      {
+        "code": "F24",
+        "qty": 540
+      },
+      {
+        "code": "H2",
+        "qty": 554
+      },
+      {
+        "code": "H3",
+        "qty": 540
+      },
+      {
+        "code": "H5",
+        "qty": 540
+      },
+      {
+        "code": "H7",
+        "qty": 554
+      }
+    ],
+    "exactRequired": true,
+    "exact": true,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 4.128,
+    "wallMs": 12794,
+    "message": "已取得部分候选，请核对疑点和可能漏计的区域。",
+    "events": [
+      {
+        "stage": "progress",
+        "time": 1790152853483,
+        "progress": {
+          "completed": 1,
+          "total": 21
+        },
+        "total": 170
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853611,
+        "progress": {
+          "completed": 2,
+          "total": 21
+        },
+        "total": 340
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853652,
+        "progress": {
+          "completed": 3,
+          "total": 21
+        },
+        "total": 550
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853687,
+        "progress": {
+          "completed": 4,
+          "total": 21
+        },
+        "total": 720
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853721,
+        "progress": {
+          "completed": 5,
+          "total": 21
+        },
+        "total": 890
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853767,
+        "progress": {
+          "completed": 6,
+          "total": 21
+        },
+        "total": 1100
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853802,
+        "progress": {
+          "completed": 7,
+          "total": 21
+        },
+        "total": 1270
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853845,
+        "progress": {
+          "completed": 8,
+          "total": 21
+        },
+        "total": 1480
+      },
+      {
+        "stage": "progress",
+        "time": 1790152853973,
+        "progress": {
+          "completed": 9,
+          "total": 21
+        },
+        "total": 1650
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854103,
+        "progress": {
+          "completed": 10,
+          "total": 21
+        },
+        "total": 1820
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854154,
+        "progress": {
+          "completed": 11,
+          "total": 21
+        },
+        "total": 2030
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854180,
+        "progress": {
+          "completed": 12,
+          "total": 21
+        },
+        "total": 2200
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854217,
+        "progress": {
+          "completed": 13,
+          "total": 21
+        },
+        "total": 2370
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854258,
+        "progress": {
+          "completed": 14,
+          "total": 21
+        },
+        "total": 2580
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854296,
+        "progress": {
+          "completed": 15,
+          "total": 21
+        },
+        "total": 2750
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854337,
+        "progress": {
+          "completed": 16,
+          "total": 21
+        },
+        "total": 2960
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854378,
+        "progress": {
+          "completed": 17,
+          "total": 21
+        },
+        "total": 3130
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854419,
+        "progress": {
+          "completed": 18,
+          "total": 21
+        },
+        "total": 3300
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854459,
+        "progress": {
+          "completed": 19,
+          "total": 21
+        },
+        "total": 3510
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854497,
+        "progress": {
+          "completed": 20,
+          "total": 21
+        },
+        "total": 3680
+      },
+      {
+        "stage": "progress",
+        "time": 1790152854527,
+        "progress": {
+          "completed": 21,
+          "total": 21
+        },
+        "total": 3808
+      },
+      {
+        "stage": "result",
+        "time": 1790152854546,
+        "progress": null,
+        "total": 3808
+      }
+    ],
+    "location": {
+      "region": [
+        20,
+        20,
+        1504,
+        3328
+      ],
+      "raw": "已读制作格 3808；空白格 1080；未知格 0；未处理格 0；外围未覆盖数量未知"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd6cad2f-9514a3a016147",
+      "version": 1,
+      "lines": [
+        {
+          "code": "B8",
+          "qty": 540
+        },
+        {
+          "code": "F21",
+          "qty": 540
+        },
+        {
+          "code": "F24",
+          "qty": 540
+        },
+        {
+          "code": "H2",
+          "qty": 554
+        },
+        {
+          "code": "H3",
+          "qty": 540
+        },
+        {
+          "code": "H5",
+          "qty": 540
+        },
+        {
+          "code": "H7",
+          "qty": 554
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "B8",
+            "qty": 540
+          },
+          {
+            "code": "F21",
+            "qty": 540
+          },
+          {
+            "code": "F24",
+            "qty": 540
+          },
+          {
+            "code": "H2",
+            "qty": 554
+          },
+          {
+            "code": "H3",
+            "qty": 540
+          },
+          {
+            "code": "H5",
+            "qty": 540
+          },
+          {
+            "code": "H7",
+            "qty": 554
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 3808；空白格 1080；未知格 0；未处理格 0；外围未覆盖数量未知",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:40:56.873Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "rectangular.png",
+    "patternId": "pattern-1a0cd6ce0b6-17b660fe8b1a9",
+    "automatic": [
+      {
+        "code": "B8",
+        "qty": 540
+      },
+      {
+        "code": "F21",
+        "qty": 540
+      },
+      {
+        "code": "F24",
+        "qty": 540
+      },
+      {
+        "code": "H2",
+        "qty": 554
+      },
+      {
+        "code": "H3",
+        "qty": 540
+      },
+      {
+        "code": "H5",
+        "qty": 540
+      },
+      {
+        "code": "H7",
+        "qty": 554
+      }
+    ],
+    "exactRequired": true,
+    "exact": true,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 5.467,
+    "wallMs": 15463,
+    "message": "已取得部分候选，请核对疑点和可能漏计的区域。",
+    "events": [
+      {
+        "stage": "progress",
+        "time": 1790152868808,
+        "progress": {
+          "completed": 1,
+          "total": 21
+        },
+        "total": 170
+      },
+      {
+        "stage": "progress",
+        "time": 1790152868869,
+        "progress": {
+          "completed": 2,
+          "total": 21
+        },
+        "total": 340
+      },
+      {
+        "stage": "progress",
+        "time": 1790152868936,
+        "progress": {
+          "completed": 3,
+          "total": 21
+        },
+        "total": 550
+      },
+      {
+        "stage": "progress",
+        "time": 1790152868996,
+        "progress": {
+          "completed": 4,
+          "total": 21
+        },
+        "total": 720
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869060,
+        "progress": {
+          "completed": 5,
+          "total": 21
+        },
+        "total": 890
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869130,
+        "progress": {
+          "completed": 6,
+          "total": 21
+        },
+        "total": 1100
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869187,
+        "progress": {
+          "completed": 7,
+          "total": 21
+        },
+        "total": 1270
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869254,
+        "progress": {
+          "completed": 8,
+          "total": 21
+        },
+        "total": 1480
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869314,
+        "progress": {
+          "completed": 9,
+          "total": 21
+        },
+        "total": 1650
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869372,
+        "progress": {
+          "completed": 10,
+          "total": 21
+        },
+        "total": 1820
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869443,
+        "progress": {
+          "completed": 11,
+          "total": 21
+        },
+        "total": 2030
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869500,
+        "progress": {
+          "completed": 12,
+          "total": 21
+        },
+        "total": 2200
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869558,
+        "progress": {
+          "completed": 13,
+          "total": 21
+        },
+        "total": 2370
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869624,
+        "progress": {
+          "completed": 14,
+          "total": 21
+        },
+        "total": 2580
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869683,
+        "progress": {
+          "completed": 15,
+          "total": 21
+        },
+        "total": 2750
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869749,
+        "progress": {
+          "completed": 16,
+          "total": 21
+        },
+        "total": 2960
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869807,
+        "progress": {
+          "completed": 17,
+          "total": 21
+        },
+        "total": 3130
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869866,
+        "progress": {
+          "completed": 18,
+          "total": 21
+        },
+        "total": 3300
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869938,
+        "progress": {
+          "completed": 19,
+          "total": 21
+        },
+        "total": 3510
+      },
+      {
+        "stage": "progress",
+        "time": 1790152869992,
+        "progress": {
+          "completed": 20,
+          "total": 21
+        },
+        "total": 3680
+      },
+      {
+        "stage": "progress",
+        "time": 1790152870040,
+        "progress": {
+          "completed": 21,
+          "total": 21
+        },
+        "total": 3808
+      },
+      {
+        "stage": "result",
+        "time": 1790152870057,
+        "progress": null,
+        "total": 3808
+      }
+    ],
+    "location": {
+      "region": [
+        20,
+        20,
+        1505,
+        4160
+      ],
+      "raw": "已读制作格 3808；空白格 1080；未知格 0；未处理格 0；外围未覆盖数量未知"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd6ce0b6-17b660fe8b1a9",
+      "version": 1,
+      "lines": [
+        {
+          "code": "B8",
+          "qty": 540
+        },
+        {
+          "code": "F21",
+          "qty": 540
+        },
+        {
+          "code": "F24",
+          "qty": 540
+        },
+        {
+          "code": "H2",
+          "qty": 554
+        },
+        {
+          "code": "H3",
+          "qty": 540
+        },
+        {
+          "code": "H5",
+          "qty": 540
+        },
+        {
+          "code": "H7",
+          "qty": 554
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "B8",
+            "qty": 540
+          },
+          {
+            "code": "F21",
+            "qty": 540
+          },
+          {
+            "code": "F24",
+            "qty": 540
+          },
+          {
+            "code": "H2",
+            "qty": 554
+          },
+          {
+            "code": "H3",
+            "qty": 540
+          },
+          {
+            "code": "H5",
+            "qty": 540
+          },
+          {
+            "code": "H7",
+            "qty": 554
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 3808；空白格 1080；未知格 0；未处理格 0；外围未覆盖数量未知",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:41:12.765Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "compressed.webp",
+    "patternId": "pattern-1a0cd6d2a57-4fe411472b7c2",
+    "automatic": [
+      {
+        "code": "B8",
+        "qty": 156
+      },
+      {
+        "code": "F21",
+        "qty": 156
+      },
+      {
+        "code": "F24",
+        "qty": 156
+      },
+      {
+        "code": "H2",
+        "qty": 160
+      },
+      {
+        "code": "H3",
+        "qty": 156
+      },
+      {
+        "code": "H5",
+        "qty": 156
+      },
+      {
+        "code": "H7",
+        "qty": 160
+      }
+    ],
+    "exactRequired": false,
+    "exact": null,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 24.303,
+    "wallMs": 38523,
+    "message": "识别超过 30 秒，已停止。已保留本次已读部分，可核对采用、重试或手工补充。",
+    "events": [
+      {
+        "stage": "progress",
+        "time": 1790152891157,
+        "progress": {
+          "completed": 1,
+          "total": 21
+        },
+        "total": 170
+      },
+      {
+        "stage": "progress",
+        "time": 1790152894015,
+        "progress": {
+          "completed": 2,
+          "total": 21
+        },
+        "total": 340
+      },
+      {
+        "stage": "progress",
+        "time": 1790152897929,
+        "progress": {
+          "completed": 3,
+          "total": 21
+        },
+        "total": 550
+      },
+      {
+        "stage": "progress",
+        "time": 1790152901016,
+        "progress": {
+          "completed": 4,
+          "total": 21
+        },
+        "total": 720
+      },
+      {
+        "stage": "progress",
+        "time": 1790152903899,
+        "progress": {
+          "completed": 5,
+          "total": 21
+        },
+        "total": 890
+      },
+      {
+        "stage": "progress",
+        "time": 1790152907804,
+        "progress": {
+          "completed": 6,
+          "total": 21
+        },
+        "total": 1100
+      }
+    ],
+    "location": {
+      "region": [
+        20,
+        20,
+        1504,
+        3328
+      ],
+      "raw": "已读制作格 1100；空白格 100；未知格 210；未处理格 3478；外围未覆盖数量未知"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd6d2a57-4fe411472b7c2",
+      "version": 1,
+      "lines": [
+        {
+          "code": "B8",
+          "qty": 156
+        },
+        {
+          "code": "F21",
+          "qty": 156
+        },
+        {
+          "code": "F24",
+          "qty": 156
+        },
+        {
+          "code": "H2",
+          "qty": 160
+        },
+        {
+          "code": "H3",
+          "qty": 156
+        },
+        {
+          "code": "H5",
+          "qty": 156
+        },
+        {
+          "code": "H7",
+          "qty": 160
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "B8",
+            "qty": 156
+          },
+          {
+            "code": "F21",
+            "qty": 156
+          },
+          {
+            "code": "F24",
+            "qty": 156
+          },
+          {
+            "code": "H2",
+            "qty": 160
+          },
+          {
+            "code": "H3",
+            "qty": 156
+          },
+          {
+            "code": "H5",
+            "qty": 156
+          },
+          {
+            "code": "H7",
+            "qty": 160
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 1100；空白格 100；未知格 210；未处理格 3478；外围未覆盖数量未知",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "第 31–104 行尚未处理，未计入；可重试或手工补充",
+            "raw": "该区域的制作数量未知",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "第 1 行有 34 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 17：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认；列 22：无法辨认；列 23：无法辨认；列 24：无法辨认；列 25：无法辨认；列 27：无法辨认；列 28：无法辨认；列 29：无法辨认；列 30：无法辨认；列 33：无法辨认；列 34：无法辨认；列 35：无法辨认；列 36：无法辨认；列 37：无法辨认；列 38：无法辨认；列 39：无法辨认；列 40：无法辨认；列 43：无法辨认；列 44：无法辨认；列 45：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "第 2 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-4",
+            "reason": "第 3 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-5",
+            "reason": "第 4 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-6",
+            "reason": "第 5 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-7",
+            "reason": "第 6 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-8",
+            "reason": "第 7 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-9",
+            "reason": "第 8 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-10",
+            "reason": "第 9 行有 19 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 2：无法辨认；列 5：无法辨认；列 7：无法辨认；列 8：无法辨认；列 12：无法辨认；列 13：无法辨认；列 15：无法辨认；列 20：无法辨认；列 21：无法辨认；列 23：无法辨认；列 24：无法辨认；列 28：无法辨认；列 30：无法辨认；列 32：无法辨认；列 36：无法辨认；列 37：无法辨认；列 38：无法辨认；列 44：无法辨认；列 45：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-11",
+            "reason": "第 10 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-12",
+            "reason": "第 11 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-13",
+            "reason": "第 12 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-14",
+            "reason": "第 13 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-15",
+            "reason": "第 14 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-16",
+            "reason": "第 15 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-17",
+            "reason": "第 16 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-18",
+            "reason": "第 17 行有 25 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 2：无法辨认；列 4：无法辨认；列 5：无法辨认；列 7：无法辨认；列 8：无法辨认；列 10：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 23：无法辨认；列 24：无法辨认；列 28：无法辨认；列 29：无法辨认；列 30：无法辨认；列 32：无法辨认；列 34：无法辨认；列 36：无法辨认；列 37：无法辨认；列 38：无法辨认；列 39：无法辨认；列 40：无法辨认；列 41：无法辨认；列 44：无法辨认；列 45：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-19",
+            "reason": "第 18 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-20",
+            "reason": "第 19 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-21",
+            "reason": "第 20 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-22",
+            "reason": "第 21 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-23",
+            "reason": "第 22 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-24",
+            "reason": "第 23 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-25",
+            "reason": "第 24 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-26",
+            "reason": "第 25 行有 20 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 7：无法辨认；列 8：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 19：无法辨认；列 23：无法辨认；列 24：无法辨认；列 27：无法辨认；列 29：无法辨认；列 30：无法辨认；列 32：无法辨认；列 34：无法辨认；列 37：无法辨认；列 38：无法辨认；列 39：无法辨认；列 40：无法辨认；列 45：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-27",
+            "reason": "第 26 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-28",
+            "reason": "第 27 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-29",
+            "reason": "第 28 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-30",
+            "reason": "第 29 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-31",
+            "reason": "第 30 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 8：无法辨认；列 16：无法辨认；列 24：无法辨认；列 32：无法辨认；列 40：无法辨认",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:41:51.166Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "S14-body.png",
+    "patternId": "pattern-1a0cd710c42-446f423bfc999",
+    "automatic": [
+      {
+        "code": "D4",
+        "qty": 1
+      },
+      {
+        "code": "G14",
+        "qty": 5
+      },
+      {
+        "code": "M12",
+        "qty": 20
+      },
+      {
+        "code": "M8",
+        "qty": 11
+      }
+    ],
+    "exactRequired": false,
+    "exact": null,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 21.442,
+    "wallMs": 43214,
+    "message": "识别超过 30 秒，已停止。已保留本次已读部分，可核对采用、重试或手工补充。",
+    "events": [
+      {
+        "stage": "progress",
+        "time": 1790153160333,
+        "progress": {
+          "completed": 1,
+          "total": 22
+        },
+        "total": 37
+      }
+    ],
+    "location": {
+      "region": [
+        0,
+        0,
+        1079,
+        2336
+      ],
+      "raw": "已读制作格 37；空白格 19；未知格 189；未处理格 4949；外围未覆盖数量未知"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd710c42-446f423bfc999",
+      "version": 1,
+      "lines": [
+        {
+          "code": "D4",
+          "qty": 1
+        },
+        {
+          "code": "G14",
+          "qty": 5
+        },
+        {
+          "code": "M8",
+          "qty": 11
+        },
+        {
+          "code": "M12",
+          "qty": 20
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "D4",
+            "qty": 1
+          },
+          {
+            "code": "G14",
+            "qty": 5
+          },
+          {
+            "code": "M8",
+            "qty": 11
+          },
+          {
+            "code": "M12",
+            "qty": 20
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 37；空白格 19；未知格 189；未处理格 4949；外围未覆盖数量未知",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "第 6–106 行尚未处理，未计入；可重试或手工补充",
+            "raw": "该区域的制作数量未知",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "第 1 行有 48 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：T；列 3：I2；列 4：3；列 5：4；列 6：5；列 7：6；列 8：7；列 9：8；列 10：9；列 11：I0；列 12：11；列 13：T2；列 14：I5；列 15：T4；列 16：T5；列 17：T6；列 18：I17；列 19：18；列 20：19；列 21：20；列 22：2I；列 23：32；列 24：23；列 25：X；列 26：25；列 27：Z6；列 28：27；列 29：28；列 30：29；列 31：Z0；列 32：9；列 33：I32；列 34：33；列 36：35；列 37：X6；列 38：E37；列 39：38；列 40：39；列 41：610；列 42：41；列 43：42；列 44：43；列 45：44；列 46：45；列 47：46；列 48：I47；列 49：T.",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "第 2 行有 49 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：1；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 6：U；列 7：E；列 8：E；列 9：2；列 10：I；列 11：无法辨认；列 12：I；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认；列 18：I；列 19：无法辨认；列 20：L；列 21：I8Q；列 22：II；列 23：I；列 24：无法辨认；列 25：无法辨认；列 26：无法辨认；列 27：无法辨认；列 28：I；列 29：无法辨认；列 30：无法辨认；列 31：无法辨认；列 32：无法辨认；列 33：I；列 34：IV；列 35：L8；列 36：X；列 37：无法辨认；列 38：I；列 39：无法辨认；列 40：无法辨认；列 41：无法辨认；列 42：无法辨认；列 43：无法辨认；列 44：无法辨认；列 45：无法辨认；列 46：U；列 47：..(；列 48：E(；列 49：I1",
+            "resolved": false
+          },
+          {
+            "id": "risk-4",
+            "reason": "第 3 行有 44 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：2；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：(；列 6：I；列 7：-----7；列 8：E-7；列 9：(--7；列 10：T-T；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认；列 18：T7；列 19：7---7；列 20：T---；列 21：-T7；列 22：--J；列 28：I---；列 29：无法辨认；列 30：无法辨认；列 31：无法辨认；列 32：J；列 33：F-；列 34：1；列 35：I)；列 36：I；列 37：F7；列 38：E-----；列 39：无法辨认；列 40：无法辨认；列 41：无法辨认；列 42：无法辨认；列 43：无法辨认；列 44：无法辨认；列 45：(；列 46：(；列 47：(7；列 48：E-----；列 49：L2",
+            "resolved": false
+          },
+          {
+            "id": "risk-5",
+            "reason": "第 4 行有 27 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：3；列 2：无法辨认；列 3：无法辨认；列 5：Y；列 6：F4；列 7：I；列 8：E；列 9：无法辨认；列 12：无法辨认；列 13：无法辨认；列 16：无法辨认；列 17：无法辨认；列 32：I；列 33：N；列 34：P；列 35：无法辨认；列 37：无法辨认；列 38：I；列 40：无法辨认；列 42：无法辨认；列 43：无法辨认；列 44：无法辨认；列 45：I1；列 46：I；列 47：E(；列 48：I；列 49：3",
+            "resolved": false
+          },
+          {
+            "id": "risk-6",
+            "reason": "第 5 行有 21 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：4；列 2：无法辨认；列 3：无法辨认；列 5：I0；列 6：无法辨认；列 7：无法辨认；列 8：I；列 12：无法辨认；列 13：无法辨认；列 33：无法辨认；列 35：无法辨认；列 37：无法辨认；列 38：E；列 42：无法辨认；列 43：无法辨认；列 44：无法辨认；列 45：无法辨认；列 46：T；列 47：无法辨认；列 48：E；列 49：N1",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:46:08.069Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "S14.webp",
+    "patternId": "pattern-1a0cd71b00a-c5fcdce035d34",
+    "automatic": [
+      {
+        "code": "A11",
+        "qty": 66
+      },
+      {
+        "code": "A17",
+        "qty": 26
+      },
+      {
+        "code": "A20",
+        "qty": 70
+      },
+      {
+        "code": "A21",
+        "qty": 114
+      },
+      {
+        "code": "A25",
+        "qty": 10
+      },
+      {
+        "code": "B8",
+        "qty": 39
+      },
+      {
+        "code": "B14",
+        "qty": 8
+      },
+      {
+        "code": "C29",
+        "qty": 113
+      },
+      {
+        "code": "D4",
+        "qty": 91
+      },
+      {
+        "code": "E11",
+        "qty": 67
+      },
+      {
+        "code": "E14",
+        "qty": 25
+      },
+      {
+        "code": "E16",
+        "qty": 303
+      },
+      {
+        "code": "F7",
+        "qty": 62
+      },
+      {
+        "code": "F9",
+        "qty": 33
+      },
+      {
+        "code": "F14",
+        "qty": 16
+      },
+      {
+        "code": "F22",
+        "qty": 24
+      },
+      {
+        "code": "F25",
+        "qty": 11
+      },
+      {
+        "code": "G14",
+        "qty": 202
+      },
+      {
+        "code": "G17",
+        "qty": 7
+      },
+      {
+        "code": "H2",
+        "qty": 275
+      },
+      {
+        "code": "H3",
+        "qty": 49
+      },
+      {
+        "code": "H5",
+        "qty": 206
+      },
+      {
+        "code": "H6",
+        "qty": 27
+      },
+      {
+        "code": "H7",
+        "qty": 515
+      },
+      {
+        "code": "H10",
+        "qty": 55
+      },
+      {
+        "code": "H11",
+        "qty": 34
+      },
+      {
+        "code": "H16",
+        "qty": 62
+      },
+      {
+        "code": "M4",
+        "qty": 39
+      },
+      {
+        "code": "M8",
+        "qty": 436
+      },
+      {
+        "code": "M9",
+        "qty": 35
+      },
+      {
+        "code": "M12",
+        "qty": 242
+      }
+    ],
+    "exactRequired": true,
+    "exact": true,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 7.593,
+    "wallMs": 21669,
+    "message": "已取得部分候选，请核对疑点和可能漏计的区域。",
+    "events": [
+      {
+        "stage": "result",
+        "time": 1790153187505,
+        "progress": null,
+        "total": 3262
+      }
+    ],
+    "location": {
+      "region": [
+        550,
+        2508,
+        88,
+        23
+      ],
+      "raw": "G14 / 2O2"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd71b00a-c5fcdce035d34",
+      "version": 1,
+      "lines": [
+        {
+          "code": "A11",
+          "qty": 66
+        },
+        {
+          "code": "A17",
+          "qty": 26
+        },
+        {
+          "code": "A20",
+          "qty": 70
+        },
+        {
+          "code": "A21",
+          "qty": 114
+        },
+        {
+          "code": "A25",
+          "qty": 10
+        },
+        {
+          "code": "B8",
+          "qty": 39
+        },
+        {
+          "code": "B14",
+          "qty": 8
+        },
+        {
+          "code": "C29",
+          "qty": 113
+        },
+        {
+          "code": "D4",
+          "qty": 91
+        },
+        {
+          "code": "E11",
+          "qty": 67
+        },
+        {
+          "code": "E14",
+          "qty": 25
+        },
+        {
+          "code": "E16",
+          "qty": 303
+        },
+        {
+          "code": "F7",
+          "qty": 62
+        },
+        {
+          "code": "F9",
+          "qty": 33
+        },
+        {
+          "code": "F14",
+          "qty": 16
+        },
+        {
+          "code": "F22",
+          "qty": 24
+        },
+        {
+          "code": "F25",
+          "qty": 11
+        },
+        {
+          "code": "G14",
+          "qty": 202
+        },
+        {
+          "code": "G17",
+          "qty": 7
+        },
+        {
+          "code": "H2",
+          "qty": 275
+        },
+        {
+          "code": "H3",
+          "qty": 49
+        },
+        {
+          "code": "H5",
+          "qty": 206
+        },
+        {
+          "code": "H6",
+          "qty": 27
+        },
+        {
+          "code": "H7",
+          "qty": 515
+        },
+        {
+          "code": "H10",
+          "qty": 55
+        },
+        {
+          "code": "H11",
+          "qty": 34
+        },
+        {
+          "code": "H16",
+          "qty": 62
+        },
+        {
+          "code": "M4",
+          "qty": 39
+        },
+        {
+          "code": "M8",
+          "qty": 436
+        },
+        {
+          "code": "M9",
+          "qty": 35
+        },
+        {
+          "code": "M12",
+          "qty": 242
+        }
+      ],
+      "inputMethod": "legend",
+      "recognition": {
+        "source": "legend",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "A11",
+            "qty": 66
+          },
+          {
+            "code": "A17",
+            "qty": 26
+          },
+          {
+            "code": "A20",
+            "qty": 70
+          },
+          {
+            "code": "A21",
+            "qty": 114
+          },
+          {
+            "code": "A25",
+            "qty": 10
+          },
+          {
+            "code": "B8",
+            "qty": 39
+          },
+          {
+            "code": "B14",
+            "qty": 8
+          },
+          {
+            "code": "C29",
+            "qty": 113
+          },
+          {
+            "code": "D4",
+            "qty": 91
+          },
+          {
+            "code": "E11",
+            "qty": 67
+          },
+          {
+            "code": "E14",
+            "qty": 25
+          },
+          {
+            "code": "E16",
+            "qty": 303
+          },
+          {
+            "code": "F7",
+            "qty": 62
+          },
+          {
+            "code": "F9",
+            "qty": 33
+          },
+          {
+            "code": "F14",
+            "qty": 16
+          },
+          {
+            "code": "F22",
+            "qty": 24
+          },
+          {
+            "code": "F25",
+            "qty": 11
+          },
+          {
+            "code": "G14",
+            "qty": 202
+          },
+          {
+            "code": "G17",
+            "qty": 7
+          },
+          {
+            "code": "H2",
+            "qty": 275
+          },
+          {
+            "code": "H3",
+            "qty": 49
+          },
+          {
+            "code": "H5",
+            "qty": 206
+          },
+          {
+            "code": "H6",
+            "qty": 27
+          },
+          {
+            "code": "H7",
+            "qty": 515
+          },
+          {
+            "code": "H10",
+            "qty": 55
+          },
+          {
+            "code": "H11",
+            "qty": 34
+          },
+          {
+            "code": "H16",
+            "qty": 62
+          },
+          {
+            "code": "M4",
+            "qty": 39
+          },
+          {
+            "code": "M8",
+            "qty": 436
+          },
+          {
+            "code": "M9",
+            "qty": 35
+          },
+          {
+            "code": "M12",
+            "qty": 242
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "存在字符歧义，候选按字段语法解释，仍需核对",
+            "raw": "G14 / 2O2",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": " / 1.)4B",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": " / T",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "图例与本体计数待核对",
+            "raw": "",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:46:29.947Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "S04.webp",
+    "patternId": "pattern-1a0cd72123c-8b158a29726b",
+    "automatic": [
+      {
+        "code": "A17",
+        "qty": 23
+      },
+      {
+        "code": "B31",
+        "qty": 586
+      },
+      {
+        "code": "C2",
+        "qty": 27
+      },
+      {
+        "code": "D10",
+        "qty": 13
+      },
+      {
+        "code": "E8",
+        "qty": 95
+      },
+      {
+        "code": "E11",
+        "qty": 9
+      },
+      {
+        "code": "E15",
+        "qty": 3
+      },
+      {
+        "code": "E16",
+        "qty": 282
+      },
+      {
+        "code": "F19",
+        "qty": 26
+      },
+      {
+        "code": "F21",
+        "qty": 112
+      },
+      {
+        "code": "H2",
+        "qty": 153
+      },
+      {
+        "code": "H6",
+        "qty": 33
+      },
+      {
+        "code": "H7",
+        "qty": 556
+      },
+      {
+        "code": "M2",
+        "qty": 15
+      },
+      {
+        "code": "M12",
+        "qty": 3
+      }
+    ],
+    "exactRequired": true,
+    "exact": true,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 5.691,
+    "wallMs": 23160,
+    "message": "已取得部分候选，请核对疑点和可能漏计的区域。",
+    "events": [
+      {
+        "stage": "result",
+        "time": 1790153210604,
+        "progress": null,
+        "total": 1936
+      }
+    ],
+    "location": {
+      "region": [
+        259,
+        1322,
+        80,
+        21
+      ],
+      "raw": "D1O / 13"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd72123c-8b158a29726b",
+      "version": 1,
+      "lines": [
+        {
+          "code": "A17",
+          "qty": 23
+        },
+        {
+          "code": "B31",
+          "qty": 586
+        },
+        {
+          "code": "C2",
+          "qty": 27
+        },
+        {
+          "code": "D10",
+          "qty": 13
+        },
+        {
+          "code": "E8",
+          "qty": 95
+        },
+        {
+          "code": "E11",
+          "qty": 9
+        },
+        {
+          "code": "E15",
+          "qty": 3
+        },
+        {
+          "code": "E16",
+          "qty": 282
+        },
+        {
+          "code": "F19",
+          "qty": 26
+        },
+        {
+          "code": "F21",
+          "qty": 112
+        },
+        {
+          "code": "H2",
+          "qty": 153
+        },
+        {
+          "code": "H6",
+          "qty": 33
+        },
+        {
+          "code": "H7",
+          "qty": 556
+        },
+        {
+          "code": "M2",
+          "qty": 15
+        },
+        {
+          "code": "M12",
+          "qty": 3
+        }
+      ],
+      "inputMethod": "legend",
+      "recognition": {
+        "source": "legend",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "A17",
+            "qty": 23
+          },
+          {
+            "code": "B31",
+            "qty": 586
+          },
+          {
+            "code": "C2",
+            "qty": 27
+          },
+          {
+            "code": "D10",
+            "qty": 13
+          },
+          {
+            "code": "E8",
+            "qty": 95
+          },
+          {
+            "code": "E11",
+            "qty": 9
+          },
+          {
+            "code": "E15",
+            "qty": 3
+          },
+          {
+            "code": "E16",
+            "qty": 282
+          },
+          {
+            "code": "F19",
+            "qty": 26
+          },
+          {
+            "code": "F21",
+            "qty": 112
+          },
+          {
+            "code": "H2",
+            "qty": 153
+          },
+          {
+            "code": "H6",
+            "qty": 33
+          },
+          {
+            "code": "H7",
+            "qty": 556
+          },
+          {
+            "code": "M2",
+            "qty": 15
+          },
+          {
+            "code": "M12",
+            "qty": 3
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "存在字符歧义，候选按字段语法解释，仍需核对",
+            "raw": "D1O / 13",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "图例与本体计数待核对",
+            "raw": "",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:46:53.407Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "S17.jpg",
+    "patternId": "pattern-1a0cd727525-e4935c48402e8",
+    "automatic": [
+      {
+        "code": "A6",
+        "qty": 225
+      },
+      {
+        "code": "A11",
+        "qty": 154
+      },
+      {
+        "code": "F10",
+        "qty": 78
+      },
+      {
+        "code": "F23",
+        "qty": 14
+      },
+      {
+        "code": "G12",
+        "qty": 253
+      },
+      {
+        "code": "G15",
+        "qty": 42
+      },
+      {
+        "code": "G20",
+        "qty": 165
+      }
+    ],
+    "exactRequired": true,
+    "exact": true,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 3.432,
+    "wallMs": 22744,
+    "message": "已取得部分候选，请核对疑点和可能漏计的区域。",
+    "events": [
+      {
+        "stage": "result",
+        "time": 1790153234062,
+        "progress": null,
+        "total": 931
+      }
+    ],
+    "location": {},
+    "confirmed": {
+      "patternId": "pattern-1a0cd727525-e4935c48402e8",
+      "version": 1,
+      "lines": [
+        {
+          "code": "A6",
+          "qty": 225
+        },
+        {
+          "code": "A11",
+          "qty": 154
+        },
+        {
+          "code": "F10",
+          "qty": 78
+        },
+        {
+          "code": "F23",
+          "qty": 14
+        },
+        {
+          "code": "G12",
+          "qty": 253
+        },
+        {
+          "code": "G15",
+          "qty": 42
+        },
+        {
+          "code": "G20",
+          "qty": 165
+        }
+      ],
+      "inputMethod": "legend",
+      "recognition": {
+        "source": "legend",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "A6",
+            "qty": 225
+          },
+          {
+            "code": "A11",
+            "qty": 154
+          },
+          {
+            "code": "F10",
+            "qty": 78
+          },
+          {
+            "code": "F23",
+            "qty": 14
+          },
+          {
+            "code": "G12",
+            "qty": 253
+          },
+          {
+            "code": "G15",
+            "qty": 42
+          },
+          {
+            "code": "G20",
+            "qty": 165
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "图例与本体计数待核对",
+            "raw": "",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:47:16.162Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "S01.jpg",
+    "patternId": "pattern-1a0cd72d5cc-4f69814dc929b",
+    "automatic": [
+      {
+        "code": "C2",
+        "qty": 401
+      },
+      {
+        "code": "C4",
+        "qty": 805
+      },
+      {
+        "code": "C6",
+        "qty": 78
+      },
+      {
+        "code": "C7",
+        "qty": 193
+      },
+      {
+        "code": "C17",
+        "qty": 90
+      },
+      {
+        "code": "C20",
+        "qty": 181
+      },
+      {
+        "code": "F3",
+        "qty": 41
+      },
+      {
+        "code": "F16",
+        "qty": 37
+      },
+      {
+        "code": "F19",
+        "qty": 15
+      },
+      {
+        "code": "G9",
+        "qty": 188
+      },
+      {
+        "code": "H2",
+        "qty": 347
+      },
+      {
+        "code": "H7",
+        "qty": 123
+      }
+    ],
+    "exactRequired": true,
+    "exact": true,
+    "algorithm": "pixel-glyph-0.12.0-dev",
+    "algorithmSeconds": 23.087,
+    "wallMs": 44518,
+    "message": "已取得部分候选，请核对疑点和可能漏计的区域。",
+    "events": [
+      {
+        "stage": "result",
+        "time": 1790153278444,
+        "progress": null,
+        "total": 2499
+      }
+    ],
+    "location": {
+      "region": [
+        939,
+        1122,
+        105,
+        80
+      ],
+      "raw": ""
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd72d5cc-4f69814dc929b",
+      "version": 1,
+      "lines": [
+        {
+          "code": "C2",
+          "qty": 401
+        },
+        {
+          "code": "C4",
+          "qty": 805
+        },
+        {
+          "code": "C6",
+          "qty": 78
+        },
+        {
+          "code": "C7",
+          "qty": 193
+        },
+        {
+          "code": "C17",
+          "qty": 90
+        },
+        {
+          "code": "C20",
+          "qty": 181
+        },
+        {
+          "code": "F3",
+          "qty": 41
+        },
+        {
+          "code": "F16",
+          "qty": 37
+        },
+        {
+          "code": "F19",
+          "qty": 15
+        },
+        {
+          "code": "G9",
+          "qty": 188
+        },
+        {
+          "code": "H2",
+          "qty": 347
+        },
+        {
+          "code": "H7",
+          "qty": 123
+        }
+      ],
+      "inputMethod": "legend",
+      "recognition": {
+        "source": "legend",
+        "algorithmVersion": "pixel-glyph-0.12.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "C2",
+            "qty": 401
+          },
+          {
+            "code": "C4",
+            "qty": 805
+          },
+          {
+            "code": "C6",
+            "qty": 78
+          },
+          {
+            "code": "C7",
+            "qty": 193
+          },
+          {
+            "code": "C17",
+            "qty": 90
+          },
+          {
+            "code": "C20",
+            "qty": 181
+          },
+          {
+            "code": "F3",
+            "qty": 41
+          },
+          {
+            "code": "F16",
+            "qty": 37
+          },
+          {
+            "code": "F19",
+            "qty": 15
+          },
+          {
+            "code": "G9",
+            "qty": 188
+          },
+          {
+            "code": "H2",
+            "qty": 347
+          },
+          {
+            "code": "H7",
+            "qty": 123
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "小字候选由同图重复格内文字或字形交叉解释，保留原文供核对",
+            "raw": "C8 / 78",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "同一文字有不同读法，请核对原图",
+            "raw": "C6 / C8",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "同一文字有不同读法，请核对原图",
+            "raw": "7 / 78",
+            "resolved": false
+          },
+          {
+            "id": "risk-4",
+            "reason": "小字候选由同图重复格内文字或字形交叉解释，保留原文供核对",
+            "raw": "C28 / 181",
+            "resolved": false
+          },
+          {
+            "id": "risk-5",
+            "reason": "同一文字有不同读法，请核对原图",
+            "raw": "11 / 181",
+            "resolved": false
+          },
+          {
+            "id": "risk-6",
+            "reason": "小字候选由同图重复格内文字或字形交叉解释，保留原文供核对",
+            "raw": "F8 / 41",
+            "resolved": false
+          },
+          {
+            "id": "risk-7",
+            "reason": "同一文字有不同读法，请核对原图",
+            "raw": "1 / 188",
+            "resolved": false
+          },
+          {
+            "id": "risk-8",
+            "reason": "存在字符歧义，候选按字段语法解释，仍需核对",
+            "raw": "H2 / 3N7",
+            "resolved": false
+          },
+          {
+            "id": "risk-9",
+            "reason": "同一文字有不同读法，请核对原图",
+            "raw": "1 / 12 / 123",
+            "resolved": false
+          },
+          {
+            "id": "risk-10",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": "4NC / 777",
+            "resolved": false
+          },
+          {
+            "id": "risk-11",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": "(BA / 44",
+            "resolved": false
+          },
+          {
+            "id": "risk-12",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": " / N",
+            "resolved": false
+          },
+          {
+            "id": "risk-13",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": " / W",
+            "resolved": false
+          },
+          {
+            "id": "risk-14",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": "581 / A",
+            "resolved": false
+          },
+          {
+            "id": "risk-15",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": "JV-T / SNNS",
+            "resolved": false
+          },
+          {
+            "id": "risk-16",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": ". / Y8",
+            "resolved": false
+          },
+          {
+            "id": "risk-17",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": "I.6 / ......",
+            "resolved": false
+          },
+          {
+            "id": "risk-18",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": "T11 / .....",
+            "resolved": false
+          },
+          {
+            "id": "risk-19",
+            "reason": "图例字段未可靠读清，未计入，未记为零",
+            "raw": ". / PK",
+            "resolved": false
+          },
+          {
+            "id": "risk-20",
+            "reason": "图例与本体计数待核对",
+            "raw": "",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T08:48:00.916Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  }
+]

@@ -1,37 +1,18 @@
 {
-    "name" : "豆计",
-    "appid" : "__UNI__1B6F1EF",
-    "description" : "个人拼豆库存、图纸用量与制作记账",
-    "versionName" : "0.2.0",
-    "versionCode" : "200",
-    "transformPx" : false,
-    "uniStatistics" : { "enable" : false },
-    "app-plus" : {
-        "usingComponents" : true,
-        "splashscreen" : {
-            "alwaysShowBeforeRender" : true,
-            "waiting" : true,
-            "autoclose" : true,
-            "delay" : 0
-        },
-        "modules" : {
-            "SQLite" : {}
-        },
-        "distribute" : {
-            "android" : {
-                "permissions" : [
-                    "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>"
-                ],
-                "minSdkVersion" : 21,
-                "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
-                "packagename" : "com.pindou.ledger"
-            },
-            "sdkConfigs" : {},
-            "ios" : {
-                "dSYMs" : false
-            }
-        }
-    },
-    "vueVersion" : "3"
+  "name": "豆计",
+  "appid": "__UNI__1B6F1EF",
+  "description": "个人拼豆库存、图纸用量与制作记账",
+  "versionName": "0.2.0",
+  "versionCode": "200",
+  "transformPx": false,
+  "uniStatistics": {
+    "enable": false
+  },
+  "vueVersion": "3",
+  "h5": {
+    "router": {
+      "mode": "hash",
+      "base": "/"
+    }
+  }
 }

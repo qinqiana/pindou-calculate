@@ -1,40 +1,22 @@
-# Linux Android 构建与真机测试
+# Linux 构建独立 Android 安装包
 
-2026-09-22：用户允许自行选择 Android 构建工具，不要求 HBuilderX 或 Windows。
+2026-09-23 用户确认使用 Android 本身，尽量不增加第三方依赖。当前入口是 `android/` 的 Java 工程：系统 WebView 显示随包页面，系统 SQLite 保存账本，系统文档选择器读取原图和备份，MediaStore 保存下载文件与分享图。不依赖 DCloud 手机运行库、离线 AppKey、云打包或容器 SDK；现有 Vue/uni-app H5 编译工具及本地识别依赖继续复用。
 
-## 已验证的资源构建
-
-在仓库根目录运行：
+已有工具：Node 24、JDK 17、Gradle 8.14.3、Android Gradle Plugin 8.12.0、Android SDK / build-tools 36。Android 最低版本设为 10（API 29），使用其无需广泛存储权限的 MediaStore 输出；实际机型覆盖以验收记录为准。没有为应用申请网络权限，资源只由固定本地来源载入。
 
 ```sh
 npm ci
-npm run build:app
+npm test
+npm run build:web
+# JAVA_HOME、ANDROID_HOME、PATH 指向本机已有 JDK、SDK、Gradle
+export PINDOU_SIGNING_FILE=/absolute/private/path/signing.properties
+gradle -p android --no-daemon assembleRelease
 ```
 
-输出为 `dist/build/app/`，包含 `app-service.js`、视图资源及 Android 运行时使用的 `manifest.json`。它是应用资源，尚不是 APK。`app/` 仍可直接由 HBuilderX 打开。
+页面输出 `dist/build/android-assets/`；自用签名 APK 输出 `android/app/build/outputs/apk/release/app-release.apk`。签名配置缺失时正式构建报错，不交付未签 APK。验收可用 `assembleDebug` 生成独立包名 `com.pindou.ledger.debug`，正式包名为 `com.pindou.ledger`；正式包关闭 WebView 调试。
 
-本次环境是 Ubuntu 24.04 ARM64、Node 24.19.0，官方 uni-app 编译器版本为 `3.0.0-5020620260917001`（5.26）。根目录构建实测成功，加入依赖后 79 项既有应用测试全部通过。版本由 `package-lock.json` 锁定。新版编译器默认开启的 uni 统计已在 `app/manifest.json` 显式关闭。
+签名配置放仓库外且仅保管人可读，内容为 `storeFile`、`storePassword`、`keyAlias`、`keyPassword` 四项。包、仓库和日志都不应包含密钥或密码。签名保管及更新说明见 [交接](qin-apk-handoff.md)。
 
-## Android 工具与运行库
+本次 ARM64 Linux 主机沿用任务目录中准备好的官方 x64 aapt2 及 QEMU 包装器，通过 `-Pandroid.aapt2FromMavenOverride=/absolute/path/aapt2` 指定；包装器文件名必须为 `aapt2`。这是主机打包工具的适配，不会进入手机安装包。Gradle 使用 `--no-daemon`；没有部署服务器或常驻服务。
 
-临时目录中已实际启动 ARM64 JDK 17、Gradle 8.14.3 / Android Gradle Plugin 8.12.0，并准备 Android 36 平台。Linux build-tools 36.0.0 的 aapt2 是 x64 可执行文件，本次通过 QEMU 验证其可运行。没有改变系统 Java 或安装常驻服务。
-
-官方 HBuilderX Linux CLI 包是 x64；在这台 ARM64 主机直接运行返回 `Exec format error`。这不等于 Linux 不能编译 Android，也不等于已经证明完整 HBuilderX 无法通过兼容层运行。[官方 Linux CLI](https://hx.dcloud.net.cn/Tutorial/install/linux-cli)、[社区 ARM / amd64 反馈](https://github.com/haixeefrontend/hbuilderx-docker/issues/1)。本项目已通过原生 Node CLI 完成资源构建，无需启动 HBuilderX。
-
-为验证原有 HTML5+ 文件、图片和存储能力，已从官方 HBuilderX 5.26 Linux 压缩包提取标准基座 `plugins/launcher/base/android_base.apk`。包名为 `io.dcloud.HBuilder`，版本 15.26，含 arm64-v8a，targetSdk 28；原始官方 APK 未修改。标准基座可加载 uni-app 动态资源，使用 DCloud 的包名和签名。[官方基座说明](https://uniapp.dcloud.io/tutorial/run/run-app.html)
-
-## 当前真机边界
-
-小米 14 Ultra（Android 15）已授权 USB 调试。USB 安装被手机拒绝：`INSTALL_FAILED_USER_RESTRICTED: Install canceled by user`，用户开启小米“USB 安装”时遇到 SIM 卡要求。随后已通过系统 mDNS（`avahi-browse`）发现同一手机、使用用户提供的配对码成功建立 Wi-Fi 调试连接；本机 `adb mdns services` 未显示设备，不能据此判断手机未开启无线调试。
-
-Wi-Fi 连接下再次安装仍返回相同限制，说明更换连接方式没有解决本机安装限制。官方 APK 已成功传入手机 `Download/pindou-test-20260922/HBuilder-5.26.apk`（96,061,408 字节），随后已通过手机本地安装，并确认 `io.dcloud.HBuilder` 存在。
-
-仅复制资源并启动 `PandoraEntry` 时仍显示基座等待页；复用官方 launcher 的 `PushResources` 同步接口后，豆计首页实际显示成功。同步进程在临时目录运行，HTTP 与 WebSocket 只监听回环地址，经 `adb reverse` 提供资源；停止时移除本次端口转发。标准基座及 APK 未修改，未启动 HBuilderX 主程序。手机限制 shell 模拟点击，但可通过豆计自身的 WebView 调试通道验证页面。
-
-用户随后要求优先处理 UI，功能验收已暂停。首页视觉、色组筛选和搜索的真机结果见 [UI 调整记录](acceptance/ui-20260922/README.md)。持久化、文件、分享及备份恢复仍未完成 Android 验收。
-
-标准基座验证不能替代正式包名 `com.pindou.ledger` 的签名安装包、目标 SDK 差异或覆盖升级验收。正式签名密钥由 qin 保管；不使用标准基座的签名冒充正式签名。
-
-如采用 DCloud 离线 SDK 制作正式 APK，官方 3.1.10 起要求配置绑定应用与签名的 AppKey。本次官方 SDK 下载页的网盘链路要求图形验证码，未取得 SDK；没有上传源码、签名材料或创建云打包任务。[离线 SDK 接入](https://nativesupport.dcloud.net.cn/AppDocs/usesdk/android)
-
-本次构建配置及证据由主会话自行复核，未做独立 QA。
+打包结果不替代真机验证。完整证据、所用包类型、手机限制及尚未完成的验收见 [#13–#14](acceptance/issues13-14/README.md)。旧 DCloud 标准基座验收保留在历史记录中，不能冒充新容器结果。

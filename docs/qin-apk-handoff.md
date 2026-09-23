@@ -1,26 +1,16 @@
-# 安卓打包交接（qin）
+# 自用 Android 安装包交接（qin）
 
-Linux 可以构建 Android；不再要求由 Windows HBuilderX 完成。2026-09-22 已在 ARM64 Linux 上使用官方 Node CLI 编译本项目的 Android 资源，正式签名密钥仍由 **qin** 保管。仓库不含密钥、keystore 或个人配置。
+2026-09-23 已确认采用 Android 系统容器，不再要求 DCloud 账号、离线 AppKey 或 HBuilderX。安装包可以自行签名；签名密钥由 **qin** 保管，用于后续覆盖更新，仓库和安装包不包含密钥及密码。
 
-## 源码位置
+- 原生工程：`android/`，构建步骤见 [Linux 构建](linux-android-build.md)。
+- 页面和账本：`app/`；正式账本规则仍以 `app/src/ledger/operations.ts` 为真源。
+- 应用包名：`com.pindou.ledger`；开发版 `0.2.0`；备份格式 v2。独立验收包名为 `com.pindou.ledger.debug`。
+- 输出：`android/app/build/outputs/apk/release/app-release.apk`。后续更新沿用同包名和密钥，并提高 `versionCode`；不要先卸载应用。
 
-- uni-app 工程根：`app/`（`manifest.json`、`pages.json`、`pages/`、`src/ledger/`）
-- 账本真源：`app/src/ledger/operations.ts` 的 `Ledger`
-- 应用标识：`appid` `__UNI__1B6F1EF`；Android 包名 `com.pindou.ledger`；版本 `0.1.3`（`versionCode` 102）
+本机签名文件位置为 `/home/kenbattle/.local/share/pindou-calculate/signing/`，内含 `douji-release.p12` 与私有 `signing.properties`，仅当前系统用户可读。请由 qin 在私人存储中保留这两个文件；不可放入 Git、APK 或公开分发附件。重新生成不同密钥将无法直接覆盖更新现有安装。
 
-## Linux 本机结论
+账本通过 Android SQLite 事务保存，原生提交成功后页面才显示成功。读取失败或数据格式损坏会显示错误、保留原库，不转成可编辑的空白账本。当前备份包括库存、图纸缩略图、用量来源/风险和制作记录，原始大图不进入备份。
 
-旧实施记录中的“无 SDK、Java 8、无设备”是当时的环境探测，不能推出 Linux 无法打包。当前已在临时目录验证 ARM64 JDK 17、Gradle 8.14.3、Android 36 工具链；x64 aapt2 通过 QEMU 运行。小米 14 Ultra（Android 15）已通过 USB 调试授权。`npm ci && npm run build:app` 输出 `dist/build/app/`，这是 Android 应用资源，不是 APK。
+旧 DCloud 基座和独立应用是不同应用，不能直接读取彼此的私有存储。需要保留基座中的数据时，先在旧应用设置页导出当前备份，再在新应用设置页选择并确认恢复；核对完成后再处理旧应用。验收不会自动替用户导入或覆盖个人数据。
 
-## qin 负责
-
-签名密钥由 qin 保管；主会话负责选择构建工具并执行真机验证。使用标准调试基座运行时，其包名和签名属于 DCloud，不能替代 `com.pindou.ledger` 正式签名安装包或覆盖升级验收。真机验收：无账号录入 A1=100 重开仍在；95 颗补货后已拼 A1=20、B1=0。
-
-## PR2 返修后的持久化与文件能力（待真机复核）
-
-- `plus.sqlite` 的官方接口通过回调返回结果，不能被同步账本接口直接读取。因此 Android App 运行时使用 `app/src/platform/app-ledger.ts` 的 `PlusStorageSink`，将完整 envelope 一次写入同步本地存储 key；仍保持“先落盘、后改可见状态”，写入失败不会伪成功。同步回调的 `PlusSqliteSink` 和 `SqliteJsonStore` 保留给测试/兼容环境，不作为标准 App 运行时路径。
-- 首次启动若新本地存储没有账本，会异步读取同一 appid/包名下旧 SQLite 的 `pindou_ledger`，校验后写入新存储并回读确认；旧 SQLite 不删除。迁移失败时不显示空账本，也不覆盖旧数据。测试升级迁移时必须覆盖安装，不能先卸载应用。
-- 启动读取失败不再空账覆盖：`BootReadError` 置位后 `appLedger()` 返回降级账本（写入即报 persist-failed），三个 tab 页有存储错误横幅 + `retryAppStorage()` 重试。
-- 文件能力集中在 `app/src/platform/fs.ts`：系统文档选择器读图纸/备份（`pickImageFile` / `pickTextDocument`）、`writeTextToDownloads` 写公共下载目录、`saveImageToGallery` 入相册。**系统选择器、作用域存储（Android 10+）、相册可见性均待真机复核。**
-- 真机闭环验收清单（即审阅出口）：录入 → 杀进程重开数据仍在 → 导入图纸 → 已拼/撤回 → 导出备份并能从下载目录取出 → 恢复备份 → 分享图入相册可见。
-- 升级验收还需覆盖：同一包名从旧 SQLite 账本覆盖安装到 0.1.3 后，库存、图纸和历史仍可读；若旧版本使用过不同 appid，系统沙盒隔离时改用备份恢复。
+自用无需上架或公开发布。手机若拒绝电脑安装，可在手机文件管理器中打开下载目录内的 APK 安装；这一步取决于手机的安装权限。实际安装、覆盖更新和完整闭环是否通过，以 [本次验收](acceptance/issues13-14/README.md) 为准。

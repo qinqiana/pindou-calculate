@@ -1,0 +1,16 @@
+{
+  "input": "S14.webp",
+  "share": {
+    "message": "图片已保存到系统相册，未发布。",
+    "format": "PNG",
+    "width": 1080,
+    "height": 1800
+  },
+  "backup": {
+    "filename": "pindou-backup-2026-09-23-09-35-48.json",
+    "directory": "Download/豆计",
+    "formatVersion": 2,
+    "fileParsedAndEqual": true
+  },
+  "productionUnchanged": true
+}

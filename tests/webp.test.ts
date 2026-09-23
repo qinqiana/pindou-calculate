@@ -8,63 +8,42 @@ import { base64ToBytes, decodeRaster, sniffImage, TINY_PNG } from '../app/src/le
 import { MAX_IMAGE_BYTES, MAX_THUMB_BYTES } from '../app/src/ledger/numbers.ts'
 import { Ledger } from '../app/src/ledger/operations.ts'
 import { openNodeStore } from '../app/src/ledger/store-node.ts'
-import { pickImageFile } from '../app/src/platform/fs.ts'
 import { handoffOriginal, pickPlatformThumbnail, prepareOriginal, takeOriginal } from '../app/src/platform/image.ts'
 import { shareContentFromPattern, previewShareDataUrl } from '../app/src/share/from-pattern.ts'
 
 const fixture = (name: string) => new Uint8Array(readFileSync('tests/fixtures/webp/' + name))
 const samples = ['参考样例/豆画-Mard-148图纸样例.png', ...readdirSync('参考样例/参考图纸').map(name => '参考样例/参考图纸/' + name)]
 
-// Real host decoding via Pillow/libwebp, behind a Native.js test double.
-// This verifies data flow and pixels; it does NOT replace Android device acceptance.
-function nativeCodec(sdk = 28, failCompress = false) {
-  const recycled: any[] = []
+// Pillow is a real host codec behind the narrow native interface. Android gets its own device check.
+function nativeCodec(_sdk = 29, failCompress = false) {
   const calls: string[] = []
-  const decode = (bytes: Uint8Array, orient: boolean) => {
-    const output = execFileSync('python3', ['-c', `
-import base64, io, json, sys
+  const android = { call(action: string, raw: string) {
+    calls.push(action)
+    if (failCompress) return JSON.stringify({ ok: false, message: 'conversion failed' })
+    try {
+      const args = JSON.parse(raw)
+      const png = execFileSync('python3', ['-c', `
+import base64, io, sys
 from PIL import Image, ImageOps
-im = Image.open(io.BytesIO(sys.stdin.buffer.read()))
-im.load()
-if ${orient ? 'True' : 'False'}: im = ImageOps.exif_transpose(im)
-w, h = im.size
+im = Image.open(io.BytesIO(sys.stdin.buffer.read())); im.load()
+im = ImageOps.exif_transpose(im)
+assert im.size == (${args.width}, ${args.height})
 im = im.convert('RGBA'); im.thumbnail((256, 256))
 white = Image.new('RGBA', im.size, 'white'); white.alpha_composite(im)
 out = io.BytesIO(); white.convert('RGB').save(out, format='PNG')
-print(json.dumps(dict(width=w, height=h, png=base64.b64encode(out.getvalue()).decode())))
-`], { input: bytes, maxBuffer: 1024 * 1024, stdio: ['pipe', 'pipe', 'pipe'] })
-    return JSON.parse(output.toString())
-  }
-  const android = {
-    // Native.js static fields live on imported classes, not getAttribute(className).
-    importClass(_name: string) { return { SDK_INT: sdk, ARGB_8888: 'ARGB_8888', PNG: 'PNG' } },
-    newObject(name: string, target?: any) { return { name, target } },
-    invoke(obj: any, method: string, ...args: any[]): any {
-      calls.push(method)
-      if (method === 'decode') return base64ToBytes(args[0])
-      if (method === 'wrap' || method === 'createSource') return args[0]
-      if (method === 'decodeBitmap') return decode(args[0], true)
-      if (method === 'decodeByteArray') return decode(args[0], false)
-      if (method === 'getWidth') return obj.width
-      if (method === 'getHeight') return obj.height
-      if (method === 'createScaledBitmap') return { ...args[0], width: args[1], height: args[2] }
-      if (method === 'copy') return { ...obj }
-      if (method === 'createBitmap') return { width: args[0], height: args[1] }
-      if (method === 'drawBitmap') { obj.target.png = args[0].png; return }
-      if (method === 'compress') { args[2].png = obj.png; return !failCompress }
-      if (method === 'toByteArray') return base64ToBytes(obj.png)
-      if (method === 'encodeToString') return Buffer.from(args[0]).toString('base64')
-      if (method === 'recycle') recycled.push(obj)
-    },
-  }
-  return { android, calls, recycled }
+print(base64.b64encode(out.getvalue()).decode())
+`], { input: base64ToBytes(args.base64), maxBuffer: 1024 * 1024, stdio: ['pipe', 'pipe', 'pipe'] }).toString().trim()
+      return JSON.stringify({ ok: true, value: png })
+    } catch { return JSON.stringify({ ok: false, message: 'full decode failed' }) }
+  } }
+  return { android, calls }
 }
 
 async function withAndroid<T>(android: any, fn: () => T | Promise<T>): Promise<T> {
   const g = globalThis as any
-  const previous = g.plus
-  g.plus = { android }
-  try { return await fn() } finally { if (previous === undefined) delete g.plus; else g.plus = previous }
+  const previous = g.PindouAndroid
+  g.PindouAndroid = android
+  try { return await fn() } finally { g.PindouAndroid = previous }
 }
 
 test('18 real originals → full decode → manual confirmation → restart → share → v2 restore', async () => {
@@ -120,8 +99,7 @@ test('18 real originals → full decode → manual confirmation → restart → 
         const share = previewShareDataUrl('xiaohongshu', shareContentFromPattern(pattern.name, pattern.thumbnail))
         writeFileSync(join(process.env.PINDOU_IMAGE_EVIDENCE_DIR, 'share.png'), base64ToBytes(share.split(',')[1]))
       }
-      assert.ok(codec.calls.includes('decodeBitmap'))
-      assert.ok(codec.recycled.length >= 18)
+      assert.equal(codec.calls.filter(c => c === 'thumbnail').length, 18)
     })
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
@@ -144,7 +122,6 @@ test('lossy/lossless/transparent WebP, EXIF direction and conversion failure pro
       }
     }
   })
-  await withAndroid(nativeCodec(21).android, () => assert.ok(prepareOriginal(fixture('lossless.webp')).ok))
   await withAndroid(nativeCodec(28, true).android, () => {
     const ledger = new Ledger(undefined, undefined, pickPlatformThumbnail)
     const before = ledger.store.live()
@@ -180,80 +157,5 @@ test('animated, corrupt container, truncated, oversized and bad compressed data 
     ledger.setInterrupt('before-commit')
     assert.equal(ledger.createPattern('save-fail', { name: 'fail', imageBytes: valid }, ledger.token()).ok, false)
     assert.equal(JSON.stringify(ledger.store.live()), before)
-  })
-})
-
-test('Android document picker preserves bytes without bridging raw arrays; partial writes, limits and errors close streams', async () => {
-  const bytes = new Uint8Array(readFileSync('参考样例/豆画-Mard-148图纸样例.png'))
-  const closed = new Set<any>()
-  const opened: any[] = []
-  let cancelled = false
-  let failed = false
-  let oversized = false
-  const prior = () => {}
-  const main: any = {
-    onActivityResult: prior,
-    startActivityForResult(_intent: any, code: number) { this.onActivityResult(code, cancelled ? 0 : -1, {}) },
-  }
-  const keep = (object: any) => { opened.push(object); return object }
-  const android = {
-    runtimeMainActivity: () => main,
-    importClass() {},
-    newObject(name: string, output: any) {
-      if (name === 'java.io.ByteArrayOutputStream') return keep({ kind: 'output', parts: [] })
-      if (name === 'android.util.Base64OutputStream') return keep({ kind: 'encoder', output })
-      return {}
-    },
-    invoke(obj: any, method: string, ...args: any[]) {
-      if (method === 'getData') return 'content://test/source.png'
-      if (method === 'getContentResolver') return {}
-      if (method === 'openInputStream') return keep({ kind: 'input', offset: 0 })
-      if (method === 'newChannel') return keep({ stream: args[0] })
-      if (method === 'allocate') return { bytes: new Uint8Array(args[0]), count: 0, position: 0 }
-      if (method === 'clear') { obj.count = 0; obj.position = 0 }
-      if (method === 'read') {
-        if (failed) throw new Error('permission revoked')
-        const size = oversized ? MAX_IMAGE_BYTES + 1 : bytes.length
-        if (obj.stream.offset === size) return -1
-        const count = Math.min(65536, size - obj.stream.offset)
-        if (!oversized) args[0].bytes.set(bytes.subarray(obj.stream.offset, obj.stream.offset + count))
-        args[0].count = count; obj.stream.offset += count
-        return count
-      }
-      if (method === 'flip') obj.position = 0
-      if (method === 'hasRemaining') return obj.position < obj.count
-      if (method === 'write') {
-        const buffer = args[0]
-        const count = Math.min(16384, buffer.count - buffer.position)
-        obj.stream.output.parts.push(Buffer.from(buffer.bytes.subarray(buffer.position, buffer.position + count)))
-        buffer.position += count
-        return count
-      }
-      if (method === 'array' || method === 'toByteArray') throw new Error('raw native arrays must not cross the bridge')
-      if (method === 'toString') return obj.kind === 'output' ? Buffer.concat(obj.parts).toString('base64') : String(obj)
-      if (method === 'getType') return 'application/octet-stream'
-      if (method === 'close') { closed.add(obj); if (obj.stream) closed.add(obj.stream) }
-    },
-  }
-  await withAndroid(android, async () => {
-    const selected = await pickImageFile()
-    assert.ok(selected.ok)
-    assert.deepEqual(selected.value.bytes, bytes)
-    assert.ok(opened.every(o => closed.has(o)), 'every opened stream is closed')
-    assert.equal(main.onActivityResult, prior)
-    cancelled = true
-    const cancel = await pickImageFile()
-    assert.ok(!cancel.ok && cancel.cancelled)
-    assert.equal(main.onActivityResult, prior)
-    cancelled = false; failed = true
-    const fail = await pickImageFile()
-    assert.ok(!fail.ok && !fail.cancelled)
-    assert.equal(main.onActivityResult, prior)
-    assert.ok(opened.every(o => closed.has(o)))
-    failed = false; oversized = true
-    const large = await pickImageFile()
-    assert.ok(!large.ok && /20 MiB/.test(large.message))
-    assert.ok(opened.every(o => closed.has(o)))
-    assert.equal(main.onActivityResult, prior)
   })
 })

@@ -28,10 +28,12 @@ self.onmessage = async ({ data: { assets, image } }) => {
     py.FS.writeFile('/app/app/src/ledger/catalog.ts', new Uint8Array(assets['catalog.ts']))
     py.FS.writeFile('/app/input', new Uint8Array(image))
     self.postMessage({ stage: 'recognizing', message: '正在读取图例并检查制作区域…' })
-    const result = JSON.parse(py.runPython('import sys, json\nsys.path.insert(0, "/app/experiments/issue8")\nfrom recognize import recognize\njson.dumps(recognize("/app/input"), ensure_ascii=False)'))
-    // Keep per-region evidence for this session; full cell debugging stays in the experiment.
-    const evidence = result.evidence.map(e => ({ id: e.id, rawText: e.rawText ?? (typeof e.code === 'string' ? e.code : e.code?.rawText) ?? '', region: e.region }))
-    self.postMessage({ stage: 'result', result: { algorithm: result.algorithm, status: result.status, source: result.source, image: result.image, candidates: result.candidates, evidence, doubts: result.doubts, total: result.total, titleTotal: result.titleTotal, coverage: result.coverage, elapsedSeconds: result.elapsedSeconds } })
+    py.globals.set('emit_checkpoint', value => {
+      const result = JSON.parse(value)
+      self.postMessage({ stage: 'progress', result, message: `已处理 ${result.progress.completed}/${result.progress.total} 个区域，仍在读取；可取消并核对已读部分。` })
+    })
+    const result = JSON.parse(py.runPython('import sys, json\nsys.path.insert(0, "/app/experiments/issue8")\nfrom recognize import recognize, app_result\ndef checkpoint(result):\n    emit_checkpoint(json.dumps(app_result(result), ensure_ascii=False))\njson.dumps(app_result(recognize("/app/input", on_progress=checkpoint)), ensure_ascii=False)'))
+    self.postMessage({ stage: 'result', result })
   } catch (error) {
     self.postMessage({ stage: 'error', message: '本次识别未能完成，可重试或手工录入。', detail: String(error) })
   } finally {

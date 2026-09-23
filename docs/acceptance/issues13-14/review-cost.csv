@@ -1,0 +1,13 @@
+input,layout,route,plannedOrder,operator,familiarity,totalSeconds,activeSeconds,corrections,undetectedErrors,abandoned,status
+S17,inline,manual,first,,,,,,,,not-run
+S17,inline,recognition-review,second,,,,,,,,not-run
+S04,right,manual,second,,,,,,,,not-run
+S04,right,recognition-review,first,,,,,,,,not-run
+S01,below,manual,first,,,,,,,,not-run
+S01,below,recognition-review,second,,,,,,,,not-run
+M060,white-body,manual,second,,,,,,,,not-run
+M060,white-body,recognition-review,first,,,,,,,,not-run
+N25,long-body,manual,first,,,,,,,,not-run
+N25,long-body,recognition-review,second,,,,,,,,not-run
+S14-body,unsupported-watermark-long,manual,second,,,,,,,,not-run
+S14-body,unsupported-watermark-long,recognition-review,first,,,,,,,,not-run

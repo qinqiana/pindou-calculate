@@ -534,6 +534,26 @@ def recognize_layout(image, preview, model, axes=None):
     tiny_reader = None
     rows = swatch_rows(strip)
     fits = [(row, lattice(row)) for row in rows]
+    # With only one dark chip, there is no pitch yet. Closed pale outlines at
+    # the same measured size can establish spacing without guessing quantities.
+    isolated = [row[0] for row, fit in fits if fit is None and len(row) == 1
+                and .8 < row[0][2]/row[0][3] < 1.2]
+    if isolated:
+        contours, _ = cv2.findContours((strip.min(axis=2) < 245).astype('uint8'),
+                                       cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        for chip in isolated:
+            recovered = [chip]
+            for contour in contours:
+                b = list(cv2.boundingRect(contour))
+                if (cv2.contourArea(contour) >= b[2]*b[3]*.8 and abs(b[1]-chip[1]) < 6
+                        and .8 < b[2]/chip[2] < 1.2 and .8 < b[3]/chip[3] < 1.2
+                        and not any(abs(b[0]-other[0]) < 6 for other in recovered)):
+                    recovered.append(b)
+            recovered.sort()
+            fit = lattice(recovered)
+            if fit is not None and fit[1] > fit[2]*4:
+                fits = [(row, f) for row, f in fits if row[0] != chip]
+                fits.append((recovered, fit))
     # Pale, unlabelled swatches still occupy columns. Recover their rectangles
     # before fitting pitch, otherwise two visible chips can suggest half a row.
     beside = [f for _, f in fits if f is not None and .8 < f[2]/f[3] < 1.2 and f[1] > f[2]*4]

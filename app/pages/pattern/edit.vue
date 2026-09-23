@@ -51,7 +51,7 @@
           <button class="delete" @click="removeLine(i)">删除</button>
         </view>
         <text v-if="lineError(line)" class="field-error">{{ lineError(line) }}</text>
-        <button v-if="original && line.proof?.region" class="small-button line-proof" @click="previewRegion(line.proof.region)">图例原文：{{ line.proof.raw }} · 查看位置</button>
+        <button v-if="original && line.proof?.region" class="small-button line-proof" @click="previewRegion(line.proof.region)">原图文字：{{ line.proof.raw }} · 查看位置</button>
       </view>
       <button class="add" @click="addLine">＋ 增加色号</button>
       <view class="field">
@@ -135,7 +135,8 @@ let imageChanged = false
 
 function identity(requestId: string): RecognitionIdentity { return { requestId, imageSession, patternId: id.value, revision, confirmedVersion: appLedger().getPattern(id.value)?.pattern.confirmedVersion ?? null, epoch: appLedger().token().epoch } }
 function stopRecognition() { clearTimeout(recognitionTimer); request.value = null; busy.value = false }
-function cancelRecognition() { stopRecognition(); recognitionMessage.value = '已取消识别，当前输入保留。可以重试或手工录入。' }
+function stoppedMessage(message: string) { return message + (candidate.value?.status === 'partial' ? '已保留本次已读部分，可核对采用、重试或手工补充。' : '当前输入已保留，可重试或手工录入。') }
+function cancelRecognition() { stopRecognition(); recognitionMessage.value = stoppedMessage('已取消识别。') }
 function touchEdit() {
   revision++; riskAck.value = false; needAck.value = false
   invalidateRiskReview(adopted.value)
@@ -164,20 +165,22 @@ function startRecognition() {
   recognitionFailed.value = false
   recognitionMessage.value = '正在准备手机离线识别…'; busy.value = true
   request.value = { identity: identity(newRequestId()), image: original.value.preview }
-  recognitionTimer = setTimeout(() => { recognitionFailed.value = true; stopRecognition(); recognitionMessage.value = '识别超过 30 秒，已停止。可以重试、换清晰原图或手工录入。' }, 30000)
+  recognitionTimer = setTimeout(() => { recognitionFailed.value = true; stopRecognition(); recognitionMessage.value = stoppedMessage('识别超过 30 秒，已停止。') }, 30000)
 }
 function receiveRecognition(event: any) {
   if (!active || !request.value || !sameRecognition(event.identity, request.value.identity) || !sameRecognition(event.identity, identity(event.identity.requestId))) return
-  if (event.stage === 'result') {
+  if (event.stage === 'result' || event.stage === 'progress') {
     try {
       const result = readRecognition(event.result)
+      if (event.stage === 'progress' && result.status !== 'partial') throw Error('分块结果状态无效')
       candidate.value = result
+      if (event.stage === 'progress') { recognitionMessage.value = event.message; return }
       recognitionFailed.value = result.status === 'failed'
       recognitionMessage.value = result.status === 'failed' ? '没有取得可采用的用量。可换清晰原图或独立手工录入；不会生成零用量。' : result.status === 'partial' ? '已取得部分候选，请核对疑点和可能漏计的区域。' : '已取得候选，请结合原图核对后确认。'
       if (result.status !== 'failed' && lines.value.every(l => !l.code.trim() && l.qty === '') && !titleTotal.value && !adopted.value) adoptCandidate()
     } catch (e) { recognitionFailed.value = true; error.value = (e instanceof Error ? e.message : '识别结果无效') + '，当前输入已保留，可重试或手工录入。' }
     stopRecognition()
-  } else if (['error', 'timeout'].includes(event.stage)) { recognitionFailed.value = true; recognitionMessage.value = event.message; stopRecognition() }
+  } else if (['error', 'timeout'].includes(event.stage)) { recognitionFailed.value = true; recognitionMessage.value = stoppedMessage(event.stage === 'timeout' ? '识别超过 30 秒，已停止。' : '本次识别中断。'); stopRecognition() }
   else recognitionMessage.value = event.message
 }
 function adoptCandidate() {

@@ -1,0 +1,52 @@
+plugins { id 'com.android.application' }
+
+def signingFile = System.getenv('PINDOU_SIGNING_FILE')
+def signing = new Properties()
+if (signingFile) file(signingFile).withInputStream { signing.load(it) }
+
+android {
+    namespace 'com.pindou.ledger'
+    compileSdk 36
+    buildToolsVersion '36.0.0'
+    defaultConfig {
+        applicationId 'com.pindou.ledger'
+        minSdk 29
+        targetSdk 36
+        versionCode = (project.findProperty('pindouVersionCode') ?: '200').toInteger()
+        versionName '0.2.0'
+    }
+    signingConfigs {
+        selfUse {
+            if (signingFile) {
+                storeFile file(signing.getProperty('storeFile'))
+                storePassword signing.getProperty('storePassword')
+                keyAlias signing.getProperty('keyAlias')
+                keyPassword signing.getProperty('keyPassword')
+            }
+        }
+    }
+    buildTypes {
+        debug { applicationIdSuffix '.debug' }
+        release { signingConfig signingConfigs.selfUse }
+    }
+    sourceSets.main.assets.srcDirs = ['../../dist/build/android-assets']
+    // Everything is Android framework code; there are no native SDK dependencies.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+tasks.register('checkWebAssets') {
+    doLast {
+        if (!file('../../dist/build/android-assets/index.html').isFile()) {
+            throw new GradleException('Run npm run build:web before assembling the APK.')
+        }
+    }
+}
+tasks.named('preBuild').configure { dependsOn 'checkWebAssets' }
+tasks.matching { it.name == 'validateSigningRelease' }.configureEach {
+    doFirst {
+        if (!signingFile) throw new GradleException('Set PINDOU_SIGNING_FILE to the private signing properties file.')
+    }
+}

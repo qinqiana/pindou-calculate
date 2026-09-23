@@ -1,0 +1,10 @@
+input,group,exactRequired,referenceComplete,status,source,total,exact,rows,columns,blocks,checkpoints,unknownCells,unreadCells,locatedDoubts,seconds,peakRssMiB,differences
+long-5.png,authored-fixture,True,True,partial,grid,3808,True,104,47,21,21,0,0,1,0.646,131.72,{}
+long-10.png,authored-fixture,True,True,partial,grid,3808,True,104,47,21,21,28,0,15,0.597,131.5,{}
+rectangular.png,authored-fixture,True,True,partial,grid,3808,True,104,47,21,21,0,0,1,0.676,134.13,{}
+compressed.jpg,authored-fixture,True,True,partial,grid,3808,True,104,47,21,21,791,0,105,1.355,138.75,{}
+compressed.webp,authored-fixture,True,True,partial,grid,3808,True,104,47,21,21,699,0,105,8.324,184.51,{}
+watermark.png,authored-fixture,False,False,partial,grid,3722,,104,47,21,21,4,0,2,0.693,131.18,
+N25.png,BitBead-existing-real-chart,True,True,partial,grid,325,True,81,51,17,16,0,0,1,0.613,131.18,{}
+S14-body.png,S14,False,False,partial,grid,3235,,106,49,22,22,1744,0,107,21.83,137.47,
+1789460416312_afb8306d-128b-44ba-895c-778e5132756e_1833367752401994129_1080x1421.webp,S03,False,False,partial,legend,25250,,,,0,0,,,11,1.178,148.2,

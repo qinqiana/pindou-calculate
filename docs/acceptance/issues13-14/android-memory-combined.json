@@ -1,0 +1,384 @@
+{
+  "scope": "main app, its direct JS child and WebView renderer explicitly bound by activity services; 2s target sampling, excludes unrelated browser/other miniapp processes",
+  "pids": [
+    "7094",
+    "7515",
+    "7476"
+  ],
+  "samples": [
+    {
+      "stage": "before",
+      "time": 1790155036318,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213984,
+          "rssKiB": 427884
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 102785,
+          "rssKiB": 270180
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 221650,
+          "rssKiB": 229684
+        }
+      ],
+      "combinedPssKiB": 538419
+    },
+    {
+      "stage": "recognizing-0",
+      "time": 1790155043953,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 281263,
+          "rssKiB": 496028
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 247948,
+          "rssKiB": 416896
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 184709,
+          "rssKiB": 192744
+        }
+      ],
+      "combinedPssKiB": 713920
+    },
+    {
+      "stage": "recognizing-1",
+      "time": 1790155045998,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 214243,
+          "rssKiB": 428688
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 395376,
+          "rssKiB": 564004
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 184709,
+          "rssKiB": 192744
+        }
+      ],
+      "combinedPssKiB": 794328
+    },
+    {
+      "stage": "recognizing-2",
+      "time": 1790155048234,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213739,
+          "rssKiB": 428184
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 561868,
+          "rssKiB": 730496
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183341,
+          "rssKiB": 191376
+        }
+      ],
+      "combinedPssKiB": 958948
+    },
+    {
+      "stage": "recognizing-3",
+      "time": 1790155050425,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213363,
+          "rssKiB": 427808
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 569884,
+          "rssKiB": 738512
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183341,
+          "rssKiB": 191376
+        }
+      ],
+      "combinedPssKiB": 966588
+    },
+    {
+      "stage": "recognizing-4",
+      "time": 1790155052533,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 212923,
+          "rssKiB": 427368
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 505612,
+          "rssKiB": 674240
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183341,
+          "rssKiB": 191376
+        }
+      ],
+      "combinedPssKiB": 901876
+    },
+    {
+      "stage": "recognizing-5",
+      "time": 1790155055655,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213395,
+          "rssKiB": 427840
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 505736,
+          "rssKiB": 674364
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183341,
+          "rssKiB": 191376
+        }
+      ],
+      "combinedPssKiB": 902472
+    },
+    {
+      "stage": "recognizing-6",
+      "time": 1790155057781,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213395,
+          "rssKiB": 427840
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 505308,
+          "rssKiB": 673936
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183341,
+          "rssKiB": 191376
+        }
+      ],
+      "combinedPssKiB": 902044
+    },
+    {
+      "stage": "recognizing-7",
+      "time": 1790155059807,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213127,
+          "rssKiB": 427572
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 505416,
+          "rssKiB": 674044
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183341,
+          "rssKiB": 191376
+        }
+      ],
+      "combinedPssKiB": 901884
+    },
+    {
+      "stage": "recognizing-8",
+      "time": 1790155062004,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213419,
+          "rssKiB": 427864
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 503923,
+          "rssKiB": 672552
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183341,
+          "rssKiB": 191376
+        }
+      ],
+      "combinedPssKiB": 900683
+    },
+    {
+      "stage": "recognizing-9",
+      "time": 1790155063983,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213961,
+          "rssKiB": 428436
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 504605,
+          "rssKiB": 673264
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183245,
+          "rssKiB": 191280
+        }
+      ],
+      "combinedPssKiB": 901811
+    },
+    {
+      "stage": "recognizing-10",
+      "time": 1790155066028,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 214099,
+          "rssKiB": 428544
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 504763,
+          "rssKiB": 673392
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183245,
+          "rssKiB": 191280
+        }
+      ],
+      "combinedPssKiB": 902107
+    },
+    {
+      "stage": "recognizing-11",
+      "time": 1790155068142,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213227,
+          "rssKiB": 427672
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 504771,
+          "rssKiB": 673400
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183278,
+          "rssKiB": 191312
+        }
+      ],
+      "combinedPssKiB": 901276
+    },
+    {
+      "stage": "recognizing-12",
+      "time": 1790155070153,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 214523,
+          "rssKiB": 428988
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 503569,
+          "rssKiB": 672208
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183277,
+          "rssKiB": 191312
+        }
+      ],
+      "combinedPssKiB": 901369
+    },
+    {
+      "stage": "recognizing-13",
+      "time": 1790155072196,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 213391,
+          "rssKiB": 427836
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 503571,
+          "rssKiB": 672200
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183277,
+          "rssKiB": 191312
+        }
+      ],
+      "combinedPssKiB": 900239
+    },
+    {
+      "stage": "recognizing-14",
+      "time": 1790155074278,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 214925,
+          "rssKiB": 429388
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 503433,
+          "rssKiB": 672076
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183277,
+          "rssKiB": 191312
+        }
+      ],
+      "combinedPssKiB": 901635
+    },
+    {
+      "stage": "stopped",
+      "time": 1790155074950,
+      "processes": [
+        {
+          "pid": "7094",
+          "pssKiB": 214485,
+          "rssKiB": 428948
+        },
+        {
+          "pid": "7515",
+          "pssKiB": 503889,
+          "rssKiB": 672532
+        },
+        {
+          "pid": "7476",
+          "pssKiB": 183277,
+          "rssKiB": 191312
+        }
+      ],
+      "combinedPssKiB": 901651
+    }
+  ]
+}

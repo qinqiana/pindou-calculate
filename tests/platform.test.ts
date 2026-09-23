@@ -21,307 +21,94 @@ import {
   resolveMakeRequestId,
 } from '../app/src/platform/make-request.ts'
 
-test('uni-app persist modules do not import node:fs', () => {
-  for (const file of [
-    'app/src/platform/app-ledger.ts',
-    'app/src/platform/fs.ts',
-    'app/src/ledger/operations.ts',
-    'app/src/ledger/store.ts',
-    'app/src/ledger/sqlite-json.ts',
-    'app/src/ledger/image.ts',
-  ]) {
-    const text = readFileSync(file, 'utf8')
-    assert.doesNotMatch(text, /node:fs/)
-    assert.doesNotMatch(text, /from 'fs'/)
+test('platform modules use the narrow native bridge without Node filesystem or DCloud runtime', () => {
+  for (const file of ['app-ledger.ts', 'fs.ts', 'image.ts', 'android.ts']) {
+    const source = readFileSync('app/src/platform/' + file, 'utf8')
+    assert.doesNotMatch(source, /node:fs|plus\./)
   }
-  const app = readFileSync('app/src/platform/app-ledger.ts', 'utf8')
-  assert.doesNotMatch(app, /Ledger\.open/)
-  assert.match(app, /pindou_ledger/)
-  assert.match(app, /transaction/) // 原生事务 API（begin/commit/rollback）
-  assert.match(app, /PersistError/)
-  assert.match(app, /BootReadError/)
-  assert.doesNotMatch(app, /plus\.storage/)
-  assert.doesNotMatch(app, /WeakMap/) // 不再用内存缓存冒充持久化
 })
 
-/** 用纯内存账本造一份 A1=qty 的持久化载荷，作为原生库初始内容。 */
 function seedPayload(qty: number): string {
   const slot = { json: null as string | null }
-  const l = createAppLedger(memorySink(slot))
-  const saved = l.commitFirstEntry('seed', [{ code: 'A1', qty }], l.token())
-  assert.equal(saved.ok, true)
+  const ledger = createAppLedger(memorySink(slot))
+  assert.ok(ledger.commitFirstEntry('seed', [{ code: 'A1', qty }], ledger.token()).ok)
   return slot.json!
 }
 
-type Opts = {
-  success?: (rows?: unknown) => void
-  fail?: (err?: unknown) => void
-  sql?: string | string[]
-  operation?: string
-}
-
-/**
- * 原生 SQLite 模拟：真实保存 payload，事务语义与 plus.sqlite 一致
- * （begin 暂存、commit 落盘、rollback 丢弃），回调同步触发，可注入失败。
- * makeFacade() 每次生成全新门面对象，模拟整个 JS 运行上下文重建。
- */
-function fakeNativeSqlite(initialPayload: string | null) {
-  const state = {
-    payload: initialPayload,
-    tx: undefined as string | null | undefined,
-    calls: [] as string[],
-    failNext: {} as Record<string, number>,
-  }
-  const failOnce = (key: string): boolean => {
-    if ((state.failNext[key] ?? 0) > 0) {
-      state.failNext[key] -= 1
-      return true
+// Domain-facing bridge fixture. Actual SQLite transactions are checked on Android.
+async function withNative(state: { text: string | null; readError?: boolean; writeError?: boolean }, fn: () => Promise<void>) {
+  const g = globalThis as any
+  const previous = g.PindouAndroid
+  g.PindouAndroid = { call(action: string, args: string) {
+    if (action === 'readLedger') return JSON.stringify(state.readError ? { ok: false, message: 'read failed' } : { ok: true, value: state.text })
+    if (action === 'writeLedger') {
+      if (state.writeError) return JSON.stringify({ ok: false, message: 'commit failed' })
+      state.text = JSON.parse(args).text
+      return JSON.stringify({ ok: true, value: true })
     }
-    return false
-  }
-  function makeFacade() {
-    return {
-      openDatabase(opts: Opts) {
-        state.calls.push('open')
-        opts.success?.()
-      },
-      executeSql(opts: Opts) {
-        const sqls = Array.isArray(opts.sql) ? opts.sql : [opts.sql!]
-        for (const sql of sqls) state.calls.push('exec:' + sql.slice(0, 16))
-        if (failOnce('exec')) {
-          opts.fail?.({ code: -1, message: 'injected exec failure' })
-          return
-        }
-        for (const sql of sqls) {
-          if (/^CREATE/i.test(sql)) continue
-          if (/^DELETE/i.test(sql)) state.tx = null
-          else if (/^INSERT/i.test(sql)) {
-            const m = /^INSERT INTO pindou_ledger \(id, payload\) VALUES \(1, '(.*)'\)$/s.exec(sql)
-            state.tx = m ? m[1].replace(/''/g, "'") : null
-          }
-        }
-        opts.success?.()
-      },
-      selectSql(opts: Opts) {
-        state.calls.push('select')
-        if (failOnce('select')) {
-          opts.fail?.({ code: -1, message: 'injected select failure' })
-          return
-        }
-        opts.success?.(state.payload == null ? [] : [{ payload: state.payload }])
-      },
-      transaction(opts: Opts) {
-        state.calls.push('tx:' + opts.operation)
-        if (failOnce(opts.operation!)) {
-          opts.fail?.({ code: -1, message: 'injected ' + opts.operation + ' failure' })
-          return
-        }
-        if (opts.operation === 'begin') state.tx = undefined
-        else if (opts.operation === 'commit') {
-          if (state.tx !== undefined) state.payload = state.tx
-          state.tx = undefined
-        } else if (opts.operation === 'rollback') state.tx = undefined
-        opts.success?.()
-      },
-    }
-  }
-  return { state, makeFacade }
+    throw new Error('unexpected action')
+  } }
+  setAppPersistSink(null)
+  try { await fn() }
+  finally { g.PindouAndroid = previous; setAppPersistSink(null) }
 }
 
-async function withPlus(sqlite: unknown, fn: () => Promise<void>): Promise<void> {
-  const prev = (globalThis as { plus?: unknown }).plus
-  ;(globalThis as { plus?: unknown }).plus = { sqlite }
-  try {
-    await fn()
-  } finally {
-    if (prev === undefined) delete (globalThis as { plus?: unknown }).plus
-    else (globalThis as { plus?: unknown }).plus = prev
-    setAppPersistSink(null)
-  }
-}
-
-async function withStorage(storage: { getItem: (key: string) => string | null; setItem: (key: string, value: string) => void }, fn: () => Promise<void>, sqlite?: unknown): Promise<void> {
-  const prev = (globalThis as { plus?: unknown }).plus
-  ;(globalThis as { plus?: unknown }).plus = sqlite ? { storage, sqlite } : { storage }
-  try {
-    await fn()
-  } finally {
-    if (prev === undefined) delete (globalThis as { plus?: unknown }).plus
-    else (globalThis as { plus?: unknown }).plus = prev
-    setAppPersistSink(null)
-  }
-}
-
-test('启动读取旧账后，后续提交写入真实原生库；全新 JS 上下文仍能读回', async () => {
-  const initial = seedPayload(7)
-  const db = fakeNativeSqlite(initial)
-  await withPlus(db.makeFacade(), async () => {
+test('native commit is read back after a fresh JS context; failed commits preserve visible and saved state', async () => {
+  const state = { text: seedPayload(7), writeError: false }
+  await withNative(state, async () => {
     await bootAppLedger()
-    assert.equal(appStorageState().ok, true)
+    assert.ok(appStorageState().ok)
     assert.equal(appLedger().getStock('A1')!.qty, 7)
-    db.state.calls.length = 0
-    const saved = appLedger().commitRestock('a1-100', [{ code: 'A1', qty: 100 }], appLedger().token())
-    assert.equal(saved.ok, true)
-    assert.ok(db.state.calls.some((c) => c.startsWith('exec:INSERT')), '提交必须触发原生 INSERT')
-    assert.ok(db.state.calls.includes('tx:begin'), '提交必须开启原生事务')
-    assert.ok(db.state.calls.includes('tx:commit'), '提交必须真实 COMMIT')
-    assert.equal(JSON.parse(db.state.payload!).live.stock.A1.qty, 100, '原生库已写入新值')
+    state.writeError = true
+    const denied = appLedger().commitRestock('fail', [{ code: 'A1', qty: 100 }], appLedger().token())
+    assert.ok(!denied.ok && denied.code === 'persist-failed')
+    assert.equal(appLedger().getStock('A1')!.qty, 7)
+    assert.equal(JSON.parse(state.text).live.stock.A1.qty, 7)
+    state.writeError = false
+    assert.ok(appLedger().commitRestock('saved', [{ code: 'A1', qty: 100 }], appLedger().token()).ok)
   })
-  // 模拟结束进程后重开：新 facade、新适配器实例，不复用任何 JS 缓存
-  await withPlus(db.makeFacade(), async () => {
+  await withNative(state, async () => {
     await bootAppLedger()
     assert.equal(appLedger().getStock('A1')!.qty, 100)
     assert.equal(appLedger().movements('A1').length, 2)
   })
 })
 
-test('读取数据库短暂失败：不覆盖旧账，进入错误状态并可重试恢复', async () => {
-  const initial = seedPayload(7)
-  const db = fakeNativeSqlite(initial)
-  db.state.failNext.select = 1 // 冷启动首次 SELECT 失败，后续 SQL 可用
-  await withPlus(db.makeFacade(), async () => {
+test('failed or malformed reads never initialize over existing data; retry recovers', async () => {
+  const state = { text: seedPayload(7), readError: true }
+  const original = state.text
+  await withNative(state, async () => {
     await bootAppLedger()
     assert.equal(appStorageState().ok, false)
-    assert.ok(appStorageState().message)
-    // 降级账本：写入明确失败，不静默充当可编辑的临时内存账本
-    const denied = appLedger().commitFirstEntry('a1-100', [{ code: 'A1', qty: 100 }], appLedger().token())
-    if (denied.ok) assert.fail('存储不可用时不得返回保存成功')
-    assert.equal(denied.code, 'persist-failed')
-    // 旧库原样保留：没有任何写入或初始化
-    assert.equal(db.state.payload, initial)
-    assert.equal(db.state.calls.filter((c) => c.startsWith('exec:INSERT') || c.startsWith('exec:DELETE')).length, 0)
-    // 恢复后重试能读回旧账
+    assert.equal(appLedger().commitFirstEntry('denied', [{ code: 'A1', qty: 100 }], appLedger().token()).ok, false)
+    assert.equal(state.text, original)
+    state.readError = false
     await retryAppStorage()
-    assert.equal(appStorageState().ok, true)
+    assert.ok(appStorageState().ok)
     assert.equal(appLedger().getStock('A1')!.qty, 7)
   })
+  for (const text of ['', '{broken', '{}']) {
+    const bad = { text }
+    await withNative(bad, async () => {
+      await bootAppLedger()
+      assert.equal(appStorageState().ok, false)
+      assert.equal(bad.text, text)
+    })
+  }
 })
 
-test('原生写入失败：报告 persist-failed，可见状态与原生库都保持原样', async () => {
-  const initial = seedPayload(7)
-  const db = fakeNativeSqlite(initial)
-  await withPlus(db.makeFacade(), async () => {
+test('only a confirmed empty native database is initialized; missing bridge cannot appear to save', async () => {
+  const state = { text: null as string | null }
+  await withNative(state, async () => {
     await bootAppLedger()
-    db.state.failNext.exec = 1 // 下一次 [DELETE, INSERT] 失败
-    const denied = appLedger().commitRestock('a1-100', [{ code: 'A1', qty: 100 }], appLedger().token())
-    if (denied.ok) assert.fail('写入失败不得伪成功')
-    assert.equal(denied.code, 'persist-failed')
-    assert.ok(db.state.calls.includes('tx:rollback'), '失败必须回滚原生事务')
-    assert.equal(db.state.payload, initial, '原生库未被改动')
-    assert.equal(appLedger().getStock('A1')!.qty, 7, '可见状态未被改动')
-    // 故障恢复后可以正常保存
-    const again = appLedger().commitRestock('a1-100b', [{ code: 'A1', qty: 100 }], appLedger().token())
-    assert.equal(again.ok, true)
-    assert.equal(JSON.parse(db.state.payload!).live.stock.A1.qty, 100)
-  })
-})
-
-test('原生 COMMIT 失败：同样报告 persist-failed，不留伪成功', async () => {
-  const initial = seedPayload(7)
-  const db = fakeNativeSqlite(initial)
-  await withPlus(db.makeFacade(), async () => {
-    await bootAppLedger()
-    db.state.failNext.commit = 1
-    const denied = appLedger().commitRestock('a1-100', [{ code: 'A1', qty: 100 }], appLedger().token())
-    if (denied.ok) assert.fail('COMMIT 失败不得伪成功')
-    assert.equal(denied.code, 'persist-failed')
-    assert.equal(db.state.payload, initial)
-    assert.equal(appLedger().getStock('A1')!.qty, 7)
-  })
-})
-
-test('确认空库才初始化：SELECT 成功且空表时写入初始账本', async () => {
-  const db = fakeNativeSqlite(null)
-  await withPlus(db.makeFacade(), async () => {
-    await bootAppLedger()
-    assert.equal(appStorageState().ok, true)
-    assert.ok(db.state.payload, '确认空库后应初始化')
+    assert.ok(appStorageState().ok)
+    assert.ok(state.text)
     assert.equal(appLedger().getStock('A1')!.qty, 0)
   })
-})
-
-test('App 使用同步单键账本且可重开读取', async () => {
-  let payload: string | null = null
-  const storage = {
-    getItem: () => payload,
-    setItem: (_key: string, value: string) => {
-      payload = value
-    },
-  }
-  await withStorage(storage, async () => {
-    await bootAppLedger()
-    assert.equal(appStorageState().ok, true)
-    const saved = appLedger().commitFirstEntry('storage-100', [{ code: 'A1', qty: 100 }], appLedger().token())
-    assert.equal(saved.ok, true)
-    assert.equal(JSON.parse(payload!).live.stock.A1.qty, 100)
-    await bootAppLedger()
-    assert.equal(appLedger().getStock('A1')!.qty, 100)
-  })
-})
-
-test('单 key 存储保存多张图纸和历史后仍可重开读取', async () => {
-  let payload: string | null = null
-  const storage = {
-    getItem: () => payload,
-    setItem: (_key: string, value: string) => {
-      payload = value
-    },
-  }
-  await withStorage(storage, async () => {
-    await bootAppLedger()
-    for (let i = 0; i < 24; i++) {
-      const result = appLedger().createPattern('p-' + i, { name: '图纸-' + i, imageBytes: TINY_PNG }, appLedger().token())
-      assert.equal(result.ok, true)
-    }
-    assert.equal(appLedger().listPatterns().length, 24)
-    setAppPersistSink(null)
-    await bootAppLedger()
-    assert.equal(appLedger().listPatterns().length, 24)
-    assert.ok(payload && payload.length > 1000)
-  })
-})
-
-test('新存储为空时自动迁移同一应用的旧 SQLite，确认后不再重复读取旧库', async () => {
-  const initial = seedPayload(23)
-  const db = fakeNativeSqlite(initial)
-  let payload: string | null = null
-  const storage = {
-    getItem: () => payload,
-    setItem: (_key: string, value: string) => {
-      payload = value
-    },
-  }
-  await withStorage(storage, async () => {
-    await bootAppLedger()
-    assert.equal(appStorageState().ok, true)
-    assert.equal(appLedger().getStock('A1')!.qty, 23)
-    assert.equal(JSON.parse(payload!).live.stock.A1.qty, 23)
-    const callsAfterMigration = db.state.calls.length
-    setAppPersistSink(null)
-    db.state.failNext.select = 1
-    await bootAppLedger()
-    assert.equal(appStorageState().ok, true)
-    assert.equal(appLedger().getStock('A1')!.qty, 23)
-    assert.equal(db.state.calls.length, callsAfterMigration, '新存储已存在时不应再次读旧 SQLite')
-  }, db.makeFacade())
-})
-
-test('旧 SQLite 迁移写入失败时不生成新账本，也不覆盖旧库', async () => {
-  const initial = seedPayload(31)
-  const db = fakeNativeSqlite(initial)
-  let payload: string | null = null
-  const storage = {
-    getItem: () => payload,
-    setItem: () => {
-      throw new Error('storage full')
-    },
-  }
-  await withStorage(storage, async () => {
-    await bootAppLedger()
-    assert.equal(appStorageState().ok, false)
-    assert.equal(payload, null)
-    assert.equal(db.state.payload, initial)
-  }, db.makeFacade())
+  await bootAppLedger()
+  assert.equal(appStorageState().ok, false)
+  assert.equal(appLedger().commitFirstEntry('denied', [{ code: 'A1', qty: 10 }], appLedger().token()).ok, false)
+  setAppPersistSink(null)
 })
 
 test('合法 JSON 但损坏的 envelope 被拒绝，且不会被写回覆盖', () => {

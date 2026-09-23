@@ -1,0 +1,10 @@
+{
+  "scope": "CDP http(s) blocking in app renderer and attached workers; Wi-Fi retained for adb. No airplane-mode claim.",
+  "manualSaved": true,
+  "recognitionTotal": 325,
+  "workers": [
+    "worker"
+  ],
+  "remoteRequests": [],
+  "localRequestCount": 23
+}

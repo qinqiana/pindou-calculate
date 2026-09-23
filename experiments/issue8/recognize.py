@@ -17,7 +17,7 @@ from glyph_model import GlyphModel, SmallGlyphModel
 from grid_legend import refine_from_grid, refine_edge_codes, count_grid, find_grid_axes
 from source_marks import source_conflicts
 
-VERSION = 'pixel-glyph-0.11.0-dev'
+VERSION = 'pixel-glyph-0.12.0-dev'
 PARAMETERS = {
     'glyph_error': .36, 'glyph_margin': .04, 'ink_contrast': 65,
     'shape_weight': .18, 'hole_weight': .15, 'grid_preview': 2000,
@@ -256,9 +256,11 @@ def normalize_code(text, allowed):
     return code if code in allowed else None
 
 
-def grid_candidates(grid):
+def grid_candidates(grid, compact=False):
     evidence, by_code = [], {}
     for cell in grid['cells']:
+        if compact and (not cell['code'] or cell['code'] in by_code):
+            continue  # Unknown locations are retained by row in grid_doubts.
         key = f"cell-{cell['row']}-{cell['column']}"
         evidence.append({'id': key, 'source': 'grid', **cell})
         if cell['code']:
@@ -274,7 +276,17 @@ def grid_doubts(grid):
     doubts = []
     if not grid['complete']:
         doubts.append({'reason': grid['reason'], 'region': grid.get('region'),
-                       'rawText': f"已读制作格 {sum(grid['counts'].values())}；空白格 {grid.get('blankCells', '未知')}；未知格 {grid['unknownCells'] if grid['unknownCells'] is not None else '未知'}"})
+                       'rawText': f"已读制作格 {sum(grid['counts'].values())}；空白格 {grid.get('blankCells', '未知')}；未知格 {grid['unknownCells'] if grid['unknownCells'] is not None else '未知'}；未处理格 {grid.get('unreadCells', 0)}；外围未覆盖数量未知"})
+    pending = [b for b in grid.get('blocks', []) if b['status'] == 'pending']
+    if pending:
+        x, y, w, _ = pending[0]['region']
+        last = pending[-1]['region']
+        doubts.append({'reason': f"第 {pending[0]['startRow']}–{pending[-1]['endRow']} 行尚未处理，未计入；可重试或手工补充",
+                       'region': [x, y, w, last[1]+last[3]-y], 'rawText': '该区域的制作数量未知'})
+    for block in grid.get('blocks', []):
+        if block['status'] == 'failed':
+            doubts.append({'reason': f"第 {block['startRow']}–{block['endRow']} 行处理失败，未计入；可重试或手工补充",
+                           'region': block['region'], 'rawText': '该区域的制作数量未知'})
     # One row per risk preserves every unknown column and its original region;
     # no colour majority or title difference is used to fill missing labels.
     rows = {}
@@ -343,7 +355,24 @@ def reject_shared_quantities(candidates, evidence, doubts):
     return [c for c in candidates if c['evidenceIds'][0] not in ambiguous]
 
 
-def recognize(path):
+def app_result(result):
+    """Send representative code evidence and all risk regions, not cell debug arrays."""
+    used = {key for c in result['candidates'] for key in
+            (c['evidenceIds'][:1] if c['source'] == 'grid' else c['evidenceIds'])}
+    for doubt in result['doubts']:
+        used.update(doubt.get('evidenceIds', []))
+        if doubt.get('evidenceId'):
+            used.add(doubt['evidenceId'])
+    evidence = [{'id': e['id'], 'rawText': e.get('rawText', ''), 'region': e.get('region')}
+                for e in result['evidence'] if e.get('source') != 'grid' or e['id'] in used]
+    return {**{k: result.get(k) for k in ('algorithm', 'status', 'source', 'image', 'doubts',
+                'total', 'titleTotal', 'coverage', 'elapsedSeconds', 'progress')},
+            'evidence': evidence,
+            'candidates': [{**c, 'evidenceIds': [key for key in c['evidenceIds'] if key in used]}
+                           for c in result['candidates']]}
+
+
+def recognize(path, on_progress=None):
     started = time.perf_counter()
     result = {'algorithm': VERSION, 'parameters': PARAMETERS, 'status': 'failed',
               'source': None, 'candidates': [], 'evidence': [], 'doubts': [],
@@ -514,10 +543,30 @@ def recognize(path):
                 result['evidence'].extend(new_evidence)
                 result['doubts'].extend(new_doubts)
                 result['legendRegion'] = layout['region']
+        body_marks = None
         if not result['candidates'] and not layout['items']:
             body_only = not boxes
             if not grid['cells'] and axes is not None:
-                counted = count_grid(image, preview, SmallGlyphModel(model), axes, allowed, blank_texture, boxes)
+                ax, ay = axes
+                sx, sy = width/preview.shape[1], height/preview.shape[0]
+                body_region = [ax['start']*sx, ay['start']*sy,
+                               (ax['end']-ax['start'])*sx, (ay['end']-ay['start'])*sy]
+                # Check source marks before publishing any adoptable checkpoint.
+                body_marks = source_conflicts(image, preview, model, body_region, result['evidence'])
+                def progress(current):
+                    if on_progress is None or body_marks:
+                        return
+                    counts = current['counts']
+                    if not counts or max(counts.values()) < 4 or sum(counts.values()) < len(counts)*2:
+                        return
+                    candidates, evidence = grid_candidates(current, compact=True)
+                    on_progress({**result, 'grid': None, 'status': 'partial', 'source': 'grid',
+                                 'candidates': candidates, 'evidence': evidence, 'doubts': grid_doubts(current),
+                                 'total': sum(counts.values()), 'elapsedSeconds': round(time.perf_counter()-started, 3),
+                                 'progress': {'completed': sum(b['status'] == 'read' for b in current['blocks']),
+                                              'total': len(current['blocks'])}})
+                counted = count_grid(image, preview, SmallGlyphModel(model), axes, allowed, blank_texture, boxes,
+                                     progress=progress)
                 if counted is not None:
                     grid = counted
                     result['grid'] = grid
@@ -528,7 +577,7 @@ def recognize(path):
                 result['candidates'], evidence = grid_candidates(grid)
                 result['evidence'].extend(evidence)
                 result['doubts'] = []
-        if result['source'] == 'grid' or (not result['candidates'] and grid['cells']):
+        if result['source'] == 'grid' or (not result['candidates'] and (grid['cells'] or grid.get('blocks'))):
             result['doubts'].extend(grid_doubts(grid))
         if result['source'] == 'legend' and grid['complete']:
             chosen = {c['code']: c for c in result['candidates']}
@@ -556,7 +605,7 @@ def recognize(path):
             sx, sy = width/preview.shape[1], height/preview.shape[0]
             source_grid_region = [ax['start']*sx, ay['start']*sy,
                                   (ax['end']-ax['start'])*sx, (ay['end']-ay['start'])*sy]
-        marks = source_conflicts(image, preview, model or GlyphModel(), source_grid_region, result['evidence'])
+        marks = body_marks if body_marks is not None else source_conflicts(image, preview, model or GlyphModel(), source_grid_region, result['evidence'])
         if marks:
             for i, mark in enumerate(marks):
                 key = f'source-{i}'
@@ -576,6 +625,9 @@ def recognize(path):
             result['total'] = total
         else:
             result.update(status='failed', source=None)
+            if not any(d.get('region') for d in result['doubts']):
+                result['doubts'].append({'reason': '未可靠定位或读清制作区域，数量未知；可换清晰原图或手工录入',
+                                         'region': [0, 0, width, height]})
         result['coverage'] = '已覆盖带四边编号的制作区域，并逐格读取；结果仍待用户核对' if result['grid']['complete'] else '完整覆盖尚未证明；疑点可能影响用量'
     except (OSError, ValueError, SyntaxError, Image.DecompressionBombError, cv2.error) as error:
         result.update(status='failed', source=None, candidates=[], total=None)

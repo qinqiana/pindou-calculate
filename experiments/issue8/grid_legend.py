@@ -214,22 +214,22 @@ def refine_from_grid(image, preview, layout, model, axes, allowed):
 
 
 def cell_rectangle_axes(edges):
-    """Recover pitch from repeated square cell interiors when line peaks alias."""
+    """Recover both pitches from repeated cell interiors when line peaks alias."""
     contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     boxes = [cv2.boundingRect(c) for c in contours if cv2.contourArea(c) > 60]
-    boxes = [b for b in boxes if min(b[2:]) >= 8 and abs(b[2]-b[3]) <= 2
-             and b[2] < min(edges.shape)/4]
+    boxes = [b for b in boxes if min(b[2:]) >= 8 and .3 < b[2]/b[3] < 3
+             and max(b[2:]) < min(edges.shape)/4]
     if len(boxes) < 20:
         return None
-    common = Counter(round((b[2]+b[3])/2) for b in boxes).most_common(1)[0][0]
-    boxes = [b for b in boxes if max(abs(b[2]-common), abs(b[3]-common)) <= 2]
+    common = Counter((b[2], b[3]) for b in boxes).most_common(1)[0][0]
+    boxes = [b for b in boxes if max(abs(b[2]-common[0]), abs(b[3]-common[1])) <= 2]
     axes = []
     for axis in (0, 1):
         values = np.sort([b[axis]+b[axis+2]/2 for b in boxes])
         groups = np.split(values, np.flatnonzero(np.diff(values) > 3)+1)
         centers = np.array([np.mean(g) for g in groups if len(g) >= 2])
         differences = np.diff(centers)
-        adjacent = differences[(differences > common*.8) & (differences < common*1.3)]
+        adjacent = differences[(differences > common[axis]*.8) & (differences < common[axis]*1.3)]
         if len(adjacent) < 4:
             return None
         rough_step = float(np.mean(adjacent))
@@ -244,7 +244,7 @@ def cell_rectangle_axes(edges):
         if abs(length-end-step) < max(2, step*.07):
             end += step
         axes.append({'start': start, 'end': end, 'step': float(step)})
-    return axes if abs(math.log(axes[0]['step']/axes[1]['step'])) < .05 else None
+    return axes
 
 
 def find_grid_axes(preview, axis_reader):
@@ -287,7 +287,7 @@ def find_grid_axes(preview, axis_reader):
     return axes
 
 
-def count_grid(image, preview, model, axes, allowed, blank_check, legend_regions):
+def count_grid(image, preview, model, axes, allowed, blank_check, legend_regions, progress=None):
     """Read each visible cell; geometry supplies positions, never colour codes.
 
     Completeness remains unproved for cropped frames, even if readable cells agree.
@@ -296,8 +296,8 @@ def count_grid(image, preview, model, axes, allowed, blank_check, legend_regions
         return None
     x, y = axes
     cols, rows = [round((a['end']-a['start'])/a['step']) for a in axes]
-    # ponytail: cap retained cell evidence at 40k; stream it before supporting larger grids.
-    # Dense charts keep locations and readings without repeated character alternatives.
+    # ponytail: geometry beyond 40k cells remains unsupported; do not infer extra
+    # cells from a title or enlarge this boundary without device measurements.
     if min(cols, rows) < 5 or rows*cols > 40000:
         return None
     sx, sy = image.width/preview.shape[1], image.height/preview.shape[0]
@@ -307,92 +307,137 @@ def count_grid(image, preview, model, axes, allowed, blank_check, legend_regions
         if (rx < x['start']*sx-3 or ry < y['start']*sy-3
                 or rx+rw > x['end']*sx+3 or ry+rh > y['end']*sy+3):
             return None
-    cells, counts, blanks, unknown = [], Counter(), 0, 0
+    region = [max(0, round(x['start']*sx)), max(0, round(y['start']*sy)),
+              min(image.width, round(x['end']*sx))-max(0, round(x['start']*sx)),
+              min(image.height, round(y['end']*sy))-max(0, round(y['start']*sy))]
+    # Each block owns whole rows. Cell crops use original coordinates and overlap
+    # the row boundary; the overlap supplies pixels, never a second counted cell.
+    block_rows = max(1, min(8, 256//cols))
+    blocks = []
+    for start in range(0, rows, block_rows):
+        end = min(rows, start+block_rows)
+        top = max(0, round((y['start']+start*y['step'])*sy))
+        bottom = min(image.height, round((y['start']+end*y['step'])*sy))
+        margin = math.ceil(y['step']*sy*.54)
+        blocks.append({'id': f'rows-{start+1}-{end}', 'startRow': start+1, 'endRow': end,
+                       'status': 'pending', 'region': [region[0], top, region[2], bottom-top],
+                       'readRegion': [region[0], max(0, top-margin), region[2],
+                                      min(image.height, bottom+margin)-max(0, top-margin)]})
+    completed = {}
+    def snapshot():
+        counts, blanks, unknown, cells = Counter(), 0, 0, []
+        # Replacement by block identity makes repeated delivery/retry idempotent.
+        for block_counts, block_blanks, block_unknown, block_cells in completed.values():
+            counts.update(block_counts)
+            blanks += block_blanks
+            unknown += block_unknown
+            cells.extend(block_cells)
+        unread = sum((b['endRow']-b['startRow']+1)*cols for b in blocks if b['status'] != 'read')
+        return {'complete': False, 'rows': rows, 'columns': cols, 'counts': dict(counts),
+                'blankCells': blanks, 'unknownCells': unknown, 'unreadCells': unread,
+                'cells': cells, 'blocks': [dict(b) for b in blocks], 'region': region,
+                'reason': '逐格候选已读取；外围是否截断尚未证明，未读清格不计为零'}
     readings = {}
     def clipped(field):
         fx, fy, fw, fh = field['region']
         return any(cx <= fx or cy <= fy or cx+cw >= fx+fw or cy+ch >= fy+fh
                    for cx, cy, cw, ch in (c['region'] for c in field['characters']))
 
-    for row in range(rows):
-        for col in range(cols):
-            xx, yy = x['start']+(col+.5)*x['step'], y['start']+(row+.5)*y['step']
-            region = [(xx-x['step']*.44)*sx, (yy-y['step']*.36)*sy, x['step']*.88*sx, y['step']*.72*sy]
-            pixels, transparent = crop_rgb(image, region)
-            if not pixels.size:
-                unknown += 1
-                continue
-            if not transparent and blank_check(pixels):
-                blanks += 1
-                continue
-            expanded = [(xx-x['step']*.54)*sx, (yy-y['step']*.46)*sy,
-                        x['step']*1.08*sx, y['step']*.92*sy]
-            wide, wide_transparent = crop_rgb(image, expanded)
-            # Exact original pixels, both crop sizes and relative rounding must match.
-            rounded, outer = list(map(round, region)), list(map(round, expanded))
-            key = (pixels.shape, transparent, pixels.tobytes(), wide.shape, wide_transparent,
-                   wide.tobytes(), rounded[0]-outer[0], rounded[1]-outer[1])
-            cached = readings.get(key)
-            if cached is not None:
-                code, previous = cached
-                dx, dy = rounded[0]-previous['cellOrigin'][0], rounded[1]-previous['cellOrigin'][1]
-                def shifted(box):
-                    return [box[0]+dx, box[1]+dy, *box[2:]]
-                field = {**previous, 'region': shifted(previous['region']),
-                         'characters': [{**c, 'region': shifted(c['region'])} for c in previous['characters']]}
-                if previous.get('interpretation'):
-                    field['interpretation'] = {**previous['interpretation'], 'changes':
-                        [{**c, 'region': shifted(c['region'])} for c in previous['interpretation']['changes']]}
-            else:
-                background = np.median(pixels.reshape(-1, 3), axis=0)
+    def read_cell(row, col):
+        xx, yy = x['start']+(col+.5)*x['step'], y['start']+(row+.5)*y['step']
+        region = [(xx-x['step']*.44)*sx, (yy-y['step']*.36)*sy, x['step']*.88*sx, y['step']*.72*sy]
+        pixels, transparent = crop_rgb(image, region)
+        if not pixels.size:
+            return {'row': row+1, 'column': col+1, 'region': region,
+                    'rawText': '未取得格内像素', 'code': None, 'characters': []}
+        if not transparent and blank_check(pixels):
+            return None
+        expanded = [(xx-x['step']*.54)*sx, (yy-y['step']*.46)*sy,
+                    x['step']*1.08*sx, y['step']*.92*sy]
+        wide, wide_transparent = crop_rgb(image, expanded)
+        # Exact original pixels, both crop sizes and relative rounding must match.
+        rounded, outer = list(map(round, region)), list(map(round, expanded))
+        key = (pixels.shape, transparent, pixels.tobytes(), wide.shape, wide_transparent,
+               wide.tobytes(), rounded[0]-outer[0], rounded[1]-outer[1])
+        cached = readings.get(key)
+        if cached is not None:
+            code, previous = cached
+            dx, dy = rounded[0]-previous['cellOrigin'][0], rounded[1]-previous['cellOrigin'][1]
+            def shifted(box):
+                return [box[0]+dx, box[1]+dy, *box[2:]]
+            field = {**previous, 'region': shifted(previous['region']),
+                     'characters': [{**c, 'region': shifted(c['region'])} for c in previous['characters']]}
+            if previous.get('interpretation'):
+                field['interpretation'] = {**previous['interpretation'], 'changes':
+                    [{**c, 'region': shifted(c['region'])} for c in previous['interpretation']['changes']]}
+        else:
+            background = np.median(pixels.reshape(-1, 3), axis=0)
+            field = read_field(image, region, model, background, kind='code')
+            if clipped(field):
+                # The small overlap includes rules, not adjacent centred text.
+                region = expanded
                 field = read_field(image, region, model, background, kind='code')
-                if clipped(field):
-                    # The small overlap includes rules, not adjacent centred text.
-                    region = expanded
-                    field = read_field(image, region, model, background, kind='code')
-                text = decode_field(field, 'code')
+            text = decode_field(field, 'code')
+            match = re.fullmatch(r'([A-Z]+)([0-9]+)', text or '')
+            code = match[1]+str(int(match[2])) if match else None
+            if code not in allowed or field.get('interpretation', {}).get('score', 0) <= .6:
+                first = field['characters'][0] if field['characters'] else None
+                stable_prefix = first['char'] if first and first['char'].isalpha() and first['score'] > .9 else None
+                retry = read_field(image, region, model, background, kind='code', split_candidates=True)
+                text = decode_field(retry, 'code')
                 match = re.fullmatch(r'([A-Z]+)([0-9]+)', text or '')
-                code = match[1]+str(int(match[2])) if match else None
-                if code not in allowed or field.get('interpretation', {}).get('score', 0) <= .6:
-                    first = field['characters'][0] if field['characters'] else None
-                    stable_prefix = first['char'] if first and first['char'].isalpha() and first['score'] > .9 else None
-                    retry = read_field(image, region, model, background, kind='code', split_candidates=True)
-                    text = decode_field(retry, 'code')
-                    match = re.fullmatch(r'([A-Z]+)([0-9]+)', text or '')
-                    alternative = match[1]+str(int(match[2])) if match else None
-                    if (alternative in allowed and retry.get('interpretation', {}).get('score', 0) > .6
-                            and not clipped(retry) and (stable_prefix is None or alternative.startswith(stable_prefix))):
-                        # Recutting merged digits must not overwrite a clear
-                        # prefix merely because the new word enters the catalog.
-                        code, field = alternative, retry
-                if code not in allowed or field.get('interpretation', {}).get('score', 0) <= .6 or clipped(field):
-                    code = None
-                if len(key[2])+len(key[5]) <= 8192:
-                    if len(readings) >= 512:
-                        readings.pop(next(iter(readings)))
-                    readings[key] = (code, {**field, 'cellOrigin': rounded[:2]})
-            if code:
-                bounds = [c['region'] for c in field['characters']]
-                tx = (min(b[0] for b in bounds)+max(b[0]+b[2] for b in bounds))/2
-                ty = (min(b[1] for b in bounds)+max(b[1]+b[3] for b in bounds))/2
-                # This reader samples centred cell labels. A watermark fragment
-                # at a corner is uncertain even when it resembles a valid code.
-                if abs(tx-xx*sx) > x['step']*sx*.2 or abs(ty-yy*sy) > y['step']*sy*.2:
-                    code = None
-            if code is None:
-                unknown += 1
-            else:
-                counts[code] += 1
-            cells.append({'row': row+1, 'column': col+1, 'region': field['region'],
-                          'rawText': field['rawText'], 'code': code,
-                          'characters': field['characters'] if code is None or rows*cols <= 16000 else [],
-                          'interpretation': field.get('interpretation')})
+                alternative = match[1]+str(int(match[2])) if match else None
+                if (alternative in allowed and retry.get('interpretation', {}).get('score', 0) > .6
+                        and not clipped(retry) and (stable_prefix is None or alternative.startswith(stable_prefix))):
+                    # Recutting merged digits must not overwrite a clear
+                    # prefix merely because the new word enters the catalog.
+                    code, field = alternative, retry
+            if code not in allowed or field.get('interpretation', {}).get('score', 0) <= .6 or clipped(field):
+                code = None
+            if len(key[2])+len(key[5]) <= 8192:
+                if len(readings) >= 512:
+                    readings.pop(next(iter(readings)))
+                readings[key] = (code, {**field, 'cellOrigin': rounded[:2]})
+        if code:
+            bounds = [c['region'] for c in field['characters']]
+            tx = (min(b[0] for b in bounds)+max(b[0]+b[2] for b in bounds))/2
+            ty = (min(b[1] for b in bounds)+max(b[1]+b[3] for b in bounds))/2
+            # This reader samples centred cell labels. A watermark fragment
+            # at a corner is uncertain even when it resembles a valid code.
+            if abs(tx-xx*sx) > x['step']*sx*.2 or abs(ty-yy*sy) > y['step']*sy*.2:
+                code = None
+        return {'row': row+1, 'column': col+1, 'region': field['region'],
+                      'rawText': field['rawText'], 'code': code,
+                      'characters': field['characters'] if code is None or rows*cols <= 16000 else [],
+                      'interpretation': field.get('interpretation')}
+
+    for block in blocks:
+        counts, blanks, unknown, cells = Counter(), 0, 0, []
+        try:
+            for row in range(block['startRow']-1, block['endRow']):
+                for col in range(cols):
+                    cell = read_cell(row, col)
+                    if cell is None:
+                        blanks += 1
+                    else:
+                        cells.append(cell)
+                        if cell['code']:
+                            counts[cell['code']] += 1
+                        else:
+                            unknown += 1
+            completed[block['id']] = (counts, blanks, unknown, cells)
+            block['status'] = 'read'
+        except (OSError, ValueError, cv2.error) as error:
+            block.update(status='failed', reason=str(error))
+        if progress is not None:
+            progress(snapshot())
+    result = snapshot()
+    counts = result['counts']
     # A palette chart also has a grid. Require repeated production labels before
     # returning counts; do not turn a sheet of one example per colour into a design.
     if not counts or max(counts.values()) < 4 or sum(counts.values()) < len(counts)*2:
+        if result['unreadCells']:
+            return {**result, 'counts': {}, 'cells': [], 'blankCells': 0, 'unknownCells': None,
+                    'reason': '处理未完成，尚无足够制作格证据；未覆盖区域数量未知'}
         return None
-    return {'complete': False, 'rows': rows, 'columns': cols, 'counts': dict(counts),
-            'blankCells': blanks, 'unknownCells': unknown, 'cells': cells,
-            'region': [round(x['start']*sx), round(y['start']*sy),
-                       round((x['end']-x['start'])*sx), round((y['end']-y['start'])*sy)],
-            'reason': '逐格候选已读取；外围是否截断尚未证明，未读清格不计为零'}
+    return result
