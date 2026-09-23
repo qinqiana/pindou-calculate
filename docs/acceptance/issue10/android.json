@@ -1,10 +1,11 @@
 {
   "device": "Xiaomi 14 Ultra / Android 15 / official HBuilder debug runtime",
+  "algorithm": "pixel-glyph-0.9.2-dev",
   "input": "Bundled original image bytes read with Android file API; actual offline worker and shipped editor handlers. No new system-picker test.",
   "cases": [
     {
       "id": "S17",
-      "format": "jpg",
+      "format": "png",
       "automaticLines": [
         {
           "code": "A6",
@@ -36,10 +37,11 @@
         }
       ],
       "manualCorrections": 0,
-      "algorithmSeconds": 2.608,
-      "scriptedFlowSeconds": 21.505,
+      "algorithmSeconds": 2.768,
+      "scriptedFlowSeconds": 22.693,
       "stockUnchanged": true,
-      "makesUnchanged": true
+      "makesUnchanged": true,
+      "encoding": "PNG conversion of S17"
     },
     {
       "id": "S04",
@@ -107,10 +109,11 @@
         }
       ],
       "manualCorrections": 0,
-      "algorithmSeconds": 4.457,
-      "scriptedFlowSeconds": 23.227,
+      "algorithmSeconds": 5.636,
+      "scriptedFlowSeconds": 23.059,
       "stockUnchanged": true,
-      "makesUnchanged": true
+      "makesUnchanged": true,
+      "encoding": "WebP recompression of S04 at quality 88"
     },
     {
       "id": "S01",
@@ -166,13 +169,28 @@
         }
       ],
       "manualCorrections": 0,
-      "algorithmSeconds": 24.273,
-      "scriptedFlowSeconds": 44.739,
+      "algorithmSeconds": 21.908,
+      "scriptedFlowSeconds": 43.053,
       "stockUnchanged": true,
-      "makesUnchanged": true
+      "makesUnchanged": true,
+      "encoding": "Original S01 JPEG"
     }
   ],
+  "earlierTimeout": {
+    "algorithm": "pixel-glyph-0.9.1-dev",
+    "id": "S01",
+    "attempts": 2,
+    "limitSeconds": 30,
+    "candidateAdopted": false,
+    "emptyUsageSaved": false,
+    "diagnosticAlgorithmSeconds": 25.472,
+    "diagnosticLoadingSeconds": 3.61,
+    "diagnosticHadExtendedTimeout": true,
+    "finalBuildUsedOriginalTimeout": true,
+    "finalBuildRetries": 0
+  },
   "edit": {
+    "algorithm": "pixel-glyph-0.9-dev",
     "version": 2,
     "firstCode": "A6",
     "confirmedQty": 224,

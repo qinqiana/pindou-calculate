@@ -260,7 +260,10 @@ def read_field(image, box, model, background=None, kind=None, split_candidates=F
         if not components or len(components) > 20:
             continue
         components.sort(key=lambda c: c[0])
-        results = model.predict([c[4] for c in components])
+        # At <=8 source pixels the pixel-font model has the relevant stroke
+        # evidence; averaging in the ordinary reader can erase a narrow 0/9.
+        tiny_number = bool(kind == 'number' and hasattr(model, 'pixel') and max(c[3] for c in components) <= 8*scale)
+        results = (model.pixel if tiny_number else model).predict([c[4] for c in components])
         characters = [{'char': r[0]['char'], 'score': r[0]['score'], 'alternatives': r[1:],
                        'region': [x+round(a/scale), y+round(b/scale), max(1, round(cw/scale)), max(1, round(ch/scale))]}
                       for r, (a, b, cw, ch, _) in zip(results, components)]
@@ -292,7 +295,7 @@ def read_field(image, box, model, background=None, kind=None, split_candidates=F
             occupied[max(0,b-scale):b+ch+scale, max(0,a-scale):a+cw+scale] = 1
         low = diff > max(20, contrast*.3)
         coverage = float(np.count_nonzero(occupied & low)/max(1,np.count_nonzero(low)))
-        variants.append({'invalidNumericSymbols': numeric_symbols, 'inkCoverage': coverage, 'rawText': ''.join(c['char'] for c in characters), 'characters': characters,
+        variants.append({'tinyNumber': tiny_number, 'invalidNumericSymbols': numeric_symbols, 'inkCoverage': coverage, 'rawText': ''.join(c['char'] for c in characters), 'characters': characters,
                          'score': min(c['score'] for c in characters), 'region': [x, y, w, h],
                          'visible': True, 'transparent': transparent,
                          'threshold': threshold})
@@ -322,7 +325,7 @@ def read_field(image, box, model, background=None, kind=None, split_candidates=F
     def evidence(v):
         score = v.get('interpretation', {}).get('score', v['score']*.25) if kind else math.exp(sum(math.log(max(.001, c['score'])) for c in v['characters'])/len(v['characters']))
         consensus = sum(o.get('interpretation', {}).get('score', 0)
-                        for o in variants if o['decoded'] == v['decoded']) if v['decoded'] else 0
+                        for o in variants if o['decoded'] == v['decoded']) if v['decoded'] and not v['tinyNumber'] else 0
         return (v['inkCoverage']**.15)*score*(1+consensus*.1)
     best = max(variants, key=evidence)
     best['variants'] = [{'rawText': v['rawText'], 'decoded': v['decoded'], 'score': v.get('interpretation', {}).get('score', 0)} for v in variants]
@@ -371,7 +374,7 @@ def decode_field(field, kind):
 
 def local_contrast_field(image, field, model, kind):
     """Recover faint strokes under broad overlays, keeping original-image evidence."""
-    if field.get('invalidNumericSymbols') or field.get('interpretation', {}).get('score', 0) >= .8:
+    if field.get('invalidNumericSymbols') or field.get('interpretation', {}).get('score', 0) * field.get('inkCoverage', 0) >= .8:
         return field
     from PIL import Image
     pixels, _ = crop_rgb(image, field['region'])
@@ -396,12 +399,29 @@ def local_contrast_field(image, field, model, kind):
             score = candidate.get('interpretation', {}).get('score', 0)
             if text and score > .8:
                 variants.append((text, score, candidate))
+    if not variants and kind == 'code' and field.get('interpretation', {}).get('score', 0) < .8:
+        # A watermark can introduce a third brightness level. Absolute contrast
+        # then joins dark background fragments to light lettering. Read each
+        # ink polarity separately, without choosing by palette membership.
+        middle = float(np.median(gray))
+        for edge in (float(gray.min()), float(gray.max())):
+            for fraction in (.3, .4, .5, .6, .7, .8):
+                threshold = middle+(edge-middle)*fraction
+                ink = gray < threshold if edge < middle else gray > threshold
+                with Image.fromarray(255-ink.astype('uint8')*255).convert('RGB') as tile:
+                    candidate = read_field(tile, [0,0,w,h], model, background=np.full(3,255), kind=kind)
+                text = decode_field(candidate, kind)
+                score = candidate.get('interpretation', {}).get('score', 0)
+                if text and score > .8:
+                    variants.append((text, score, candidate))
+        variants = [v for v in variants if sum(word == v[0] for word, _, _ in variants) >= 2]
     if not variants:
         return field
     votes = {text: sum(score for word, score, _ in variants if word == text) for text, _, _ in variants}
     text = max(votes, key=votes.get)
-    # Quantities require agreement across local windows; one plausible fragment is insufficient.
-    if kind == 'number' and sum(word == text for word, _, _ in variants) < 2:
+    # Quantities and replacements of a strong original reading require
+    # agreement across local windows; one transformed fragment is insufficient.
+    if (kind == 'number' or field.get('interpretation', {}).get('score', 0) >= .8) and sum(word == text for word, _, _ in variants) < 2:
         return field
     candidate = max((v for word, _, v in variants if word == text),
                     key=lambda v: v['interpretation']['score'])

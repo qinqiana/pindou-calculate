@@ -16,7 +16,7 @@ from layout_legend import crop_rgb, recognize_layout, make_preview
 from glyph_model import GlyphModel, SmallGlyphModel
 from grid_legend import refine_from_grid, refine_edge_codes, count_grid, find_grid_axes
 
-VERSION = 'pixel-glyph-0.9-dev'
+VERSION = 'pixel-glyph-0.9.2-dev'
 PARAMETERS = {
     'glyph_error': .36, 'glyph_margin': .04, 'ink_contrast': 65,
     'shape_weight': .18, 'hole_weight': .15, 'grid_preview': 2000,

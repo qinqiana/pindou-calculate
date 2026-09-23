@@ -52,8 +52,10 @@ class GlyphModel:
                     np.pad(x, ((0, 0), (0, 0), (1, 1), (1, 1))), (3, 3), axis=(2, 3))
                 x = np.einsum('nchwkl,ockl->nohw', windows, w, optimize=True) + b[None, :, None, None]
                 np.maximum(x, 0, out=x)
-                n, c, h, width = x.shape
-                x = x.reshape(n, c, h//2, 2, width//2, 2).max(axis=(3, 5))
+                # The same 2x2 maximum, avoiding a strided multi-axis reduction
+                # for every small glyph in the Android runtime.
+                x = np.maximum(np.maximum(x[:, :, ::2, ::2], x[:, :, 1::2, ::2]),
+                               np.maximum(x[:, :, ::2, 1::2], x[:, :, 1::2, 1::2]))
             x = x.reshape(len(x), -1)
             x = np.maximum(x @ self.weights['layers.7.weight'].T + self.weights['layers.7.bias'], 0)
             logits = x @ self.weights['layers.9.weight'].T + self.weights['layers.9.bias']
