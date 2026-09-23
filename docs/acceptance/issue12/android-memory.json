@@ -1,0 +1,65 @@
+{
+  "scope": "io.dcloud.HBuilder process; sampled PSS, not worker or whole-app peak",
+  "samples": [
+    {
+      "stage": "before",
+      "pssKiB": 221429
+    },
+    {
+      "stage": "M040-recognizing",
+      "pssKiB": 232061
+    },
+    {
+      "stage": "M040-after",
+      "pssKiB": 209423
+    },
+    {
+      "stage": "M060-recognizing",
+      "pssKiB": 227181
+    },
+    {
+      "stage": "M060-after",
+      "pssKiB": 215105
+    },
+    {
+      "stage": "M023-recognizing",
+      "pssKiB": 238879
+    },
+    {
+      "stage": "M023-after",
+      "pssKiB": 220639
+    },
+    {
+      "stage": "M024-recognizing",
+      "pssKiB": 250825
+    },
+    {
+      "stage": "M024-after",
+      "pssKiB": 224135
+    },
+    {
+      "stage": "148-body-unknown-recognizing",
+      "pssKiB": 264540
+    },
+    {
+      "stage": "148-body-unknown-recognizing",
+      "pssKiB": 227004
+    },
+    {
+      "stage": "148-body-unknown-after",
+      "pssKiB": 228814
+    },
+    {
+      "stage": "148-body-recognizing",
+      "pssKiB": 263513
+    },
+    {
+      "stage": "148-body-recognizing",
+      "pssKiB": 224685
+    },
+    {
+      "stage": "148-body-after",
+      "pssKiB": 240211
+    }
+  ]
+}

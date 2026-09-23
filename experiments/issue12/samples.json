@@ -1,0 +1,105 @@
+{
+  "samples": [
+    {
+      "id": "M040",
+      "sourcePage": "https://www.bitbead.app/en/library/51a13024-dccf-4e35-9607-83c9775728ae",
+      "imageUrl": "https://www.bitbead.app/api/uploads/51a13024-dccf-4e35-9607-83c9775728ae/pattern?public=1&v=editable-svg-v2-empty-grid-1787457387831",
+      "creator": "Lai Tom",
+      "width": 17,
+      "height": 13,
+      "conversion": "public-native-svg-rasterized-by-installed-ImageMagick",
+      "path": "experiments/issue12/inputs/M040.png",
+      "kind": "real-no-legend",
+      "sourceGroup": "BitBead-native-svg",
+      "split": "frozen-regression",
+      "previouslyUsed": true
+    },
+    {
+      "id": "M060",
+      "sourcePage": "https://www.bitbead.app/en/library/8ff73539-2b89-4da3-9180-68edbe5f69f0",
+      "imageUrl": "https://www.bitbead.app/api/uploads/8ff73539-2b89-4da3-9180-68edbe5f69f0/pattern?public=1&v=editable-svg-v2-empty-grid-1787457413436",
+      "creator": "張湫行",
+      "width": 17,
+      "height": 13,
+      "conversion": "public-native-svg-rasterized-by-installed-ImageMagick",
+      "path": "experiments/issue12/inputs/M060.png",
+      "kind": "real-no-legend",
+      "sourceGroup": "BitBead-native-svg",
+      "split": "frozen-regression",
+      "previouslyUsed": true
+    },
+    {
+      "id": "M023",
+      "sourcePage": "https://www.bitbead.app/en/library/5003b98e-867d-4e16-ba95-16b338196b65",
+      "imageUrl": "https://www.bitbead.app/api/uploads/5003b98e-867d-4e16-ba95-16b338196b65/pattern?public=1&v=editable-svg-v2-empty-grid-1787457406703",
+      "creator": "65649568",
+      "width": 15,
+      "height": 20,
+      "conversion": "public-native-svg-rasterized-by-installed-ImageMagick",
+      "path": "experiments/issue12/inputs/M023.png",
+      "kind": "real-no-legend",
+      "sourceGroup": "BitBead-native-svg",
+      "split": "frozen-regression",
+      "previouslyUsed": true
+    },
+    {
+      "id": "M024",
+      "sourcePage": "https://www.bitbead.app/en/library/72bf66d7-d535-4d7f-914e-456c2012a67c",
+      "imageUrl": "https://www.bitbead.app/api/uploads/72bf66d7-d535-4d7f-914e-456c2012a67c/pattern?public=1&v=editable-svg-v2-empty-grid-1787457404228",
+      "creator": "18152092167",
+      "width": 20,
+      "height": 15,
+      "conversion": "public-native-svg-rasterized-by-installed-ImageMagick",
+      "path": "experiments/issue12/inputs/M024.png",
+      "kind": "real-no-legend",
+      "sourceGroup": "BitBead-native-svg",
+      "split": "frozen-regression",
+      "previouslyUsed": true
+    },
+    {
+      "id": "S18-body",
+      "path": "参考样例/豆画-Mard-148图纸样例.png",
+      "kind": "derived-legend-hidden",
+      "sourceGroup": "douhua",
+      "split": "development",
+      "crop": [
+        0,
+        150,
+        5000,
+        3057
+      ],
+      "supported": true,
+      "previouslyUsed": true
+    },
+    {
+      "id": "S11-body",
+      "path": "参考样例/参考图纸/1789460465729_b4f8bf9d-2570-4684-b40a-25189483783c_5880820946873246126_1080x1331.webp",
+      "kind": "derived-legend-hidden",
+      "sourceGroup": "rounded-below",
+      "split": "boundary",
+      "crop": [
+        0,
+        0,
+        1080,
+        1083
+      ],
+      "supported": false,
+      "previouslyUsed": true
+    },
+    {
+      "id": "S12-body",
+      "path": "参考样例/参考图纸/1789460466748_112aee41-7688-44eb-97e7-c66e674f807b_1541671248427790876_1080x1331.webp",
+      "kind": "derived-legend-hidden",
+      "sourceGroup": "rounded-below",
+      "split": "boundary",
+      "crop": [
+        0,
+        0,
+        1080,
+        1083
+      ],
+      "supported": false,
+      "previouslyUsed": true
+    }
+  ]
+}

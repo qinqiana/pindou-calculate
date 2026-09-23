@@ -1,0 +1,8 @@
+input,source,derivation,passed,status,total,doubts,locatedDoubts,seconds,manualCorrections
+S03,参考样例/参考图纸/1789460416312_afb8306d-128b-44ba-895c-778e5132756e_1833367752401994129_1080x1421.webp,原始截图,True,partial,25250,13,12,1.19,0
+S04,参考样例/参考图纸/1789460425312_5bf77ed7-e5ad-48ad-88a4-e6edfa46a8ee_6334508569979175063_1080x1382.webp,原始截图,True,partial,1936,2,1,0.493,0
+foreign,148原图派生,148原图下方加120像素白边并印 ARTKAL,True,failed,,10,10,1.158,0
+multiple,148原图派生,148原图下方加120像素白边并印 MARD    HAMA,True,failed,,11,11,1.156,0
+palette,148原图派生,148原图下方加120像素白边并印 MARD 291,True,failed,,10,10,1.148,0
+unknown,148原图派生,148原图末项H7(60)改印为色卡外C30(60)，本体不改,True,partial,88,2,1,1.273,0
+cut,148原图派生,148原图裁至末行y+22=3181像素，保留完整本体,True,partial,148,1,1,1.259,0

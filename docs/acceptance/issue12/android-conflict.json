@@ -1,0 +1,72 @@
+{
+  "input": "148 图例 H7 从60改印为61；本体不变",
+  "source": "legend",
+  "status": "partial",
+  "automaticLines": [
+    {
+      "code": "C2",
+      "qty": 18
+    },
+    {
+      "code": "C12",
+      "qty": 3
+    },
+    {
+      "code": "C16",
+      "qty": 11
+    },
+    {
+      "code": "C17",
+      "qty": 12
+    },
+    {
+      "code": "C19",
+      "qty": 7
+    },
+    {
+      "code": "C29",
+      "qty": 18
+    },
+    {
+      "code": "H2",
+      "qty": 14
+    },
+    {
+      "code": "H3",
+      "qty": 5
+    },
+    {
+      "code": "H7",
+      "qty": 61
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "risk-2",
+      "reason": "两路数量不一致，未相加。请核对图例位置",
+      "raw": "H7：图例 61；独立本体 60",
+      "region": [
+        170,
+        3160,
+        585,
+        82
+      ],
+      "resolved": false
+    },
+    {
+      "id": "risk-3",
+      "reason": "两路数量不一致，未相加。请核对本体位置",
+      "raw": "H7：图例 61；独立本体 60",
+      "region": [
+        4191,
+        474,
+        162,
+        161
+      ],
+      "resolved": false
+    }
+  ],
+  "algorithmSeconds": 11.482,
+  "stockUnchanged": true,
+  "makesUnchanged": true
+}

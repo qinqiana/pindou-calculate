@@ -17,7 +17,7 @@ from glyph_model import GlyphModel, SmallGlyphModel
 from grid_legend import refine_from_grid, refine_edge_codes, count_grid, find_grid_axes
 from source_marks import source_conflicts
 
-VERSION = 'pixel-glyph-0.10.0-dev'
+VERSION = 'pixel-glyph-0.11.0-dev'
 PARAMETERS = {
     'glyph_error': .36, 'glyph_margin': .04, 'ink_contrast': 65,
     'shape_weight': .18, 'hole_weight': .15, 'grid_preview': 2000,
@@ -269,6 +269,28 @@ def grid_candidates(grid):
     return candidates, evidence
 
 
+def grid_doubts(grid):
+    """Keep unknown cells locatable without overflowing the mobile risk list."""
+    doubts = []
+    if not grid['complete']:
+        doubts.append({'reason': grid['reason'], 'region': grid.get('region'),
+                       'rawText': f"已读制作格 {sum(grid['counts'].values())}；空白格 {grid.get('blankCells', '未知')}；未知格 {grid['unknownCells'] if grid['unknownCells'] is not None else '未知'}"})
+    # One row per risk preserves every unknown column and its original region;
+    # no colour majority or title difference is used to fill missing labels.
+    rows = {}
+    for cell in grid['cells']:
+        if not cell['code']:
+            rows.setdefault(cell['row'], []).append(cell)
+    for row, cells in rows.items():
+        boxes = [c['region'] for c in cells]
+        x, y = min(b[0] for b in boxes), min(b[1] for b in boxes)
+        right, bottom = max(b[0]+b[2] for b in boxes), max(b[1]+b[3] for b in boxes)
+        doubts.append({'reason': f'第 {row} 行有 {len(cells)} 格未读清或色号不在 MARD 221 内，未计入，请放大核对',
+                       'region': [x, y, right-x, bottom-y],
+                       'rawText': '；'.join(f"列 {c['column']}：{c['rawText'] or '无法辨认'}" for c in cells)})
+    return doubts
+
+
 def overlapping_region(a, b):
     x, y, w, h = a
     u, v, s, t = b
@@ -353,7 +375,11 @@ def recognize(path):
         result['image'] = {'format': fmt, 'width': width, 'height': height,
                            'sourceOrientation': orientation, 'coordinates': 'display-oriented-original'}
         reader, allowed = GlyphReader(), color_codes()
+        grid = grid_result(image, preview, reader, allowed)
+        result['grid'] = grid
         boxes = legend_boxes(image)
+        if grid.get('region'):
+            boxes = [box for box in boxes if not overlapping_region(box, grid['region'])]
         if len(boxes) > PARAMETERS['max_legend_boxes']:
             raise ValueError('图例候选过多，本版无法可靠处理')
         invalid_number_regions = []
@@ -381,8 +407,6 @@ def recognize(path):
                                          'rawText': item['text'], 'quantity': None})
         result['candidates'] = reject_duplicate_codes(result['candidates'], result['evidence'], result['doubts'])
         rejected_legend = bool(result['doubts'])
-        grid = grid_result(image, preview, reader, allowed)
-        result['grid'] = grid
         legend = {c['code']: c['quantity'] for c in result['candidates']}
         if legend:
             result['source'] = 'legend'
@@ -399,10 +423,17 @@ def recognize(path):
         else:
             result['doubts'].append({'reason': '未取得可靠逐色用量', 'gridReason': grid['reason']})
         model, axes = None, None
+        layout = {'items': [], 'region': None}
         if result['status'] != 'ready':
             model = GlyphModel()
             axes = find_grid_axes(preview, axis_lines)
             layout = recognize_layout(image, preview, model, axes)
+            if grid.get('region'):
+                # A verified numbered frame includes its coordinate labels.
+                # Those labels cannot become an outside quantity legend merely
+                # because one production cell could not be read.
+                layout['items'] = [item for item in layout['items']
+                                   if not overlapping_region(item['region'], grid['region'])]
             if axes is not None and any(it['tinyPrint'] for it in layout['items']):
                 refine_from_grid(image,preview,layout,SmallGlyphModel(model),axes,allowed)
             if axes is not None:
@@ -483,15 +514,40 @@ def recognize(path):
                 result['evidence'].extend(new_evidence)
                 result['doubts'].extend(new_doubts)
                 result['legendRegion'] = layout['region']
-        if not result['candidates'] and not layout['items'] and not grid['cells']:
-            # Keep invalid/unreadable quantity legends visible; this path is for a
-            # grid that the older four-numbered-sides reader could not accept.
-            counted = count_grid(image, preview, SmallGlyphModel(model), axes, allowed, blank_texture, boxes)
-            if counted is not None:
-                result.update(grid=counted, source='grid', status='partial')
-                result['candidates'], evidence = grid_candidates(counted)
+        if not result['candidates'] and not layout['items']:
+            body_only = not boxes
+            if not grid['cells'] and axes is not None:
+                counted = count_grid(image, preview, SmallGlyphModel(model), axes, allowed, blank_texture, boxes)
+                if counted is not None:
+                    grid = counted
+                    result['grid'] = grid
+                    body_only = True  # count_grid rejected every outside legend box.
+            if body_only and grid['cells']:
+                # A failed reading in one cell must not discard all readable cells.
+                result['source'], result['status'] = 'grid', 'partial'
+                result['candidates'], evidence = grid_candidates(grid)
                 result['evidence'].extend(evidence)
-                result['doubts'].append({'reason': counted['reason'], 'unknownCells': counted['unknownCells']})
+                result['doubts'] = []
+        if result['source'] == 'grid' or (not result['candidates'] and grid['cells']):
+            result['doubts'].extend(grid_doubts(grid))
+        if result['source'] == 'legend' and grid['complete']:
+            chosen = {c['code']: c for c in result['candidates']}
+            different = [code for code in sorted(chosen.keys() | grid['counts'].keys())
+                         if (chosen[code]['quantity'] if code in chosen else 0) != grid['counts'].get(code, 0)]
+            if different:
+                result['status'] = 'partial'
+                _, proofs = grid_candidates(grid)
+                result['evidence'].extend(proofs)
+                for code in different:
+                    candidate = chosen.get(code)
+                    legend_proof = next((e for e in result['evidence']
+                                         if candidate and e['id'] in candidate['evidenceIds']), None)
+                    cell = next((e for e in proofs if e['code'] == code), None)
+                    raw = f"{code}：图例 {candidate['quantity'] if candidate else '未列出'}；独立本体 {grid['counts'].get(code, 0)}"
+                    for source, proof in [('图例', legend_proof), ('本体', cell)]:
+                        if proof:
+                            result['doubts'].append({'reason': f'两路数量不一致，未相加。请核对{source}位置',
+                                                     'rawText': raw, 'evidenceId': proof['id'], 'region': proof['region']})
         source_grid_region = grid.get('region')
         if source_grid_region is None and axes is not None:
             # The layout reader has already located this production rectangle,

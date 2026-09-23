@@ -21,6 +21,13 @@
       <text class="section-title">确认版本 {{ detail.confirmed.version }}</text>
       <text class="muted">{{ usageSourceLabel(detail.confirmed.inputMethod) }}{{ detail.confirmed.recognition?.modified ? ' · 已人工修改' : '' }}</text>
       <text v-if="detail.confirmed.recognition" class="muted">原始结果：{{ detail.confirmed.recognition.originalStatus === 'failed' ? '未取得可用候选，后续手工补录' : detail.confirmed.recognition.originalStatus === 'partial' ? '部分识别' : '已取得候选' }}</text>
+      <template v-if="detail.confirmed.recognition?.candidateLines.length">
+        <button class="btn ghost small" @click="showOriginalCounts = !showOriginalCounts">{{ showOriginalCounts ? '收起' : '查看' }}原始识别用量</button>
+        <view v-if="showOriginalCounts">
+          <text class="muted">以下为自动结果；当前采用的数量见逐色对照。</text>
+          <text v-for="line in detail.confirmed.recognition.candidateLines" :key="line.code" class="muted">{{ line.code }} · {{ line.qty }} 颗</text>
+        </view>
+      </template>
       <text v-if="hasRecognitionRisk(detail.confirmed.recognition)" class="risk-note">按已确认用量计算，仍可能漏计。已知情保留识别风险。</text>
       <text v-for="risk in detail.confirmed.recognition?.risks || []" :key="risk.id" class="muted">{{ risk.resolved ? '已核对并修正：' : '仍需注意：' }}{{ risk.reason }}{{ risk.raw ? ' · 原始内容：' + risk.raw : '' }}</text>
     </view>
@@ -93,6 +100,7 @@ import { appLedger, newRequestId } from '../../src/platform/app-ledger'
 import { writeTextToDownloads } from '../../src/platform/fs'
 import { clearRequestAfterVoid, emptyMakeRequestState, markMakeSuccess, resolveMakeRequestId, type MakeAction } from '../../src/platform/make-request'
 
+const showOriginalCounts = ref(false)
 const id = ref('')
 const detail = ref(appLedger().getPattern(''))
 const gap = ref<{ ok: true; totalDemand: number; colorCount: number; canMake: boolean; lines: { code: string; demand: number; have: number; gap: number; remaining: number }[] } | null>(null)

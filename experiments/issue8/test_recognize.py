@@ -43,6 +43,31 @@ class RecognitionChecks(unittest.TestCase):
             self.assertEqual(result['status'], 'ready', result['doubts'])
             self.assertEqual({c['code']: c['quantity'] for c in result['candidates']}, EXPECTED)
 
+    def test_unreadable_body_cell_keeps_other_counts_and_locatable_unknown(self):
+        grid = self.reference['grid']
+        target = next(c for c in grid['cells'] if c['code'] == 'H2')
+        x, y, w, h = target['region']
+        gx, gy, gw, gh = grid['region']
+        top = max(0, gy-2)
+        with tempfile.TemporaryDirectory(prefix='issue12-') as folder:
+            path = Path(folder)/'body-unknown.png'
+            with Image.open(REFERENCE) as original, original.convert('RGB') as image:
+                # An out-of-set label on a white production cell must neither be
+                # counted as H2 by colour nor disappear into the blank count.
+                draw = ImageDraw.Draw(image)
+                draw.rectangle((x+8,y+8,x+w-8,y+h-8), fill='white')
+                font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 40)
+                draw.text((x+w/2,y+h/2), 'Z99', font=font, fill='black', anchor='mm')
+                image.crop((0,top,image.width,gy+gh+2)).save(path)
+            result = recognize(path)
+        self.assertEqual((result['source'], result['status']), ('grid','partial'), result['doubts'])
+        self.assertEqual({c['code']: c['quantity'] for c in result['candidates']}, {**EXPECTED, 'H2':13})
+        self.assertEqual((result['grid']['unknownCells'], result['grid']['blankCells']), (1,316))
+        unknown = next(d for d in result['doubts'] if 'Z99' in d.get('rawText',''))
+        self.assertEqual(unknown['region'], [x,y-top,w,h])
+        self.assertTrue(all(e['source'] == 'grid' for e in result['evidence']))
+        self.assertEqual(result['titleTotal'], None)
+
     def test_last_legend_row_cut_off_reuses_only_complete_body(self):
         bottom = max(e['region'][1] for e in self.reference['evidence'])
         with tempfile.TemporaryDirectory(prefix='issue8-') as folder:
@@ -155,6 +180,9 @@ class RecognitionChecks(unittest.TestCase):
                 self.assertEqual(candidate['quantity'], 61)
             self.assertEqual(result['grid']['counts'], EXPECTED)
             self.assertTrue(result['doubts'])
+            differences = [d for d in result['doubts'] if d.get('rawText') == 'H7：图例 61；独立本体 60']
+            self.assertEqual(len(differences), 2)
+            self.assertTrue(all(d['region'] and d['evidenceId'] for d in differences))
 
     def test_blank_image_does_not_become_zero_usage(self):
         with tempfile.TemporaryDirectory(prefix='issue8-') as folder:

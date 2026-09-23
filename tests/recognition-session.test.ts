@@ -26,6 +26,37 @@ test('recognition is tied to image/edit/version/epoch, while viewing and unrelat
   assert.throws(() => recognitionProvenance(readRecognition({ ...raw, status: 'failed', source: null, candidates: [] })))
 })
 
+test('body counts keep cell locations and original unknowns through correction and backup', () => {
+  const result = readRecognition({ algorithm: 'body-test', status: 'partial', source: 'grid',
+    image: { width: 100, height: 100 }, total: 2, titleTotal: null,
+    candidates: [{ code: 'H2', quantity: 2, source: 'grid', evidenceIds: ['cell-1-1','cell-1-2'] }],
+    evidence: [{ id: 'cell-1-1', rawText: 'H2', region: [10,10,10,10] },
+      { id: 'cell-1-2', rawText: 'H2', region: [20,10,10,10] },
+      { id: 'cell-2-1', rawText: 'Z99', region: [10,20,10,10] }],
+    doubts: [{ reason: '已读制作格 2；空白格 1；未知格 1', region: [10,10,20,20] },
+      { reason: '第 2 行列 1 未计入', rawText: 'Z99', region: [10,20,10,10] }] })
+  assert.deepEqual(result.evidence.map(e => e.codes), [['H2'],['H2'],[]])
+  assert.deepEqual(result.risks.at(-1)!.region, [10,20,10,10])
+  const ledger = new Ledger(new LedgerStore())
+  const created = ledger.createPattern('create', { name: '无数量表', imageBytes: TINY_PNG }, ledger.token())
+  assert.ok(created.ok)
+  const stock = ledger.listStock()
+  const provenance = recognitionProvenance(result)
+  const lines = [{ code: 'H2', qty: 3 }]
+  assert.equal(ledger.confirmUsage('confirm', created.patternId, { lines, recognition: provenance }, ledger.token()).ok, false)
+  provenance.riskAcknowledged = true
+  assert.ok(ledger.confirmUsage('confirm', created.patternId, { lines, recognition: provenance }, ledger.token()).ok)
+  const restored = new Ledger(new LedgerStore())
+  assert.ok(restored.restoreReplace('restore', ledger.exportBackup(), restored.token()).ok)
+  const saved = restored.getPattern(created.patternId)!.confirmed!
+  assert.equal(saved.inputMethod, 'grid')
+  assert.equal(saved.recognition!.modified, true)
+  assert.deepEqual(saved.recognition!.candidateLines, [{ code: 'H2', qty: 2 }])
+  assert.deepEqual(saved.lines, lines)
+  assert.deepEqual(saved.recognition!.risks, provenance.risks)
+  assert.deepEqual(restored.listStock(), stock)
+})
+
 test('review risks, corrections and excluded source text survive confirm, reopen and backup without changing a make', () => {
   const raw = { algorithm: 'review-test', status: 'partial', source: 'legend', image: { width: 100, height: 100 },
     candidates: [{ code: 'A1', quantity: 3, source: 'legend', evidenceIds: ['e1'] }],

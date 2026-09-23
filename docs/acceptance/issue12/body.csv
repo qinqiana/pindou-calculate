@@ -1,0 +1,8 @@
+id,kind,group,supported,status,source,total,exact,blankCells,unknownCells,locatedDoubts,seconds,peakRssMiB,differences
+M040,real-no-legend,BitBead-native-svg,True,partial,grid,133,True,0,88,14,0.107,73.98,{}
+M060,real-no-legend,BitBead-native-svg,True,partial,grid,116,True,0,105,14,0.11,74.12,{}
+M023,real-no-legend,BitBead-native-svg,True,partial,grid,127,True,56,117,21,0.111,76.04,{}
+M024,real-no-legend,BitBead-native-svg,True,partial,grid,168,True,0,132,16,0.153,76.53,{}
+S18-body,derived-legend-hidden,douhua,True,ready,grid,148,True,316,0,0,1.277,181.01,{}
+S11-body,derived-legend-hidden,rounded-below,False,partial,grid,884,False,151,1127,47,6.289,148.34,"{""A13"": [null, 1], ""A19"": [15, 14], ""A2"": [null, 1], ""A24"": [null, 1], ""A25"": [305, 290], ""F1"": [240, 235], ""F13"": [149, 133], ""H15"": [null, 1], ""H16"": [228, 192], ""H18"": [null, 10]}"
+S12-body,derived-legend-hidden,rounded-below,False,partial,grid,890,False,133,1139,47,5.873,148.34,"{""A2"": [null, 1], ""E19"": [null, 1], ""F1"": [264, 258], ""F13"": [104, 92], ""F6"": [null, 3], ""F9"": [null, 1], ""G1"": [null, 1], ""H16"": [236, 195], ""H18"": [null, 7], ""H19"": [null, 1], ""H2"": [339, 328], ""H4"": [null, 1], ""H6"": [null, 1]}"

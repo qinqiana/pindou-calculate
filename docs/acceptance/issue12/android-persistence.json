@@ -1,0 +1,81 @@
+{
+  "formatVersion": 2,
+  "restart": {
+    "stockEqual": true,
+    "patternsEqual": true,
+    "makesEqual": true
+  },
+  "restore": {
+    "stockEqual": true,
+    "patternsEqual": true,
+    "makesEqual": true
+  },
+  "productionUnchanged": true,
+  "comparison": "逐字段/逐字比较，无哈希",
+  "confirmed": [
+    {
+      "name": "Issue12-M040",
+      "version": 1,
+      "source": "grid",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 15
+    },
+    {
+      "name": "Issue12-M040",
+      "version": 1,
+      "source": "grid",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 15
+    },
+    {
+      "name": "Issue12-M060",
+      "version": 1,
+      "source": "grid",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 15
+    },
+    {
+      "name": "Issue12-M023",
+      "version": 1,
+      "source": "grid",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 22
+    },
+    {
+      "name": "Issue12-M024",
+      "version": 1,
+      "source": "grid",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 17
+    },
+    {
+      "name": "Issue12-148-body-unknown",
+      "version": 2,
+      "source": "grid",
+      "originalStatus": "partial",
+      "modified": true,
+      "riskCount": 3
+    },
+    {
+      "name": "Issue12-148-body",
+      "version": 1,
+      "source": "grid",
+      "originalStatus": "ready",
+      "modified": false,
+      "riskCount": 0
+    },
+    {
+      "name": "Issue12-两路数量冲突",
+      "version": 1,
+      "source": "legend",
+      "originalStatus": "partial",
+      "modified": false,
+      "riskCount": 5
+    }
+  ]
+}

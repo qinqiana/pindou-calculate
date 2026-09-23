@@ -1,0 +1,1156 @@
+[
+  {
+    "input": "M040",
+    "patternId": "pattern-1a0cd3f976f-b363df7715626",
+    "status": "partial",
+    "automaticLines": [
+      {
+        "code": "A12",
+        "qty": 10
+      },
+      {
+        "code": "A19",
+        "qty": 73
+      },
+      {
+        "code": "A6",
+        "qty": 40
+      },
+      {
+        "code": "F5",
+        "qty": 4
+      },
+      {
+        "code": "H7",
+        "qty": 6
+      }
+    ],
+    "algorithmSeconds": 0.743,
+    "recognitionWallMs": 6307,
+    "proof": {
+      "allLinesHaveLocations": true,
+      "source": "grid"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd3f976f-b363df7715626",
+      "version": 1,
+      "lines": [
+        {
+          "code": "A6",
+          "qty": 40
+        },
+        {
+          "code": "A12",
+          "qty": 10
+        },
+        {
+          "code": "A19",
+          "qty": 73
+        },
+        {
+          "code": "F5",
+          "qty": 4
+        },
+        {
+          "code": "H7",
+          "qty": 6
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.11.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "A6",
+            "qty": 40
+          },
+          {
+            "code": "A12",
+            "qty": 10
+          },
+          {
+            "code": "A19",
+            "qty": 73
+          },
+          {
+            "code": "F5",
+            "qty": 4
+          },
+          {
+            "code": "H7",
+            "qty": 6
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 133；空白格 0；未知格 88",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "第 1 行有 17 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "第 2 行有 13 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "第 3 行有 9 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-4",
+            "reason": "第 4 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-5",
+            "reason": "第 5 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-6",
+            "reason": "第 6 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-7",
+            "reason": "第 7 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-8",
+            "reason": "第 8 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-9",
+            "reason": "第 9 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-10",
+            "reason": "第 10 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-11",
+            "reason": "第 11 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-12",
+            "reason": "第 12 行有 8 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-13",
+            "reason": "第 13 行有 17 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T07:51:38.730Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "M060",
+    "patternId": "pattern-1a0cd3fbbe8-6781f7b37c2e1",
+    "status": "partial",
+    "automaticLines": [
+      {
+        "code": "F11",
+        "qty": 42
+      },
+      {
+        "code": "F18",
+        "qty": 33
+      },
+      {
+        "code": "F22",
+        "qty": 4
+      },
+      {
+        "code": "H2",
+        "qty": 32
+      },
+      {
+        "code": "H7",
+        "qty": 5
+      }
+    ],
+    "algorithmSeconds": 0.783,
+    "recognitionWallMs": 6503,
+    "proof": {
+      "allLinesHaveLocations": true,
+      "source": "grid"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd3fbbe8-6781f7b37c2e1",
+      "version": 1,
+      "lines": [
+        {
+          "code": "F11",
+          "qty": 42
+        },
+        {
+          "code": "F18",
+          "qty": 33
+        },
+        {
+          "code": "F22",
+          "qty": 4
+        },
+        {
+          "code": "H2",
+          "qty": 32
+        },
+        {
+          "code": "H7",
+          "qty": 5
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.11.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "F11",
+            "qty": 42
+          },
+          {
+            "code": "F18",
+            "qty": 33
+          },
+          {
+            "code": "F22",
+            "qty": 4
+          },
+          {
+            "code": "H2",
+            "qty": 32
+          },
+          {
+            "code": "H7",
+            "qty": 5
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 116；空白格 0；未知格 105",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "第 1 行有 17 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "第 2 行有 13 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "第 3 行有 9 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-4",
+            "reason": "第 4 行有 7 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 9：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-5",
+            "reason": "第 5 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-6",
+            "reason": "第 6 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-7",
+            "reason": "第 7 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-8",
+            "reason": "第 8 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-9",
+            "reason": "第 9 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-10",
+            "reason": "第 10 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-11",
+            "reason": "第 11 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-12",
+            "reason": "第 12 行有 8 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-13",
+            "reason": "第 13 行有 17 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T07:51:48.057Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "M023",
+    "patternId": "pattern-1a0cd3fe109-86f7223f32141",
+    "status": "partial",
+    "automaticLines": [
+      {
+        "code": "A10",
+        "qty": 4
+      },
+      {
+        "code": "A8",
+        "qty": 1
+      },
+      {
+        "code": "H16",
+        "qty": 9
+      },
+      {
+        "code": "H2",
+        "qty": 7
+      },
+      {
+        "code": "H5",
+        "qty": 74
+      },
+      {
+        "code": "H7",
+        "qty": 32
+      }
+    ],
+    "algorithmSeconds": 1.125,
+    "recognitionWallMs": 8232,
+    "proof": {
+      "allLinesHaveLocations": true,
+      "source": "grid"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd3fe109-86f7223f32141",
+      "version": 1,
+      "lines": [
+        {
+          "code": "A8",
+          "qty": 1
+        },
+        {
+          "code": "A10",
+          "qty": 4
+        },
+        {
+          "code": "H2",
+          "qty": 7
+        },
+        {
+          "code": "H5",
+          "qty": 74
+        },
+        {
+          "code": "H7",
+          "qty": 32
+        },
+        {
+          "code": "H16",
+          "qty": 9
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.11.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "A8",
+            "qty": 1
+          },
+          {
+            "code": "A10",
+            "qty": 4
+          },
+          {
+            "code": "H2",
+            "qty": 7
+          },
+          {
+            "code": "H5",
+            "qty": 74
+          },
+          {
+            "code": "H7",
+            "qty": 32
+          },
+          {
+            "code": "H16",
+            "qty": 9
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 127；空白格 56；未知格 117",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "第 1 行有 11 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "第 2 行有 10 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "第 3 行有 8 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-4",
+            "reason": "第 4 行有 7 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 11：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-5",
+            "reason": "第 5 行有 9 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 9：无法辨认；列 10：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-6",
+            "reason": "第 6 行有 8 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 6：无法辨认；列 8：无法辨认；列 9：无法辨认；列 11：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-7",
+            "reason": "第 7 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 10：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-8",
+            "reason": "第 8 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-9",
+            "reason": "第 9 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-10",
+            "reason": "第 10 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-11",
+            "reason": "第 11 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-12",
+            "reason": "第 12 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-13",
+            "reason": "第 13 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-14",
+            "reason": "第 14 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-15",
+            "reason": "第 15 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-16",
+            "reason": "第 16 行有 3 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-17",
+            "reason": "第 17 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-18",
+            "reason": "第 18 行有 5 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-19",
+            "reason": "第 19 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-20",
+            "reason": "第 20 行有 11 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T07:51:59.361Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "M024",
+    "patternId": "pattern-1a0cd400eeb-417531a68a2a5",
+    "status": "partial",
+    "automaticLines": [
+      {
+        "code": "E15",
+        "qty": 50
+      },
+      {
+        "code": "E8",
+        "qty": 20
+      },
+      {
+        "code": "F21",
+        "qty": 4
+      },
+      {
+        "code": "F24",
+        "qty": 46
+      },
+      {
+        "code": "F9",
+        "qty": 41
+      },
+      {
+        "code": "H2",
+        "qty": 7
+      }
+    ],
+    "algorithmSeconds": 1.468,
+    "recognitionWallMs": 8950,
+    "proof": {
+      "allLinesHaveLocations": true,
+      "source": "grid"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd400eeb-417531a68a2a5",
+      "version": 1,
+      "lines": [
+        {
+          "code": "E8",
+          "qty": 20
+        },
+        {
+          "code": "E15",
+          "qty": 50
+        },
+        {
+          "code": "F9",
+          "qty": 41
+        },
+        {
+          "code": "F21",
+          "qty": 4
+        },
+        {
+          "code": "F24",
+          "qty": 46
+        },
+        {
+          "code": "H2",
+          "qty": 7
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.11.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "E8",
+            "qty": 20
+          },
+          {
+            "code": "E15",
+            "qty": 50
+          },
+          {
+            "code": "F9",
+            "qty": 41
+          },
+          {
+            "code": "F21",
+            "qty": 4
+          },
+          {
+            "code": "F24",
+            "qty": 46
+          },
+          {
+            "code": "H2",
+            "qty": 7
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "逐格候选已读取；外围是否截断尚未证明，未读清格不计为零",
+            "raw": "已读制作格 168；空白格 0；未知格 132",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "第 1 行有 20 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-2",
+            "reason": "第 2 行有 12 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-3",
+            "reason": "第 3 行有 8 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-4",
+            "reason": "第 4 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 10：无法辨认；列 11：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-5",
+            "reason": "第 5 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-6",
+            "reason": "第 6 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-7",
+            "reason": "第 7 行有 2 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-8",
+            "reason": "第 8 行有 4 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-9",
+            "reason": "第 9 行有 6 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-10",
+            "reason": "第 10 行有 10 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 10：无法辨认；列 11：无法辨认；列 17：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-11",
+            "reason": "第 11 行有 8 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 10：无法辨认；列 11：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-12",
+            "reason": "第 12 行有 8 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-13",
+            "reason": "第 13 行有 10 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-14",
+            "reason": "第 14 行有 16 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 16：无法辨认；列 17：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          },
+          {
+            "id": "risk-15",
+            "reason": "第 15 行有 20 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 1：无法辨认；列 2：无法辨认；列 3：无法辨认；列 4：无法辨认；列 5：无法辨认；列 6：无法辨认；列 7：无法辨认；列 8：无法辨认；列 9：无法辨认；列 10：无法辨认；列 11：无法辨认；列 12：无法辨认；列 13：无法辨认；列 14：无法辨认；列 15：无法辨认；列 16：无法辨认；列 17：无法辨认；列 18：无法辨认；列 19：无法辨认；列 20：无法辨认",
+            "resolved": false
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T07:52:11.275Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "148-body-unknown",
+    "patternId": "pattern-1a0cd404691-3eb6161cda832",
+    "status": "partial",
+    "automaticLines": [
+      {
+        "code": "C12",
+        "qty": 3
+      },
+      {
+        "code": "C16",
+        "qty": 11
+      },
+      {
+        "code": "C17",
+        "qty": 12
+      },
+      {
+        "code": "C19",
+        "qty": 7
+      },
+      {
+        "code": "C2",
+        "qty": 18
+      },
+      {
+        "code": "C29",
+        "qty": 18
+      },
+      {
+        "code": "H2",
+        "qty": 13
+      },
+      {
+        "code": "H3",
+        "qty": 5
+      },
+      {
+        "code": "H7",
+        "qty": 60
+      }
+    ],
+    "algorithmSeconds": 9.356,
+    "recognitionWallMs": 20270,
+    "proof": {
+      "allLinesHaveLocations": true,
+      "source": "grid",
+      "region": [
+        3708,
+        808,
+        161,
+        161
+      ],
+      "unchanged": true,
+      "raw": "列 23：Z99",
+      "manualCorrection": "H2 13 -> 14"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd404691-3eb6161cda832",
+      "version": 2,
+      "lines": [
+        {
+          "code": "C2",
+          "qty": 18
+        },
+        {
+          "code": "C12",
+          "qty": 3
+        },
+        {
+          "code": "C16",
+          "qty": 11
+        },
+        {
+          "code": "C17",
+          "qty": 12
+        },
+        {
+          "code": "C19",
+          "qty": 7
+        },
+        {
+          "code": "C29",
+          "qty": 18
+        },
+        {
+          "code": "H2",
+          "qty": 14
+        },
+        {
+          "code": "H3",
+          "qty": 5
+        },
+        {
+          "code": "H7",
+          "qty": 60
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.11.0-dev",
+        "originalStatus": "partial",
+        "candidateLines": [
+          {
+            "code": "C2",
+            "qty": 18
+          },
+          {
+            "code": "C12",
+            "qty": 3
+          },
+          {
+            "code": "C16",
+            "qty": 11
+          },
+          {
+            "code": "C17",
+            "qty": 12
+          },
+          {
+            "code": "C19",
+            "qty": 7
+          },
+          {
+            "code": "C29",
+            "qty": 18
+          },
+          {
+            "code": "H2",
+            "qty": 13
+          },
+          {
+            "code": "H3",
+            "qty": 5
+          },
+          {
+            "code": "H7",
+            "qty": 60
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": true,
+        "risks": [
+          {
+            "id": "coverage",
+            "reason": "完整覆盖尚未证明，仍可能漏计。请结合原图补充用量。",
+            "raw": "",
+            "resolved": false
+          },
+          {
+            "id": "risk-0",
+            "reason": "存在未读清或无法判为空白的格子",
+            "raw": "已读制作格 147；空白格 316；未知格 1",
+            "resolved": false
+          },
+          {
+            "id": "risk-1",
+            "reason": "第 5 行有 1 格未读清或色号不在 MARD 221 内，未计入，请放大核对",
+            "raw": "列 23：Z99",
+            "resolved": true
+          }
+        ],
+        "riskAcknowledged": true
+      },
+      "confirmedAt": "2026-09-23T07:52:35.497Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  },
+  {
+    "input": "148-body",
+    "patternId": "pattern-1a0cd40aa4e-f0757a1372822",
+    "status": "ready",
+    "automaticLines": [
+      {
+        "code": "C12",
+        "qty": 3
+      },
+      {
+        "code": "C16",
+        "qty": 11
+      },
+      {
+        "code": "C17",
+        "qty": 12
+      },
+      {
+        "code": "C19",
+        "qty": 7
+      },
+      {
+        "code": "C2",
+        "qty": 18
+      },
+      {
+        "code": "C29",
+        "qty": 18
+      },
+      {
+        "code": "H2",
+        "qty": 14
+      },
+      {
+        "code": "H3",
+        "qty": 5
+      },
+      {
+        "code": "H7",
+        "qty": 60
+      }
+    ],
+    "algorithmSeconds": 7.717,
+    "recognitionWallMs": 18148,
+    "proof": {
+      "allLinesHaveLocations": true,
+      "source": "grid"
+    },
+    "confirmed": {
+      "patternId": "pattern-1a0cd40aa4e-f0757a1372822",
+      "version": 1,
+      "lines": [
+        {
+          "code": "C2",
+          "qty": 18
+        },
+        {
+          "code": "C12",
+          "qty": 3
+        },
+        {
+          "code": "C16",
+          "qty": 11
+        },
+        {
+          "code": "C17",
+          "qty": 12
+        },
+        {
+          "code": "C19",
+          "qty": 7
+        },
+        {
+          "code": "C29",
+          "qty": 18
+        },
+        {
+          "code": "H2",
+          "qty": 14
+        },
+        {
+          "code": "H3",
+          "qty": 5
+        },
+        {
+          "code": "H7",
+          "qty": 60
+        }
+      ],
+      "inputMethod": "grid",
+      "recognition": {
+        "source": "grid",
+        "algorithmVersion": "pixel-glyph-0.11.0-dev",
+        "originalStatus": "ready",
+        "candidateLines": [
+          {
+            "code": "C2",
+            "qty": 18
+          },
+          {
+            "code": "C12",
+            "qty": 3
+          },
+          {
+            "code": "C16",
+            "qty": 11
+          },
+          {
+            "code": "C17",
+            "qty": 12
+          },
+          {
+            "code": "C19",
+            "qty": 7
+          },
+          {
+            "code": "C29",
+            "qty": 18
+          },
+          {
+            "code": "H2",
+            "qty": 14
+          },
+          {
+            "code": "H3",
+            "qty": 5
+          },
+          {
+            "code": "H7",
+            "qty": 60
+          }
+        ],
+        "candidateTitleTotal": null,
+        "modified": false,
+        "risks": [],
+        "riskAcknowledged": false
+      },
+      "confirmedAt": "2026-09-23T07:52:57.294Z",
+      "titleTotal": null,
+      "titleDiff": null,
+      "titleDiffAcknowledged": false,
+      "rejectedItems": []
+    },
+    "stockUnchanged": true,
+    "makesUnchanged": true
+  }
+]
