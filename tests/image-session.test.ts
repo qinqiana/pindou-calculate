@@ -132,14 +132,14 @@ test('zoom keeps manual inputs; failed confirmation keeps original; success/unlo
   assert.equal(api.imagePreview.value, '')
 })
 
-test('actual editor ignores late recognition after editing, requires risk acknowledgement, and keeps automatic provenance', () => {
+test('actual editor ignores late recognition after editing, requires risk acknowledgement, and keeps automatic provenance', async () => {
   const ledger = new Ledger()
   const created = ledger.createPattern('recognition-pattern', { name: '核对', imageBytes: TINY_PNG }, ledger.token())
   assert.ok(created.ok)
   const original = prepareOriginal(TINY_PNG)
   assert.ok(original.ok)
   handoffOriginal(created.patternId, ledger.token().epoch, original.original)
-  const { api, hooks } = page('edit', ledger, { uni: { redirectTo() {} } }, 'request, busy, lines, editLine, startRecognition, receiveRecognition, candidate, adoptCandidate, riskAck, adopted, confirmAll, error, previewOriginal, previewRegion, focusRegion, toggleResolved')
+  const { api, hooks } = page('edit', ledger, { uni: { redirectTo() {} } }, 'request, busy, lines, editLine, startRecognition, receiveRecognition, candidate, adoptCandidate, riskAck, riskPrompted, reviewRisk, scrollTarget, adopted, confirmAll, error, previewOriginal, previewRegion, focusRegion, toggleResolved')
   hooks.load({ id: created.patternId })
   hooks.ready?.()
   const first = api.request.value.identity
@@ -161,7 +161,11 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   api.confirmAll()
   assert.match(api.error.value, /风险/)
   assert.equal(ledger.getPattern(created.patternId)!.confirmed, null)
-  api.riskAck.value = true
+  await api.reviewRisk()
+  assert.equal(api.riskAck.value, false, 'first tap locates the risk list')
+  assert.equal(api.scrollTarget.value, 'risk-list')
+  await api.reviewRisk()
+  assert.equal(api.riskAck.value, true)
   api.toggleResolved('risk-0')
   assert.equal(api.adopted.value.risks[1].resolved, true)
   api.editLine(0, 'qty', '4')
@@ -171,7 +175,8 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   assert.equal(api.lines.value[0].proof.raw, 'C12 3', 'editing and viewing preserve the original evidence')
   assert.equal(api.lines.value[0].qty, '4')
   assert.equal(api.riskAck.value, false, 'editing invalidates earlier acknowledgement')
-  api.riskAck.value = true
+  await api.reviewRisk()
+  await api.reviewRisk()
   const stock = ledger.listStock()
   api.confirmAll()
   const confirmed = ledger.getPattern(created.patternId)!.confirmed!
@@ -183,23 +188,58 @@ test('actual editor ignores late recognition after editing, requires risk acknow
   assert.equal(JSON.stringify(confirmed).includes('region'), false, 'source boxes stay in the image session, not the backup')
 })
 
-test('recognition timeout and bridge errors cannot save an empty result as manual zero', () => {
-  for (const failure of ['timer', 'timeout', 'error', 'invalid-result']) {
+test('background keeps recognition alive and a wall-clock slow task offers recovery', () => {
+  const ledger = new Ledger()
+  const created = ledger.createPattern('background-recognition', { name: '后台识别', imageBytes: TINY_PNG }, ledger.token())
+  assert.ok(created.ok)
+  const original = prepareOriginal(TINY_PNG)
+  assert.ok(original.ok)
+  handoffOriginal(created.patternId, ledger.token().epoch, original.original)
+  let now = 0
+  const timers: { callback: Function; ms: number }[] = []
+  const { api, hooks } = page('edit', ledger, {
+    Date: { now: () => now },
+    setTimeout: (callback: Function, ms: number) => { timers.push({ callback, ms }); return timers.length },
+    uni: { redirectTo() {} },
+  }, 'request, busy, recognitionSlow, recognitionFailed, confirmAll, cancelRecognition, error')
+  hooks.load({ id: created.patternId })
+  hooks.ready()
+  const requestId = api.request.value.identity.requestId
+  assert.equal(timers[0].ms, 30000)
+  now = 5000
+  hooks.hide()
+  assert.equal(api.request.value.identity.requestId, requestId)
+  assert.equal(api.busy.value, true)
+  now = 65000
+  hooks.show()
+  assert.equal(timers.at(-1)!.ms, 0, 'background time counts toward the slow-task notice')
+  timers.at(-1)!.callback()
+  assert.equal(api.recognitionSlow.value, true)
+  assert.equal(api.busy.value, true, 'slow task keeps running for a possible result')
+  assert.equal(api.request.value.identity.requestId, requestId)
+  api.cancelRecognition()
+  assert.equal(api.recognitionFailed.value, true)
+  api.confirmAll()
+  assert.match(api.error.value, /零用量/)
+  hooks.unload()
+  assert.equal(api.request.value, null)
+})
+
+test('cancelled recognition and bridge errors cannot save an empty result as manual zero', () => {
+  for (const failure of ['cancel', 'timeout', 'error', 'invalid-result']) {
     const ledger = new Ledger()
     const created = ledger.createPattern('failed-recognition', { name: '失败保护', imageBytes: TINY_PNG }, ledger.token())
     assert.ok(created.ok)
     const original = prepareOriginal(TINY_PNG)
     assert.ok(original.ok)
     handoffOriginal(created.patternId, ledger.token().epoch, original.original)
-    let timeout: Function = () => {}
     const { api, hooks } = page('edit', ledger, {
-      setTimeout: (callback: Function, ms: number) => { assert.equal(ms, 30000); timeout = callback; return 1 },
       uni: { redirectTo() {}, showModal: (options: any) => options.success({ confirm: true }) },
-    }, 'request, busy, lines, original, confirmAll, receiveRecognition, startManual, error')
+    }, 'request, busy, lines, original, confirmAll, receiveRecognition, cancelRecognition, startManual, error')
     hooks.load({ id: created.patternId })
     hooks.ready()
     const identity = api.request.value.identity
-    if (failure === 'timer') timeout()
+    if (failure === 'cancel') api.cancelRecognition()
     else api.receiveRecognition({ identity, stage: failure === 'invalid-result' ? 'result' : failure, result: null, message: '识别失败，可重试' })
     assert.equal(api.busy.value, false)
     const before = JSON.stringify(ledger.store.live())

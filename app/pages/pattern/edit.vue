@@ -15,7 +15,8 @@
     <view class="card recognition-card">
       <text class="section-title">{{ busy ? '正在离线识别' : '用量核对' }}</text>
       <text class="hint">{{ recognitionMessage || '选择原图后自动识别，也可以直接手工录入。' }}</text>
-      <button v-if="busy" class="small-button" @click="cancelRecognition">取消识别，继续手工</button>
+      <text v-if="recognitionSlow && busy" class="hint slow-note">已超过 30 秒，可继续等待、重新识别或手工录入。</text>
+      <view v-if="busy" class="image-actions"><button class="small-button" @click="cancelRecognition">取消识别，继续手工</button><button v-if="recognitionSlow && original" class="small-button" @click="startRecognition">重新识别</button></view>
       <view v-else-if="original" class="image-actions"><button class="small-button" @click="startRecognition">重新识别</button><button v-if="adopted || recognitionFailed" class="small-button" @click="startManual">手工录入</button></view>
       <template v-if="candidate && candidate.status !== 'failed' && !candidateAdopted">
         <text class="candidate-total">候选 {{ candidate.lines.length }} 色 · {{ candidate.lines.reduce((n,l) => n + l.qty, 0) }} 颗</text>
@@ -26,19 +27,18 @@
       <text v-if="adopted" class="source">来源：{{ usageSourceLabel(adopted.source) }}{{ editedAutomatic ? ' · 已人工修改' : '' }}</text>
       <text v-if="candidate || adopted" class="hint">当前按 MARD 221 核对；未认证图片品牌或官方色值。疑点中的未计入项不参与合计。</text>
       <button v-if="candidate?.status === 'failed' && candidate.evidence.length && !candidateAdopted" class="small-button" @click="correctFailedResult">保留疑点，手工补录</button>
-      <view v-if="displayRisks.length" class="risks">
+      <view v-if="displayRisks.length" id="risk-list" class="risks">
         <text class="section-title">需要核对 {{ displayRisks.length }} 处</text>
         <view v-for="risk in displayRisks" :key="risk.id" class="risk-row">
           <text>{{ risk.reason }}</text>
           <text v-if="risk.raw" class="raw">原始内容：{{ risk.raw }}</text>
           <view class="image-actions">
-            <button v-if="original" class="small-button" @click="previewOriginal(risk.id)">{{ riskRegion(risk.id) ? '查看原图位置' : '查看整张原图' }}</button>
-            <button v-if="adopted && risk.id !== 'coverage'" class="small-button" @click="addRiskLine(risk.id)">补录此处用量</button>
-            <button v-if="adopted && risk.id !== 'coverage'" class="small-button" @click="toggleResolved(risk.id)">{{ risk.resolved ? '已核对并修正 · 撤销' : '我已核对并修正此处' }}</button>
+            <button v-if="original" class="small-button risk-action" @click="previewOriginal(risk.id)">{{ riskRegion(risk.id) ? '查看原图位置' : '查看整张原图' }}</button>
+            <button v-if="adopted && risk.id !== 'coverage'" class="small-button risk-action" @click="addRiskLine(risk.id)">补录此处用量</button>
+            <button v-if="adopted && risk.id !== 'coverage'" class="small-button risk-action" @click="toggleResolved(risk.id)">{{ risk.resolved ? '已核对并修正 · 撤销' : '我已核对并修正此处' }}</button>
           </view>
         </view>
       </view>
-      <button v-if="adopted && requiresRiskAck" class="risk-ack" :class="{ checked: riskAck }" @click="riskAck = !riskAck">{{ riskAck ? '✓ ' : '○ ' }}已查看疑点；未补录项保持未计入，知晓可能漏计或错号，按当前用量继续</button>
       <button v-if="adopted && !original" class="small-button" @click="startManual">独立手工录入</button>
     </view>
 
@@ -73,6 +73,7 @@
       <text v-if="error" class="err">{{ error }}</text>
       <text class="hint">确认不会扣库存。只有记录「已拼」才扣减。</text>
       <view v-if="needAck" class="diff-card"><text>{{ diffHint }}</text></view>
+      <button v-if="adopted && requiresRiskAck" class="risk-ack" :class="{ checked: riskAck }" @click="reviewRisk">{{ riskPrompted ? (riskAck ? '✓ ' : '○ ') + '已查看疑点；未补录项保持未计入，知晓可能漏计或错号，按当前用量继续' : '先查看 ' + displayRisks.length + ' 处疑点（点此定位）' }}</button>
       <button class="btn" :class="needAck ? 'warn' : 'primary'" :disabled="saving || busy || picking" @click="confirmAll(needAck)">{{ needAck ? '已知差异，仍用逐色合计' : '确认全部用量' }}</button>
     </view>
 
@@ -110,10 +111,10 @@ const scrollTarget = ref('')
 const error = ref(''), diffHint = ref(''), needAck = ref(false), saving = ref(false), picking = ref(false)
 const original = ref<OriginalImage | null>(null), imagePreview = ref(''), zooming = ref(false)
 const request = ref<{ identity: RecognitionIdentity; image: string } | null>(null)
-const busy = ref(false), recognitionMessage = ref(''), candidate = ref<RecognitionResult | null>(null), candidateAdopted = ref(false)
+const busy = ref(false), recognitionSlow = ref(false), recognitionMessage = ref(''), candidate = ref<RecognitionResult | null>(null), candidateAdopted = ref(false)
 const recognitionFailed = ref(false)
 const adoptedEvidence = ref<RecognitionResult | null>(null)
-const adopted = ref<RecognitionProvenance | null>(null), riskAck = ref(false), editedAutomatic = ref(false)
+const adopted = ref<RecognitionProvenance | null>(null), riskAck = ref(false), riskPrompted = ref(false), editedAutomatic = ref(false)
 const focusRegion = ref<Region | null>(null), imageWidth = ref(0), imageHeight = ref(0)
 const zoomScale = ref(1), zoomX = ref(0), zoomY = ref(0)
 const screenWidth = uni.getSystemInfoSync().windowWidth
@@ -130,18 +131,27 @@ const candidateDifferences = computed(() => {
   return differences
 })
 let recognitionTimer: ReturnType<typeof setTimeout> | undefined
+let recognitionStartedAt = 0
 let epoch = 0, imageSession = 0, revision = 0, confirmedVersion: number | null = null, active = true, selection = 0
 let imageChanged = false
 
 function identity(requestId: string): RecognitionIdentity { return { requestId, imageSession, patternId: id.value, revision, confirmedVersion: appLedger().getPattern(id.value)?.pattern.confirmedVersion ?? null, epoch: appLedger().token().epoch } }
-function stopRecognition() { clearTimeout(recognitionTimer); request.value = null; busy.value = false }
+function stopRecognition() { clearTimeout(recognitionTimer); recognitionTimer = undefined; request.value = null; busy.value = false }
+function armRecognitionTimeout() {
+  recognitionTimer = setTimeout(() => {
+    if (!busy.value) return
+    recognitionSlow.value = true
+    recognitionMessage.value = '识别已超过 30 秒，仍在进行。可继续等待、重新识别或手工录入。'
+    recognitionTimer = undefined
+  }, Math.max(0, 30000 - (Date.now() - recognitionStartedAt)))
+}
 function stoppedMessage(message: string) { return message + (candidate.value?.status === 'partial' ? '已保留本次已读部分，可核对采用、重试或手工补充。' : '当前输入已保留，可重试或手工录入。') }
-function cancelRecognition() { stopRecognition(); recognitionMessage.value = stoppedMessage('已取消识别。') }
+function cancelRecognition() { recognitionFailed.value = true; stopRecognition(); recognitionMessage.value = stoppedMessage('已取消识别。') }
 function touchEdit() {
-  revision++; riskAck.value = false; needAck.value = false
+  revision++; riskAck.value = false; riskPrompted.value = false; needAck.value = false
   invalidateRiskReview(adopted.value)
   if (adopted.value) editedAutomatic.value = true
-  if (busy.value) { stopRecognition(); recognitionMessage.value = '已保留你的编辑并停止旧识别，可重新识别后选择是否采用。' }
+  if (busy.value) { recognitionFailed.value = true; stopRecognition(); recognitionMessage.value = '已保留你的编辑并停止旧识别，可重新识别后选择是否采用。' }
 }
 function editLine(i: number, key: 'code' | 'qty', value: string) { lines.value[i][key] = value; touchEdit() }
 function addLine() { lines.value.push(makeLine()); touchEdit() }
@@ -165,7 +175,7 @@ function startRecognition() {
   recognitionFailed.value = false
   recognitionMessage.value = '正在准备手机离线识别…'; busy.value = true
   request.value = { identity: identity(newRequestId()), image: original.value.preview }
-  recognitionTimer = setTimeout(() => { recognitionFailed.value = true; stopRecognition(); recognitionMessage.value = stoppedMessage('识别超过 30 秒，已停止。') }, 30000)
+  recognitionSlow.value = false; recognitionStartedAt = Date.now(); armRecognitionTimeout()
 }
 function receiveRecognition(event: any) {
   if (!active || !request.value || !sameRecognition(event.identity, request.value.identity) || !sameRecognition(event.identity, identity(event.identity.requestId))) return
@@ -188,11 +198,20 @@ function adoptCandidate() {
   if (!result || result.status === 'failed' || epoch !== appLedger().token().epoch) return
   lines.value = result.lines.map(l => makeLine(l.code, l.qty, result.evidence.find(e => e.codes.includes(l.code)) ?? null)); titleTotal.value = result.titleTotal === null ? '' : String(result.titleTotal)
   adopted.value = recognitionProvenance(result); adoptedEvidence.value = result; candidateAdopted.value = true; editedAutomatic.value = false
-  revision++; riskAck.value = false; needAck.value = false; error.value = ''; stopRecognition()
+  revision++; riskAck.value = false; riskPrompted.value = false; needAck.value = false; error.value = ''; stopRecognition()
 }
 function toggleResolved(id: string) {
   const risk = adopted.value?.risks.find(r => r.id === id)
-  if (risk) { risk.resolved = !risk.resolved; riskAck.value = false; needAck.value = false; revision++ }
+  if (risk) { risk.resolved = !risk.resolved; riskAck.value = false; riskPrompted.value = false; needAck.value = false; revision++ }
+}
+async function reviewRisk() {
+  if (riskAck.value) { riskAck.value = false; return }
+  if (!riskPrompted.value) {
+    riskPrompted.value = true; scrollTarget.value = ''
+    await nextTick(); scrollTarget.value = 'risk-list'
+    return
+  }
+  riskAck.value = true
 }
 function correctFailedResult() {
   const result = candidate.value
@@ -225,6 +244,7 @@ function previewRegion(region: Region | null) {
 }
 async function selectOriginal() {
   if (picking.value) return
+  if (busy.value) recognitionFailed.value = true
   stopRecognition(); const ticket = ++selection; picking.value = true; error.value = ''
   try {
     const picked = await pickImageFile()
@@ -251,12 +271,12 @@ onLoad((q: {id?: string}) => {
   if (selected) installOriginal(selected)
 })
 onReady(() => { if (original.value) startRecognition() })
-onHide(() => { if (!picking.value) { if (busy.value) cancelRecognition(); active = false } })
+onHide(() => { clearTimeout(recognitionTimer); recognitionTimer = undefined })
 onShow(() => {
   active = true
   if (epoch && (epoch !== appLedger().token().epoch || confirmedVersion !== (appLedger().getPattern(id.value)?.pattern.confirmedVersion ?? null))) {
     releaseSession(); error.value = '账本或确认版本已变化，请返回列表重新打开图纸。'
-  }
+  } else if (busy.value && !recognitionSlow.value && !recognitionTimer) armRecognitionTimeout()
 })
 onUnload(releaseSession)
 onBackPress(() => { if (!zooming.value) return false; zooming.value = false; return true })
@@ -264,7 +284,7 @@ onBackPress(() => { if (!zooming.value) return false; zooming.value = false; ret
 function confirmAll(ack = false) {
   if (saving.value || busy.value || picking.value) return
   if (!active || epoch !== appLedger().token().epoch || confirmedVersion !== (appLedger().getPattern(id.value)?.pattern.confirmedVersion ?? null)) { error.value = '账本或确认版本已变化，请重新打开图纸。'; return }
-  if (requiresRiskAck.value && !riskAck.value) { error.value = '请先查看疑点并确认可能漏计的风险。'; return }
+  if (requiresRiskAck.value && (!riskPrompted.value || !riskAck.value)) { error.value = '请先查看疑点并确认可能漏计的风险。'; return }
   if (!name.value.trim()) { error.value = '图纸名称不能为空'; return }
   error.value = ''; diffHint.value = ''; saving.value = true
   try {
@@ -294,16 +314,19 @@ page { background: #f2f2f7; color: #202124; }
 .section-title { display: block; font-size: 32rpx; font-weight: 600; margin-bottom: 16rpx; }
 .hint,.source { display: block; font-size: 25rpx; line-height: 1.6; color: #63636c; margin-top: 12rpx; }
 .source { color: #0066cc; }
+.slow-note { color: #925400; }
 .image-actions { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 12rpx; }
 .small-button { font-size: 25rpx; line-height: 1.5; min-height: 80rpx; padding: 20rpx; background: #eef4fc; color: #0066cc; border-radius: 16rpx; margin: 8rpx 0; }
 button::after { border: none; }
 .candidate-total { display: block; font-weight: 600; margin-top: 24rpx; }
 .difference-line { display: block; font-size: 26rpx; margin-top: 8rpx; }
-.risks { margin-top: 24rpx; }
+.risks { margin-top: 24rpx; padding: 16rpx; border-radius: 16rpx; background: #fff9ed; }
+.risk-action { background: #ffedc9; color: #744100; }
 .risk-row { border-top: 1rpx solid #e6e6eb; padding: 20rpx 0; font-size: 26rpx; line-height: 1.6; }
 .raw { display: block; color: #63636c; }
 .risk-ack { text-align: left; background: #fff3de; color: #734400; font-size: 26rpx; line-height: 1.6; padding: 20rpx; border-radius: 16rpx; margin-top: 20rpx; }
 .risk-ack.checked { background: #e4f2e9; color: #245d35; }
+.dock .risk-ack { width: 100%; box-sizing: border-box; margin-top: 12rpx; }
 .line { display: flex; align-items: center; gap: 12rpx; margin-top: 16rpx; }
 .code-input,.qty-input,.field-input { height: 88rpx; border: 1rpx solid #d7d7df; border-radius: 14rpx; padding: 0 20rpx; font-size: 30rpx; }
 .code-input { width: 160rpx; }

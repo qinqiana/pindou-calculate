@@ -7,11 +7,10 @@ let stopTask
 watch(() => props.request, async request => {
   if (stopTask) stopTask()
   if (!request?.image) return
-  let active = true, worker, timer
+  let active = true, worker
   const xhrs = new Set(), urls = []
   const stop = () => {
     active = false
-    clearTimeout(timer)
     for (const xhr of xhrs) xhr.abort()
     if (worker) worker.terminate()
     for (const url of urls) URL.revokeObjectURL(url)
@@ -28,7 +27,6 @@ watch(() => props.request, async request => {
     xhr.onabort = () => reject(Error('cancelled'))
     xhr.send()
   })
-  timer = setTimeout(() => { send({ stage: 'timeout', message: '识别超过 30 秒，已停止。可重试、换清晰原图或手工录入。' }); stop() }, 30000)
   try {
     send({ stage: 'loading', message: '正在准备手机离线识别…' })
     const names = JSON.parse(new TextDecoder().decode(await read('generated/assets.json')))
