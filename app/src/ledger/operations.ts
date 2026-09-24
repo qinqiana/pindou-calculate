@@ -916,7 +916,7 @@ function previewBatch(
   if (kind !== 'first-entry' && meaningful.length === 0) {
     return { ok: true, lines: [], token: { epoch: state.epoch, seq: state.seq } }
   }
-  return { ok: true, lines: kind === 'flag' ? meaningful : lines, token: { epoch: state.epoch, seq: state.seq } }
+  return { ok: true, lines: kind === 'flag' || kind === 'restock' ? meaningful : lines, token: { epoch: state.epoch, seq: state.seq } }
 }
 
 function readPatternMeta(
@@ -975,6 +975,8 @@ function parseRejectedItems(items: { raw: string; qty: number | null; note: stri
 
 export type BackupDiff = {
   stockChanged: number
+  lowStockPercentBefore: number
+  lowStockPercentAfter: number
   patternCountBefore: number
   patternCountAfter: number
   makeCountBefore: number
@@ -993,6 +995,8 @@ function diffBackup(live: LedgerState, backup: BackupFile): BackupDiff {
   }
   return {
     stockChanged,
+    lowStockPercentBefore: live.settings.lowStockPercent,
+    lowStockPercentAfter: backup.settings.lowStockPercent,
     patternCountBefore: live.patterns.length,
     patternCountAfter: backup.patterns.length,
     makeCountBefore: live.makes.length,

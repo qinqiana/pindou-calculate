@@ -824,6 +824,16 @@ test('confirm without pattern metadata keeps the manual request canonical', () =
   assert.equal(l.store.live().confirmedUsages.filter((usage) => usage.patternId === id && usage.version === 1).length, 1)
 })
 
+test('restock preview omits unchanged colors so full selection only shows real changes', () => {
+  const l = ledger()
+  must(l.commitFirstEntry('seed-all', [{ code: 'A1', qty: 100 }, { code: 'B1', qty: 10 }], l.token()), 'seed')
+  const preview = must(l.previewRestock([{ code: 'A1', qty: 100 }, { code: 'B1', qty: 15 }]), 'preview')
+  assert.deepEqual(preview.ok && preview.lines.map((line) => line.code), ['B1'])
+  must(l.commitRestock('full-selection', [{ code: 'A1', qty: 100 }, { code: 'B1', qty: 15 }], preview.token), 'save')
+  assert.equal(l.movements('A1').length, 1)
+  assert.equal(l.movements('B1').at(-1)!.movement.delta, 5)
+})
+
 test('low-stock boundary compares as integers: exact threshold warns, one above does not', () => {
   const l = ledger()
   must(l.commitFirstEntry('e2', [{ code: 'C1', qty: 70 }], l.token()), 'entry')

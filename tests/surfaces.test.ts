@@ -57,6 +57,7 @@ test('user-facing pages exist and call shipped Ledger entry', () => {
   assert.match(batch, /bindPreview|previewStillValid/)
   assert.match(batch, /GROUP_ORDER/)
   assert.match(batch, /全选未录入/)
+  assert.match(batch, /全选全部/)
   assert.match(batch, /选本组/)
   assert.match(batch, /填入已选/)
   assert.match(batch, /applyBatchQty/)

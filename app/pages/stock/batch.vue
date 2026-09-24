@@ -9,7 +9,7 @@
 
     <view class="selection-tools card">
       <button class="btn outline" :disabled="availableCount === 0" @click="toggleAll">
-        {{ allAvailableSelected ? '取消全选' : mode === 'first-entry' ? '全选未录入' : '全选' }}
+        {{ allAvailableSelected ? '取消全选' : mode === 'first-entry' ? '全选未录入' : mode === 'restock' ? '全选全部' : '全选' }}
       </button>
       <text class="available-note">可选 {{ availableCount }} 色</text>
       <input class="qty-input batch-input" type="number" :value="batchQty" placeholder="统一颗数" @input="onBatchQty" />
@@ -222,9 +222,14 @@ async function preview() {
     binding = null
     return
   }
+  if (result.lines.length === 0) {
+    error.value = mode.value === 'restock' ? '所选色号没有可保存的补货变化' : '所选色号的数量和估算标记没有变化，无需保存。'
+    previewLines.value = []
+    binding = null
+    return
+  }
   binding = bindPreview(selectedItems(), result.token)
   previewLines.value = result.lines
-  if (!result.lines.length) { error.value = '所选色号的数量和估算标记没有变化，无需保存。'; return }
   await nextTick()
   scrollTarget.value = 'batch-preview'
 }

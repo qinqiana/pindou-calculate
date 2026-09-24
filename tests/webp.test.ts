@@ -22,7 +22,7 @@ function nativeCodec(_sdk = 29, failCompress = false) {
     if (failCompress) return JSON.stringify({ ok: false, message: 'conversion failed' })
     try {
       const args = JSON.parse(raw)
-      const png = execFileSync('python3', ['-c', `
+      const png = execFileSync(process.platform === 'win32' ? 'python' : 'python3', ['-c', `
 import base64, io, sys
 from PIL import Image, ImageOps
 im = Image.open(io.BytesIO(sys.stdin.buffer.read())); im.load()

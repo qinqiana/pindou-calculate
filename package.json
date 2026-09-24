@@ -6,7 +6,7 @@
   "description": "拼豆库存与图纸用量 — Android 首版本地账本",
   "scripts": {
     "test": "node --experimental-strip-types --test tests/*.test.ts app/src/share/share.test.ts",
-    "build:web": "node scripts/prepare-recognition.mjs && UNI_INPUT_DIR=\"$PWD/app\" UNI_OUTPUT_DIR=\"$PWD/dist/build/android-assets\" uni build -p h5",
+    "build:web": "node scripts/build-web.mjs",
     "build:android": "npm run build:web && gradle -p android --no-daemon assembleRelease"
   },
   "dependencies": {

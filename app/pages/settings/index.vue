@@ -24,6 +24,7 @@
       <view v-if="diff" class="diff">
         <text class="diff-title">将整体替换，不合并</text>
         <view class="diff-line"><text class="diff-key">余额变化色数</text><text class="diff-val">{{ diff.stockChanged }}</text></view>
+        <view class="diff-line"><text class="diff-key">低库存预警比例</text><text class="diff-val">{{ diff.lowStockPercentBefore }}% → {{ diff.lowStockPercentAfter }}%</text></view>
         <view class="diff-line"><text class="diff-key">图纸</text><text class="diff-val">{{ diff.patternCountBefore }} → {{ diff.patternCountAfter }}</text></view>
         <view class="diff-line"><text class="diff-key">制作</text><text class="diff-val">{{ diff.makeCountBefore }} → {{ diff.makeCountAfter }}</text></view>
         <view class="diff-line"><text class="diff-key">变动记录</text><text class="diff-val">{{ diff.movementCountBefore }} → {{ diff.movementCountAfter }}</text></view>
@@ -47,6 +48,7 @@
 <script setup lang="ts">
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import type { Ledger } from '../../src/ledger/operations'
 import { appLedger, appStorageState, bootAppLedger, newRequestId, retryAppStorage } from '../../src/platform/app-ledger'
 import { pickTextDocument, writeTextToDownloads } from '../../src/platform/fs'
 
@@ -54,6 +56,8 @@ const percent = ref('10')
 const storageError = ref('')
 const diff = ref<null | {
   stockChanged: number
+  lowStockPercentBefore: number
+  lowStockPercentAfter: number
   patternCountBefore: number
   patternCountAfter: number
   makeCountBefore: number
@@ -64,6 +68,13 @@ const diff = ref<null | {
 }>(null)
 const message = ref('')
 let validated: unknown = null
+let previewToken: ReturnType<Ledger['token']> | null = null
+
+function clearPreview() {
+  diff.value = null
+  validated = null
+  previewToken = null
+}
 
 onShow(async () => {
   await bootAppLedger()
@@ -93,34 +104,35 @@ async function exportBak() {
 }
 
 async function chooseBak() {
+  clearPreview()
   const picked = await pickTextDocument()
   if (!picked.ok) {
     message.value = picked.message
     return
   }
-  const result = appLedger().validateBackup(picked.value.text)
+  const ledger = appLedger()
+  const token = ledger.token()
+  const result = ledger.validateBackup(picked.value.text)
   if (!result.ok) {
     message.value = result.message
-    diff.value = null
-    validated = null
     return
   }
   diff.value = result.diff
   validated = result.backup
+  previewToken = token
   message.value = '这是整体替换预览，取消不会改账本。'
 }
 
 function replace() {
-  if (!validated) return
-  const result = appLedger().restoreReplace(newRequestId(), validated, appLedger().token())
-  message.value = result.ok ? '已整体替换为备份账本' : result.message
-  diff.value = null
+  if (!validated || !previewToken) return
+  const result = appLedger().restoreReplace(newRequestId(), validated, previewToken)
+  message.value = result.ok ? '已整体替换为备份账本' : result.code === 'stale' ? '账本在预览后有变化，请重新选择备份并预览差异' : result.message
+  clearPreview()
 }
 
 function cancel() {
   appLedger().cancelRestore()
-  diff.value = null
-  validated = null
+  clearPreview()
   message.value = '已取消，原账本完整。'
 }
 </script>
