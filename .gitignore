@@ -8,7 +8,9 @@ unpackage/
 *.aab
 *.keystore
 *.jks
+*.p12
 *.key
+signing.properties
 local.properties
 .idea/
 .vscode/
