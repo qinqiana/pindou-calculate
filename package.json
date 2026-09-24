@@ -1,6 +1,6 @@
 {
   "name": "pindou-calculate",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "拼豆库存与图纸用量 — Android 首版本地账本",

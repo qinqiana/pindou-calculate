@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.2.0'
+export const APP_VERSION = '0.2.1'
 export const BACKUP_FORMAT_VERSION = 2
 export const MAX_QTY = 1_000_000_000
 export const MAX_IMAGE_BYTES = 20 * 1024 * 1024

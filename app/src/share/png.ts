@@ -7,7 +7,7 @@ for (let n = 0; n < 256; n++) {
   CRC_TABLE[n] = c >>> 0
 }
 
-function crc32(bytes: Uint8Array): number {
+export function crc32(bytes: Uint8Array): number {
   let c = 0xffffffff
   for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8)
   return (c ^ 0xffffffff) >>> 0

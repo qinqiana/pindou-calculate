@@ -370,6 +370,33 @@ test('PNG and JPG import; cancel does not create; confirm does not change stock'
   assert.equal(l.getStock('A1')!.qty, before)
 })
 
+test('PNG accepts metadata after complete IEND but rejects incomplete IEND', () => {
+  const withTrailer = new Uint8Array([...TINY_PNG, ...new TextEncoder().encode('vivo screenshot metadata')])
+  const image = sniffImage(withTrailer)
+  assert.equal(image.ok, true)
+  const l = ledger()
+  assert.equal(l.createPattern('png-trailer', { name: '厂商截图', imageBytes: withTrailer }, l.token()).ok, true)
+
+  const truncated = withTrailer.subarray(0, TINY_PNG.length - 1)
+  const nonzeroIend = withTrailer.slice()
+  nonzeroIend[TINY_PNG.length - 9] = 1
+  const corruptCrcs: Uint8Array[] = []
+  const view = new DataView(TINY_PNG.buffer, TINY_PNG.byteOffset, TINY_PNG.byteLength)
+  for (let at = 8; at < TINY_PNG.length;) {
+    const next = at + 12 + view.getUint32(at)
+    const corrupt = TINY_PNG.slice()
+    corrupt[next - 1] ^= 1
+    corruptCrcs.push(corrupt)
+    at = next
+  }
+  assert.equal(corruptCrcs.length, 3)
+  for (const [index, bytes] of [truncated, nonzeroIend, ...corruptCrcs].entries()) {
+    assert.equal(sniffImage(bytes).ok, false)
+    assert.equal(l.createPattern('png-bad-' + index, { name: '损坏截图', imageBytes: bytes }, l.token()).ok, false)
+  }
+  assert.equal(l.listPatterns().length, 1)
+})
+
 test('未确认用量与确认后的零用量在图纸卡片上可区分', () => {
   const l = ledger()
   const created = must(l.createPattern('p-state', { name: '状态图纸', imageBytes: TINY_PNG }, l.token()), 'create')

@@ -1,4 +1,4 @@
-import { encodePngRgb, readPngSize } from '../share/png.ts'
+import { crc32, encodePngRgb, readPngSize } from '../share/png.ts'
 import { decodeJpegRgb } from './jpeg-decode.ts'
 import { MAX_IMAGE_BYTES, MAX_IMAGE_PIXELS, MAX_THUMB_BYTES } from './numbers.ts'
 import { decodePngRgb } from './png-decode.ts'
@@ -41,12 +41,13 @@ export function sniffImage(bytes: Uint8Array): { ok: true; image: SniffedImage }
       const length = u32(bytes, at)
       const next = at + 12 + length
       if (at + 12 > bytes.length || next > bytes.length) return { ok: false, message: 'PNG 文件不完整' }
+      if (crc32(bytes.subarray(at + 4, next - 4)) !== u32(bytes, next - 4)) return { ok: false, message: 'PNG 文件损坏' }
       const type = String.fromCharCode(...bytes.subarray(at + 4, at + 8))
       if (type === 'IHDR' && at !== 8) return { ok: false, message: 'PNG 文件含重复尺寸信息，请重新选择原图' }
       if (type === 'acTL') return { ok: false, message: '不支持动画，请选择单幅静态图纸' }
       if (type === 'eXIf') orientation = exifOrientation(bytes.subarray(at + 8, at + 8 + length))
       if (type === 'IEND') {
-        ended = length === 0 && next === bytes.length
+        ended = length === 0
         break
       }
       at = next

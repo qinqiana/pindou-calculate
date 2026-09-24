@@ -4,7 +4,7 @@
 
 - 原生工程：`android/`，构建步骤见 [Linux 构建](linux-android-build.md)。
 - 页面和账本：`app/`；正式账本规则仍以 `app/src/ledger/operations.ts` 为真源。
-- 应用包名：`com.pindou.ledger`；开发版 `0.2.0`；备份格式 v2。独立验收包名为 `com.pindou.ledger.debug`。
+- 应用包名：`com.pindou.ledger`；本次自用版 `0.2.1`（versionCode 201）；备份格式 v2。独立验收包名为 `com.pindou.ledger.debug`。
 - 输出：`android/app/build/outputs/apk/release/app-release.apk`。后续更新沿用同包名和密钥，并提高 `versionCode`；不要先卸载应用。
 
 本机签名文件位置为 `/home/kenbattle/.local/share/pindou-calculate/signing/`，内含 `douji-release.p12` 与私有 `signing.properties`，仅当前系统用户可读。请由 qin 在私人存储中保留这两个文件；不可放入 Git、APK 或公开分发附件。重新生成不同密钥将无法直接覆盖更新现有安装。
