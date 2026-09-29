@@ -14,7 +14,8 @@ from PIL import Image, ImageOps
 from generate_glyphs import feature
 from layout_legend import crop_rgb, recognize_layout, make_preview
 from glyph_model import GlyphModel, SmallGlyphModel
-from grid_legend import refine_from_grid, refine_edge_codes, count_grid, find_grid_axes
+from grid_legend import (refine_from_grid, refine_edge_codes, count_grid, find_grid_axes,
+                         frame_digit_anchors, arbitrate_legend_digits)
 from source_marks import source_conflicts
 
 VERSION = 'pixel-glyph-0.12.0-dev'
@@ -200,18 +201,62 @@ def grid_result(image, preview, reader, allowed):
     del edges
     failed = {'complete': False, 'counts': {}, 'cells': [], 'unknownCells': None,
               'reason': '网格或完整边界未可靠定位'}
-    if any(a is None for a in axes):
-        return failed
-    for a, ratio in zip(axes, [w/preview.shape[1], h/preview.shape[0]]):
-        for key in a:
-            a[key] *= ratio
+    ratios = [w/preview.shape[1], h/preview.shape[0]]
+    dimensions = (preview.shape[1], preview.shape[0])
+
+    def validate(proposal):
+        scaled = [{key: value*ratio for key, value in axis.items()}
+                  for axis, ratio in zip(proposal, ratios)]
+        return grid_attempt(image, scaled, reader, allowed, failed)
+
+    if all(a is not None for a in axes):
+        attempt = validate(axes)
+        if attempt is not None:
+            return attempt
+    # Broken rules and interior legends hide long lines from the strict kernel.
+    # Shorter kernels recover the lattice, but can stop one cell short of an
+    # outer rule whose edge blurred into a double peak. Wider hypotheses are
+    # only proposals: each must still pass the full numbered-frame validation.
+    fallback = find_grid_axes(preview, axis_lines)
+    if fallback is not None:
+        def grown(axis, delta_start, delta_end):
+            candidate = dict(axis)
+            candidate['start'] += delta_start*axis['step']
+            candidate['end'] += delta_end*axis['step']
+            return candidate
+        proposals = [fallback]
+        for side in (0, 1):
+            for delta_start, delta_end in ((0, 1), (-1, 0)):
+                proposal = list(fallback)
+                proposal[side] = grown(fallback[side], delta_start, delta_end)
+                proposals.append(proposal)
+        proposals.append([grown(fallback[0], 0, 1), grown(fallback[1], 0, 1)])
+        seen = [axes] if all(a is not None for a in axes) else []
+        for proposal in proposals:
+            if any(axis['start'] < -axis['step']*.25 or axis['end'] > limit+axis['step']*.25
+                   for axis, limit in zip(proposal, dimensions)):
+                continue
+            if any(all(abs(c['start']-p['start']) < 1 and abs(c['end']-p['end']) < 1
+                       and abs(c['step']-p['step']) < .5 for c, p in zip(proposal, previous))
+                   for previous in seen):
+                continue
+            seen.append(proposal)
+            attempt = validate(proposal)
+            if attempt is not None:
+                return attempt
+    return failed
+
+
+def grid_attempt(image, axes, reader, allowed, failed):
+    """Validate one grid hypothesis; None unless the numbered frame agrees."""
+    w, h = image.size
     x, y = axes
     cols = round((x['end']-x['start'])/x['step'])
     rows = round((y['end']-y['start'])/y['step'])
     # ponytail: v0.1 validates square grids with a four-sided numeric frame.
     # Other layouts remain unsupported until their complete boundary can be proved.
     if abs(math.log(x['step']/y['step'])) > .08 or min(cols, rows) < 4:
-        return failed
+        return None
     if rows*cols > PARAMETERS['max_grid_cells']:
         return {**failed, 'reason': '网格超过本版逐格验证范围'}
     def box(r, c):
@@ -227,7 +272,7 @@ def grid_result(image, preview, reader, allowed):
         for r, c, number in side:
             label = read(r, c, frame=True)
             if not label['reliable'] or label['text'] != str(number):
-                return failed
+                return None
     counts, cells, blanks, unknown = {}, [], 0, 0
     for r in range(1, rows-1):
         for c in range(1, cols-1):
@@ -463,10 +508,14 @@ def recognize(path, on_progress=None):
                 # because one production cell could not be read.
                 layout['items'] = [item for item in layout['items']
                                    if not overlapping_region(item['region'], grid['region'])]
-            if axes is not None and any(it['tinyPrint'] for it in layout['items']):
+            if axes is not None and any(it['tinyPrint'] or it['layout'] == 'below'
+                                        for it in layout['items']):
                 refine_from_grid(image,preview,layout,SmallGlyphModel(model),axes,allowed)
             if axes is not None:
                 refine_edge_codes(image, preview, layout, model, axes)
+                anchors = frame_digit_anchors(image, axes, width/preview.shape[1],
+                                              height/preview.shape[0])
+                arbitrate_legend_digits(image, layout['items'], anchors)
             new_candidates, new_evidence, new_doubts = [], [], []
             for i, item in enumerate(layout['items']):
                 key = f'layout-{i}'
