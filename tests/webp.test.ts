@@ -46,8 +46,8 @@ async function withAndroid<T>(android: any, fn: () => T | Promise<T>): Promise<T
   try { return await fn() } finally { g.PindouAndroid = previous }
 }
 
-test('18 real originals → full decode → manual confirmation → restart → share → v2 restore', async () => {
-  assert.equal(samples.length, 18)
+test('19 real originals → full decode → manual confirmation → restart → share → v2 restore', async () => {
+  assert.equal(samples.length, 19)
   assert.equal(samples.filter(p => p.endsWith('.webp')).length, 13)
   const dir = mkdtempSync(join(tmpdir(), 'pindou-webp-'))
   const codec = nativeCodec()
@@ -99,7 +99,7 @@ test('18 real originals → full decode → manual confirmation → restart → 
         const share = previewShareDataUrl('xiaohongshu', shareContentFromPattern(pattern.name, pattern.thumbnail))
         writeFileSync(join(process.env.PINDOU_IMAGE_EVIDENCE_DIR, 'share.png'), base64ToBytes(share.split(',')[1]))
       }
-      assert.equal(codec.calls.filter(c => c === 'thumbnail').length, 18)
+      assert.equal(codec.calls.filter(c => c === 'thumbnail').length, 19)
     })
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
