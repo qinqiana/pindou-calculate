@@ -1,5 +1,11 @@
 # 豆计自用 Release APK
 
+## 0.2.2（2026-09-29）
+
+[下载 pindou-0.2.2-release.apk](pindou-0.2.2-release.apk)（21,966,991 字节，SHA-256 `a0e09bf125cadfd0edce2e25d9fb171da6136246868249c6f6199b9e38e2094e`）。包名 `com.pindou.ledger`，versionCode 202，最低 Android 10；沿用 0.2.1 的 Windows 密钥自签（证书 SHA-256 `9c71f32a3dbaa37dbe515eaa8a21160c5f361f99bb55637385dba1621af2a1e2`），**可覆盖安装 0.2.1**；仍不能覆盖安装 0.2.0。安装包不含私钥、密码或个人账本。
+
+内容：画像素类图纸识别修复（PR #32，图例字形误读矫正，验证图纸总数 1296→1676、16 色中 15 色精确，残留 D10→D18 疑虑待核对）。本包已完成构建、签名和静态校验，尚无连接的 Android 设备供真机安装验收。
+
 ## 0.2.1（2026-09-25）
 
 [下载 pindou-0.2.1-release.apk](pindou-0.2.1-release.apk)（21,964,155 字节，SHA-256 `180C4635511DBB8F2EB979709F18451E06C1A6A2AC11F823F897F167F9900777`）。包名 `com.pindou.ledger`，versionCode 201，最低 Android 10；Windows 新密钥自签，APK v2 签名校验通过。证书 SHA-256 为 `9c71f32a3dbaa37dbe515eaa8a21160c5f361f99bb55637385dba1621af2a1e2`，安装包不含私钥、密码或个人账本。
