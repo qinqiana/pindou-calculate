@@ -81,7 +81,8 @@ def refine_edge_codes(image, preview, layout, model, axes):
 
 
 def refine_from_grid(image, preview, layout, model, axes, allowed):
-    items = [it for it in layout['items'] if it['tinyPrint']
+    items = [it for it in layout['items'] if (it['tinyPrint'] or it['layout'] == 'below')
+
              and it['swatchColor'] is not None and it['quantityText'] is not None]
     if not items or any(a is None for a in axes):
         return
@@ -441,3 +442,174 @@ def count_grid(image, preview, model, axes, allowed, blank_check, legend_regions
                     'reason': '处理未完成，尚无足够制作格证据；未覆盖区域数量未知'}
         return None
     return result
+
+
+def _frame_ink_components(image, box):
+    pixels, _ = crop_rgb(image, box)
+    if not pixels.size:
+        return []
+    background = np.median(pixels.reshape(-1, 3), axis=0).astype('float32')
+    diff = abs(pixels.astype('float32')-background).max(axis=2)
+    contrast = float(np.percentile(diff, 98))
+    if contrast < 30:
+        return []
+    mask = (diff > max(25, contrast*.45)).astype('uint8')
+    _, _, stats, _ = cv2.connectedComponentsWithStats(mask)
+    h, w = mask.shape
+    out = []
+    for a, b, cw, ch, area in sorted((s for s in stats[1:]), key=lambda s: s[0]):
+        if area < 4 or ch < h*.3 or cw > ch*2:
+            continue
+        if a == 0 or b == 0 or a+cw >= w or b+ch >= h:
+            return []
+        out.append(mask[b:b+ch, a:a+cw])
+    return out
+
+
+def frame_digit_anchors(image, axes, sx, sy):
+    """Known digit glyphs from a numbered frame, same image and same font.
+
+    Returns {digit: [normalized masks]} only when the clusters survive
+    leave-one-out self-validation, otherwise {}.
+    """
+    if axes is None or any(a is None for a in axes):
+        return {}
+    x, y = axes
+    cols = round((x['end']-x['start'])/x['step'])
+    rows = round((y['end']-y['start'])/y['step'])
+    if min(cols, rows) < 5 or cols*rows > 16000:
+        return {}
+
+    def cell_box(row, col, pad=.16):
+        x0, x1 = (x['start']+col*x['step'])*sx, (x['start']+(col+1)*x['step'])*sx
+        y0, y1 = (y['start']+row*y['step'])*sy, (y['start']+(row+1)*y['step'])*sy
+        px, py = (x1-x0)*pad, (y1-y0)*pad
+        return [x0+px, y0+py, (x1-x0)-2*px, (y1-y0)-2*py]
+
+    raw = {}
+    border = ([(0, c, c) for c in range(1, cols-1)]
+              + [(rows-1, c, c) for c in range(1, cols-1)]
+              + [(r, 0, r) for r in range(1, rows-1)]
+              + [(r, cols-1, r) for r in range(1, rows-1)])
+    for row, col, number in border:
+        masks = _frame_ink_components(image, cell_box(row, col))
+        if len(masks) != len(str(number)):
+            continue
+        for mask, digit in zip(masks, str(number)):
+            raw.setdefault(digit, []).append(normalize(mask))
+    anchors = {}
+    for digit, refs in raw.items():
+        if len(refs) < 3:
+            continue
+        arr = np.stack(refs)
+        dist = abs(arr[:, None]-arr[None]).mean(axis=(2, 3))
+        np.fill_diagonal(dist, np.inf)
+        med = np.median(dist, axis=1)
+        keep = arr[med <= max(.06, np.percentile(med, 60))]
+        if len(keep) >= 3:
+            anchors[digit] = keep
+    if len(anchors) < 6:
+        return {}
+    ok = tot = 0
+    for digit, refs in anchors.items():
+        for i, ref in enumerate(refs):
+            errs = {}
+            for other, refs2 in anchors.items():
+                e = [float(np.mean(abs(ref-r))) for j, r in enumerate(refs2)
+                     if not (other == digit and j == i)]
+                if e:
+                    errs[other] = min(e)
+            ok += min(errs, key=errs.get) == digit
+            tot += 1
+    return anchors if tot and ok/tot >= .9 else {}
+
+
+def _legend_char_mask(image, region):
+    x0, y0, w0, h0 = [int(v) for v in region]
+    pixels, _ = crop_rgb(image, [x0-3, y0-3, w0+6, h0+6])
+    if not pixels.size:
+        return None
+    ring = np.concatenate([pixels[0].reshape(-1, 3), pixels[-1].reshape(-1, 3),
+                           pixels[:, 0].reshape(-1, 3), pixels[:, -1].reshape(-1, 3)])
+    background = np.median(ring, axis=0).astype('float32')
+    diff = abs(pixels.astype('float32')-background).max(axis=2)
+    contrast = float(np.percentile(diff, 98))
+    if contrast < 30:
+        return None
+    mask = (diff > max(25, contrast*.45)).astype('uint8')
+    _, _, stats, _ = cv2.connectedComponentsWithStats(mask)
+    cx, cy = 3+w0/2, 3+h0/2
+    best = None
+    for a, b, cw, ch, area in stats[1:]:
+        if a <= cx < a+cw and b <= cy < b+ch and area >= 4:
+            if best is None or area > best[4]:
+                best = (a, b, cw, ch, area)
+    if best is None:
+        return None
+    a, b, cw, ch, _ = best
+    return normalize(mask[b:b+ch, a:a+cw])
+
+
+def arbitrate_legend_digits(image, items, anchors):
+    """Correct provably wrong legend digit characters against frame anchors.
+
+    Confident CNN digits stay untouched; a non-digit read in a digit position
+    is already wrong, so it accepts a looser match. A change is committed only
+    if the field still decodes, and every replacement is recorded as a change
+    so the caller still surfaces a review doubt.
+    """
+    if not anchors:
+        return
+    for item in items:
+        for field, kind in ((item.get('code'), 'code'), (item.get('quantity'), 'number')):
+            if field is None or not field.get('characters'):
+                continue
+            chars = field['characters']
+            positions = range(1, len(chars)) if kind == 'code' else range(len(chars))
+            replaced = []
+            for i in positions:
+                c = chars[i]
+                if c['char'].isdigit():
+                    if c['score'] >= .9:
+                        continue
+                    err_max, margin_min = .12, .03
+                else:
+                    err_max, margin_min = .16, .02
+                query = _legend_char_mask(image, c['region'])
+                if query is None:
+                    continue
+                errs = sorted((min(float(np.mean(abs(query-a))) for a in refs), d)
+                              for d, refs in anchors.items())
+                (best_err, best), (second_err, _) = errs[0], errs[1]
+                if best_err <= err_max and second_err-best_err >= margin_min and best != c['char']:
+                    replaced.append((c, c['char'], best, best_err))
+            if not replaced:
+                continue
+            kept_symbols = []
+            for symbol in field.get('invalidNumericSymbols', []):
+                sx, sy, sw, sh = symbol['region']
+                near = any(not (sx+sw+2 < rx or sx > rx+rw+2 or sy+sh+2 < ry or sy > ry+rh+2)
+                           for c, _, _, _ in replaced for rx, ry, rw, rh in [c['region']])
+                # A speck touching a misread glyph is a fragment of it, not punctuation.
+                if not (near and sw*sh <= 12):
+                    kept_symbols.append(symbol)
+            original_symbols = field.get('invalidNumericSymbols')
+            field['invalidNumericSymbols'] = kept_symbols
+            snapshot = [(c, c['char'], c['score']) for c, _, _, _ in replaced]
+            for c, _, best, best_err in replaced:
+                c['char'] = best
+                c['score'] = round(max(.5, 1-3*best_err), 3)
+            text = decode_field(field, kind)
+            if text is None:
+                for c, char, score in snapshot:
+                    c['char'], c['score'] = char, score
+                field['invalidNumericSymbols'] = original_symbols
+                continue
+            if kind == 'code':
+                item['codeText'] = text
+            else:
+                item['quantityText'] = text
+            field['interpretation']['changes'].extend(
+                {'region': c['region'], 'raw': raw, 'candidate': best,
+                 'reason': '边框同字体数字核对，仍需核对'}
+                for c, raw, best, _ in replaced)

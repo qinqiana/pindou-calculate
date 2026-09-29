@@ -19,7 +19,7 @@ class LegendLayoutChecks(unittest.TestCase):
         self.assertTrue(all(e['region'] for e in result['evidence']))
 
     def test_indented_single_last_entry_is_not_split_at_previous_columns(self):
-        sample = next(s for s in json.loads((ROOT/'experiments/issue8/samples.json').read_text())['samples'] if s['id'] == 'S11')
+        sample = next(s for s in json.loads((ROOT/'experiments/issue8/samples.json').read_text(encoding='utf-8'))['samples'] if s['id'] == 'S11')
         expected = {'A25': 305, 'F1': 240, 'H16': 228, 'F13': 149, 'A19': 15, 'H2': 6}
         result = recognize(ROOT/sample['path'])
         x, y, w, h = next(e['region'] for e in result['evidence'] if e.get('codeText') == 'A19')
