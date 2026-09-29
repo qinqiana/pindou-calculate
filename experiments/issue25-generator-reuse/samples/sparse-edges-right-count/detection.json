@@ -1,0 +1,595 @@
+{
+  "image": "sheet.png",
+  "width": 620,
+  "height": 692,
+  "objects": [
+    {
+      "id": "grid",
+      "cls": "grid_region",
+      "box": [
+        215,
+        118,
+        190,
+        304
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-0",
+      "cls": "title_text",
+      "box": [
+        17,
+        15,
+        370,
+        21
+      ],
+      "parent": null,
+      "text": "自制小样 · 5列 × 8行 · 4色 · 共16颗"
+    },
+    {
+      "id": "text-1",
+      "cls": "other_text",
+      "box": [
+        15,
+        46,
+        424,
+        13
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-2",
+      "cls": "axis_label",
+      "box": [
+        231,
+        95,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-3",
+      "cls": "axis_label",
+      "box": [
+        231,
+        435,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-4",
+      "cls": "axis_label",
+      "box": [
+        269,
+        95,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-5",
+      "cls": "axis_label",
+      "box": [
+        269,
+        435,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-6",
+      "cls": "axis_label",
+      "box": [
+        307,
+        95,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-7",
+      "cls": "axis_label",
+      "box": [
+        307,
+        435,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-8",
+      "cls": "axis_label",
+      "box": [
+        345,
+        95,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-9",
+      "cls": "axis_label",
+      "box": [
+        345,
+        435,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-10",
+      "cls": "axis_label",
+      "box": [
+        383,
+        95,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-11",
+      "cls": "axis_label",
+      "box": [
+        383,
+        435,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-12",
+      "cls": "axis_label",
+      "box": [
+        194,
+        132,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-13",
+      "cls": "axis_label",
+      "box": [
+        420,
+        132,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-14",
+      "cls": "axis_label",
+      "box": [
+        194,
+        170,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-15",
+      "cls": "axis_label",
+      "box": [
+        420,
+        170,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-16",
+      "cls": "axis_label",
+      "box": [
+        194,
+        208,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-17",
+      "cls": "axis_label",
+      "box": [
+        420,
+        208,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-18",
+      "cls": "axis_label",
+      "box": [
+        194,
+        246,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-19",
+      "cls": "axis_label",
+      "box": [
+        420,
+        246,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-20",
+      "cls": "axis_label",
+      "box": [
+        194,
+        284,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-21",
+      "cls": "axis_label",
+      "box": [
+        420,
+        284,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-22",
+      "cls": "axis_label",
+      "box": [
+        194,
+        322,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-23",
+      "cls": "axis_label",
+      "box": [
+        420,
+        322,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-24",
+      "cls": "axis_label",
+      "box": [
+        194,
+        360,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-25",
+      "cls": "axis_label",
+      "box": [
+        420,
+        360,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-26",
+      "cls": "axis_label",
+      "box": [
+        194,
+        398,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-27",
+      "cls": "axis_label",
+      "box": [
+        420,
+        398,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-44",
+      "cls": "other_text",
+      "box": [
+        14,
+        486,
+        60,
+        16
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-45",
+      "cls": "code_text",
+      "box": [
+        22,
+        521,
+        10,
+        7
+      ],
+      "parent": "li-0",
+      "text": "H2"
+    },
+    {
+      "id": "text-46",
+      "cls": "count_text",
+      "box": [
+        51,
+        520,
+        20,
+        11
+      ],
+      "parent": "li-0",
+      "text": "5 颗"
+    },
+    {
+      "id": "text-47",
+      "cls": "code_text",
+      "box": [
+        218,
+        521,
+        16,
+        7
+      ],
+      "parent": "li-1",
+      "text": "C29"
+    },
+    {
+      "id": "text-48",
+      "cls": "count_text",
+      "box": [
+        249,
+        520,
+        20,
+        11
+      ],
+      "parent": "li-1",
+      "text": "4 颗"
+    },
+    {
+      "id": "text-49",
+      "cls": "code_text",
+      "box": [
+        419,
+        521,
+        10,
+        7
+      ],
+      "parent": "li-2",
+      "text": "H7"
+    },
+    {
+      "id": "text-50",
+      "cls": "count_text",
+      "box": [
+        448,
+        520,
+        20,
+        11
+      ],
+      "parent": "li-2",
+      "text": "4 颗"
+    },
+    {
+      "id": "text-51",
+      "cls": "code_text",
+      "box": [
+        22,
+        567,
+        10,
+        7
+      ],
+      "parent": "li-3",
+      "text": "H1"
+    },
+    {
+      "id": "text-52",
+      "cls": "count_text",
+      "box": [
+        51,
+        566,
+        20,
+        11
+      ],
+      "parent": "li-3",
+      "text": "3 颗"
+    },
+    {
+      "id": "text-53",
+      "cls": "title_text",
+      "box": [
+        14,
+        625,
+        132,
+        15
+      ],
+      "parent": null,
+      "text": "所需豆子总数：16 颗"
+    },
+    {
+      "id": "text-54",
+      "cls": "other_text",
+      "box": [
+        15,
+        650,
+        245,
+        16
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-55",
+      "cls": "watermark",
+      "box": [
+        482,
+        652,
+        124,
+        12
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "swatch-0",
+      "cls": "legend_swatch",
+      "box": [
+        12,
+        511,
+        30,
+        30
+      ],
+      "parent": "li-0",
+      "text": null
+    },
+    {
+      "id": "li-0",
+      "cls": "legend_item",
+      "box": [
+        12,
+        511,
+        59,
+        30
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "swatch-1",
+      "cls": "legend_swatch",
+      "box": [
+        210.66666666666666,
+        511,
+        30,
+        30
+      ],
+      "parent": "li-1",
+      "text": null
+    },
+    {
+      "id": "li-1",
+      "cls": "legend_item",
+      "box": [
+        210.66666666666666,
+        511,
+        58.33333333333334,
+        30
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "swatch-2",
+      "cls": "legend_swatch",
+      "box": [
+        409.3333333333333,
+        511,
+        30,
+        30
+      ],
+      "parent": "li-2",
+      "text": null
+    },
+    {
+      "id": "li-2",
+      "cls": "legend_item",
+      "box": [
+        409.3333333333333,
+        511,
+        58.666666666666686,
+        30
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "swatch-3",
+      "cls": "legend_swatch",
+      "box": [
+        12,
+        557,
+        30,
+        30
+      ],
+      "parent": "li-3",
+      "text": null
+    },
+    {
+      "id": "li-3",
+      "cls": "legend_item",
+      "box": [
+        12,
+        557,
+        59,
+        30
+      ],
+      "parent": null,
+      "text": null
+    }
+  ]
+}

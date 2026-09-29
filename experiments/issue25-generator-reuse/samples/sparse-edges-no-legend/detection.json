@@ -1,0 +1,331 @@
+{
+  "image": "sheet.png",
+  "width": 262,
+  "height": 376,
+  "objects": [
+    {
+      "id": "grid",
+      "cls": "grid_region",
+      "box": [
+        36,
+        36,
+        190,
+        304
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-2",
+      "cls": "axis_label",
+      "box": [
+        52,
+        13,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-3",
+      "cls": "axis_label",
+      "box": [
+        52,
+        353,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-4",
+      "cls": "axis_label",
+      "box": [
+        90,
+        13,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-5",
+      "cls": "axis_label",
+      "box": [
+        90,
+        353,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-6",
+      "cls": "axis_label",
+      "box": [
+        128,
+        13,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-7",
+      "cls": "axis_label",
+      "box": [
+        128,
+        353,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-8",
+      "cls": "axis_label",
+      "box": [
+        166,
+        13,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-9",
+      "cls": "axis_label",
+      "box": [
+        166,
+        353,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-10",
+      "cls": "axis_label",
+      "box": [
+        204,
+        13,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-11",
+      "cls": "axis_label",
+      "box": [
+        204,
+        353,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-12",
+      "cls": "axis_label",
+      "box": [
+        15,
+        50,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-13",
+      "cls": "axis_label",
+      "box": [
+        241,
+        50,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-14",
+      "cls": "axis_label",
+      "box": [
+        15,
+        88,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-15",
+      "cls": "axis_label",
+      "box": [
+        241,
+        88,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-16",
+      "cls": "axis_label",
+      "box": [
+        15,
+        126,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-17",
+      "cls": "axis_label",
+      "box": [
+        241,
+        126,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-18",
+      "cls": "axis_label",
+      "box": [
+        15,
+        164,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-19",
+      "cls": "axis_label",
+      "box": [
+        241,
+        164,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-20",
+      "cls": "axis_label",
+      "box": [
+        15,
+        202,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-21",
+      "cls": "axis_label",
+      "box": [
+        241,
+        202,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-22",
+      "cls": "axis_label",
+      "box": [
+        15,
+        240,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-23",
+      "cls": "axis_label",
+      "box": [
+        241,
+        240,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-24",
+      "cls": "axis_label",
+      "box": [
+        15,
+        278,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-25",
+      "cls": "axis_label",
+      "box": [
+        241,
+        278,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-26",
+      "cls": "axis_label",
+      "box": [
+        15,
+        316,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    },
+    {
+      "id": "text-27",
+      "cls": "axis_label",
+      "box": [
+        241,
+        316,
+        6,
+        8
+      ],
+      "parent": null,
+      "text": null
+    }
+  ]
+}

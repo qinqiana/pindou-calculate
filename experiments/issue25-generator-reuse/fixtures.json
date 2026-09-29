@@ -1,0 +1,42 @@
+[
+  {
+    "id": "white-blank",
+    "rows": [
+      ["H1", "H2", null, "H7", "H7", null],
+      ["H1", "H2", null, "H7", "C2", "C2"],
+      [null, "H2", "A4", "A4", "C2", null],
+      ["F3", "F3", "A4", null, "H1", "H2"],
+      ["F3", null, "H7", "C2", "H1", null],
+      [null, "H2", "A4", "F3", null, "H7"]
+    ],
+    "expected": {"H1": 4, "H2": 5, "H7": 5, "C2": 4, "A4": 4, "F3": 4},
+    "blankCount": 10
+  },
+  {
+    "id": "ten-colors",
+    "rows": [
+      ["A1", "B2", "C12", "D4", "E5", "F6", "G7", "H1"],
+      ["H2", "M1", "A1", "B2", "C12", "D4", "E5", "F6"],
+      ["G7", "H1", "H2", "M1", null, null, null, null],
+      ["A1", "A1", "A1", "H2", "H2", "H1", "H1", null],
+      [null, null, "C12", "C12", "M1", "M1", null, "G7"]
+    ],
+    "expected": {"A1": 5, "B2": 2, "C12": 4, "D4": 2, "E5": 2, "F6": 2, "G7": 3, "H1": 4, "H2": 4, "M1": 4},
+    "blankCount": 8
+  },
+  {
+    "id": "sparse-edges",
+    "rows": [
+      [null, null, null, null, null],
+      [null, "H1", "H2", "H7", null],
+      [null, "C29", null, "C29", null],
+      [null, "H2", "H1", "H2", null],
+      [null, "H7", null, "H7", null],
+      [null, "C29", "C29", "H1", null],
+      [null, "H2", "H7", "H2", null],
+      [null, null, null, null, null]
+    ],
+    "expected": {"H1": 3, "H2": 5, "H7": 4, "C29": 4},
+    "blankCount": 24
+  }
+]

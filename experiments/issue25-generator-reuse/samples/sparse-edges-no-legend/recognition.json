@@ -1,0 +1,82 @@
+[
+  {
+    "crop": "crops/cell-1-1.png",
+    "text": "H1",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-1-2.png",
+    "text": "H2",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-1-3.png",
+    "text": "H7",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-2-1.png",
+    "text": "C29",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-2-3.png",
+    "text": "C29",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-3-1.png",
+    "text": "H2",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-3-2.png",
+    "text": "H1",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-3-3.png",
+    "text": "H2",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-4-1.png",
+    "text": "H7",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-4-3.png",
+    "text": "H7",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-5-1.png",
+    "text": "C29",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-5-2.png",
+    "text": "C29",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-5-3.png",
+    "text": "H1",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-6-1.png",
+    "text": "H2",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-6-2.png",
+    "text": "H7",
+    "kind": "code"
+  },
+  {
+    "crop": "crops/cell-6-3.png",
+    "text": "H2",
+    "kind": "code"
+  }
+]

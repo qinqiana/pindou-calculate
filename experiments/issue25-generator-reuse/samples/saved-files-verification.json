@@ -1,0 +1,6 @@
+{
+  "samples": 7,
+  "exact_png_crops": 320,
+  "saved_image_answer_checks": "passed",
+  "independent_qa": false
+}

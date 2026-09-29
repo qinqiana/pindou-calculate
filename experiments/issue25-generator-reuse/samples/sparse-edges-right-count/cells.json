@@ -1,0 +1,522 @@
+[
+  {
+    "row": 0,
+    "col": 0,
+    "box": [
+      215,
+      118,
+      38,
+      38
+    ],
+    "crop": "crops/cell-0-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 0,
+    "col": 1,
+    "box": [
+      253,
+      118,
+      38,
+      38
+    ],
+    "crop": "crops/cell-0-1.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 0,
+    "col": 2,
+    "box": [
+      291,
+      118,
+      38,
+      38
+    ],
+    "crop": "crops/cell-0-2.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 0,
+    "col": 3,
+    "box": [
+      329,
+      118,
+      38,
+      38
+    ],
+    "crop": "crops/cell-0-3.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 0,
+    "col": 4,
+    "box": [
+      367,
+      118,
+      38,
+      38
+    ],
+    "crop": "crops/cell-0-4.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 1,
+    "col": 0,
+    "box": [
+      215,
+      156,
+      38,
+      38
+    ],
+    "crop": "crops/cell-1-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "box": [
+      253,
+      156,
+      38,
+      38
+    ],
+    "crop": "crops/cell-1-1.png",
+    "label": "bead",
+    "code": "H1"
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "box": [
+      291,
+      156,
+      38,
+      38
+    ],
+    "crop": "crops/cell-1-2.png",
+    "label": "bead",
+    "code": "H2"
+  },
+  {
+    "row": 1,
+    "col": 3,
+    "box": [
+      329,
+      156,
+      38,
+      38
+    ],
+    "crop": "crops/cell-1-3.png",
+    "label": "bead",
+    "code": "H7"
+  },
+  {
+    "row": 1,
+    "col": 4,
+    "box": [
+      367,
+      156,
+      38,
+      38
+    ],
+    "crop": "crops/cell-1-4.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "box": [
+      215,
+      194,
+      38,
+      38
+    ],
+    "crop": "crops/cell-2-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "box": [
+      253,
+      194,
+      38,
+      38
+    ],
+    "crop": "crops/cell-2-1.png",
+    "label": "bead",
+    "code": "C29"
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "box": [
+      291,
+      194,
+      38,
+      38
+    ],
+    "crop": "crops/cell-2-2.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "box": [
+      329,
+      194,
+      38,
+      38
+    ],
+    "crop": "crops/cell-2-3.png",
+    "label": "bead",
+    "code": "C29"
+  },
+  {
+    "row": 2,
+    "col": 4,
+    "box": [
+      367,
+      194,
+      38,
+      38
+    ],
+    "crop": "crops/cell-2-4.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 3,
+    "col": 0,
+    "box": [
+      215,
+      232,
+      38,
+      38
+    ],
+    "crop": "crops/cell-3-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 3,
+    "col": 1,
+    "box": [
+      253,
+      232,
+      38,
+      38
+    ],
+    "crop": "crops/cell-3-1.png",
+    "label": "bead",
+    "code": "H2"
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "box": [
+      291,
+      232,
+      38,
+      38
+    ],
+    "crop": "crops/cell-3-2.png",
+    "label": "bead",
+    "code": "H1"
+  },
+  {
+    "row": 3,
+    "col": 3,
+    "box": [
+      329,
+      232,
+      38,
+      38
+    ],
+    "crop": "crops/cell-3-3.png",
+    "label": "bead",
+    "code": "H2"
+  },
+  {
+    "row": 3,
+    "col": 4,
+    "box": [
+      367,
+      232,
+      38,
+      38
+    ],
+    "crop": "crops/cell-3-4.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 4,
+    "col": 0,
+    "box": [
+      215,
+      270,
+      38,
+      38
+    ],
+    "crop": "crops/cell-4-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 4,
+    "col": 1,
+    "box": [
+      253,
+      270,
+      38,
+      38
+    ],
+    "crop": "crops/cell-4-1.png",
+    "label": "bead",
+    "code": "H7"
+  },
+  {
+    "row": 4,
+    "col": 2,
+    "box": [
+      291,
+      270,
+      38,
+      38
+    ],
+    "crop": "crops/cell-4-2.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 4,
+    "col": 3,
+    "box": [
+      329,
+      270,
+      38,
+      38
+    ],
+    "crop": "crops/cell-4-3.png",
+    "label": "bead",
+    "code": "H7"
+  },
+  {
+    "row": 4,
+    "col": 4,
+    "box": [
+      367,
+      270,
+      38,
+      38
+    ],
+    "crop": "crops/cell-4-4.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 5,
+    "col": 0,
+    "box": [
+      215,
+      308,
+      38,
+      38
+    ],
+    "crop": "crops/cell-5-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 5,
+    "col": 1,
+    "box": [
+      253,
+      308,
+      38,
+      38
+    ],
+    "crop": "crops/cell-5-1.png",
+    "label": "bead",
+    "code": "C29"
+  },
+  {
+    "row": 5,
+    "col": 2,
+    "box": [
+      291,
+      308,
+      38,
+      38
+    ],
+    "crop": "crops/cell-5-2.png",
+    "label": "bead",
+    "code": "C29"
+  },
+  {
+    "row": 5,
+    "col": 3,
+    "box": [
+      329,
+      308,
+      38,
+      38
+    ],
+    "crop": "crops/cell-5-3.png",
+    "label": "bead",
+    "code": "H1"
+  },
+  {
+    "row": 5,
+    "col": 4,
+    "box": [
+      367,
+      308,
+      38,
+      38
+    ],
+    "crop": "crops/cell-5-4.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 6,
+    "col": 0,
+    "box": [
+      215,
+      346,
+      38,
+      38
+    ],
+    "crop": "crops/cell-6-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 6,
+    "col": 1,
+    "box": [
+      253,
+      346,
+      38,
+      38
+    ],
+    "crop": "crops/cell-6-1.png",
+    "label": "bead",
+    "code": "H2"
+  },
+  {
+    "row": 6,
+    "col": 2,
+    "box": [
+      291,
+      346,
+      38,
+      38
+    ],
+    "crop": "crops/cell-6-2.png",
+    "label": "bead",
+    "code": "H7"
+  },
+  {
+    "row": 6,
+    "col": 3,
+    "box": [
+      329,
+      346,
+      38,
+      38
+    ],
+    "crop": "crops/cell-6-3.png",
+    "label": "bead",
+    "code": "H2"
+  },
+  {
+    "row": 6,
+    "col": 4,
+    "box": [
+      367,
+      346,
+      38,
+      38
+    ],
+    "crop": "crops/cell-6-4.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 7,
+    "col": 0,
+    "box": [
+      215,
+      384,
+      38,
+      38
+    ],
+    "crop": "crops/cell-7-0.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 7,
+    "col": 1,
+    "box": [
+      253,
+      384,
+      38,
+      38
+    ],
+    "crop": "crops/cell-7-1.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 7,
+    "col": 2,
+    "box": [
+      291,
+      384,
+      38,
+      38
+    ],
+    "crop": "crops/cell-7-2.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 7,
+    "col": 3,
+    "box": [
+      329,
+      384,
+      38,
+      38
+    ],
+    "crop": "crops/cell-7-3.png",
+    "label": "blank",
+    "code": null
+  },
+  {
+    "row": 7,
+    "col": 4,
+    "box": [
+      367,
+      384,
+      38,
+      38
+    ],
+    "crop": "crops/cell-7-4.png",
+    "label": "blank",
+    "code": null
+  }
+]

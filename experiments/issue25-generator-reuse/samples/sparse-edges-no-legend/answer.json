@@ -1,0 +1,163 @@
+{
+  "expected": {
+    "H1": 3,
+    "H2": 5,
+    "H7": 4,
+    "C29": 4
+  },
+  "titleTotal": null,
+  "status": "complete",
+  "grid": {
+    "cols": 5,
+    "rows": 8,
+    "cells": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      "H1",
+      "H2",
+      "H7",
+      null,
+      null,
+      "C29",
+      null,
+      "C29",
+      null,
+      null,
+      "H2",
+      "H1",
+      "H2",
+      null,
+      null,
+      "H7",
+      null,
+      "H7",
+      null,
+      null,
+      "C29",
+      "C29",
+      "H1",
+      null,
+      null,
+      "H2",
+      "H7",
+      "H2",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "blankPositions": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      5,
+      4
+    ],
+    [
+      6,
+      0
+    ],
+    [
+      6,
+      4
+    ],
+    [
+      7,
+      0
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      7,
+      2
+    ],
+    [
+      7,
+      3
+    ],
+    [
+      7,
+      4
+    ]
+  ],
+  "origin": "self-authored fixture",
+  "layout": "no-legend",
+  "finalCrop": [
+    179,
+    82,
+    262,
+    376
+  ],
+  "paletteSource": "maxcleme/beadcolors@94b99999652866f1a1879d6369fe735f811949e5"
+}

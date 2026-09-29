@@ -1,0 +1,562 @@
+[
+  {
+    "text": "自制小样 · 5列 × 8行 · 4色 · 共16颗",
+    "box": [
+      17,
+      15,
+      370,
+      21
+    ],
+    "font": "800 21px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "MARD 兼容基础 221 色号 · 按原图比例的图案尺寸 · 每 5 格辅助线 · 逐格色号",
+    "box": [
+      15,
+      46,
+      424,
+      13
+    ],
+    "font": "12px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "1",
+    "box": [
+      231,
+      95,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "1",
+    "box": [
+      231,
+      435,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "2",
+    "box": [
+      269,
+      95,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "2",
+    "box": [
+      269,
+      435,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "3",
+    "box": [
+      307,
+      95,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "3",
+    "box": [
+      307,
+      435,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "4",
+    "box": [
+      345,
+      95,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "4",
+    "box": [
+      345,
+      435,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "5",
+    "box": [
+      383,
+      95,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "5",
+    "box": [
+      383,
+      435,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "1",
+    "box": [
+      194,
+      132,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "1",
+    "box": [
+      420,
+      132,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "2",
+    "box": [
+      194,
+      170,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "2",
+    "box": [
+      420,
+      170,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "3",
+    "box": [
+      194,
+      208,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "3",
+    "box": [
+      420,
+      208,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "4",
+    "box": [
+      194,
+      246,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "4",
+    "box": [
+      420,
+      246,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "5",
+    "box": [
+      194,
+      284,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "5",
+    "box": [
+      420,
+      284,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "6",
+    "box": [
+      194,
+      322,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "6",
+    "box": [
+      420,
+      322,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "7",
+    "box": [
+      194,
+      360,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "7",
+    "box": [
+      420,
+      360,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "8",
+    "box": [
+      194,
+      398,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "8",
+    "box": [
+      420,
+      398,
+      6,
+      8
+    ],
+    "font": "800 11px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H1",
+    "box": [
+      265,
+      169,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H2",
+    "box": [
+      303,
+      169,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H7",
+    "box": [
+      341,
+      169,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "C29",
+    "box": [
+      262,
+      207,
+      20,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "C29",
+    "box": [
+      338,
+      207,
+      20,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H2",
+    "box": [
+      265,
+      245,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H1",
+    "box": [
+      303,
+      245,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H2",
+    "box": [
+      341,
+      245,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H7",
+    "box": [
+      265,
+      283,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H7",
+    "box": [
+      341,
+      283,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "C29",
+    "box": [
+      262,
+      321,
+      20,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "C29",
+    "box": [
+      300,
+      321,
+      20,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H1",
+    "box": [
+      341,
+      321,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H2",
+    "box": [
+      265,
+      359,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H7",
+    "box": [
+      303,
+      359,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "H2",
+    "box": [
+      341,
+      359,
+      14,
+      9
+    ],
+    "font": "800 12px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "用料清单",
+    "box": [
+      14,
+      486,
+      60,
+      16
+    ],
+    "font": "800 15px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "H2",
+    "box": [
+      22,
+      521,
+      10,
+      7
+    ],
+    "font": "800 9px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "5 颗",
+    "box": [
+      51,
+      520,
+      20,
+      11
+    ],
+    "font": "11px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "C29",
+    "box": [
+      218,
+      521,
+      16,
+      7
+    ],
+    "font": "800 9px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "4 颗",
+    "box": [
+      249,
+      520,
+      20,
+      11
+    ],
+    "font": "11px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "H7",
+    "box": [
+      419,
+      521,
+      10,
+      7
+    ],
+    "font": "800 9px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "4 颗",
+    "box": [
+      448,
+      520,
+      20,
+      11
+    ],
+    "font": "11px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "H1",
+    "box": [
+      22,
+      567,
+      10,
+      7
+    ],
+    "font": "800 9px \"DejaVu Sans Mono\""
+  },
+  {
+    "text": "3 颗",
+    "box": [
+      51,
+      566,
+      20,
+      11
+    ],
+    "font": "11px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "所需豆子总数：16 颗",
+    "box": [
+      14,
+      625,
+      132,
+      15
+    ],
+    "font": "800 14px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "图纸尺寸：5 列 × 8 行 · 辅助线每 5 格",
+    "box": [
+      15,
+      650,
+      245,
+      16
+    ],
+    "font": "800 14px \"Noto Sans CJK SC\""
+  },
+  {
+    "text": "豆格工坊 v1.3.0 · 本机生成",
+    "box": [
+      482,
+      652,
+      124,
+      12
+    ],
+    "font": "10px \"Noto Sans CJK SC\""
+  }
+]

@@ -1,0 +1,172 @@
+{
+  "upstream": "https://github.com/zwhy149/bead-grid-studio",
+  "upstreamVersion": "1.3.0",
+  "sourceRevision": "f3d8c26",
+  "browser": "Google Chrome 151.0.7922.173",
+  "fonts": [
+    "Noto Sans CJK SC (OFL-1.1)",
+    "DejaVu Sans Mono (Bitstream Vera / public domain changes)"
+  ],
+  "cliProbe": {
+    "explicitInputH1": 4,
+    "outputH1": 0,
+    "statistics": {
+      "totalBeads": 26,
+      "emptyCells": 10,
+      "usedColors": 5,
+      "density": 0.7222222222222222,
+      "beadCounts": {
+        "H2": 9,
+        "H7": 5,
+        "C2": 4,
+        "A4": 4,
+        "F3": 4
+      },
+      "colors": [
+        {
+          "code": "H2",
+          "name": "白色",
+          "hex": "#FEFFFF",
+          "count": 9,
+          "share": 0.34615384615384615
+        },
+        {
+          "code": "H7",
+          "name": "黑色",
+          "hex": "#000000",
+          "count": 5,
+          "share": 0.19230769230769232
+        },
+        {
+          "code": "A4",
+          "name": "黄橙系",
+          "hex": "#FBED56",
+          "count": 4,
+          "share": 0.15384615384615385
+        },
+        {
+          "code": "C2",
+          "name": "蓝青系",
+          "hex": "#A9F9FC",
+          "count": 4,
+          "share": 0.15384615384615385
+        },
+        {
+          "code": "F3",
+          "name": "红色系",
+          "hex": "#F74941",
+          "count": 4,
+          "share": 0.15384615384615385
+        }
+      ]
+    },
+    "note": "Default quantization is NOT the training answer source."
+  },
+  "samples": [
+    {
+      "id": "white-blank-native",
+      "width": 620,
+      "height": 616,
+      "beads": 26,
+      "blank": 10,
+      "colors": 6,
+      "H1": 4,
+      "H2": 5,
+      "detectionObjects": 61,
+      "recognitionCrops": 38,
+      "nativePixelsEqual": true,
+      "checkedTextPixels": 16150,
+      "renderedGridAndLegendMatch": true
+    },
+    {
+      "id": "white-blank-right-count",
+      "width": 620,
+      "height": 616,
+      "beads": 26,
+      "blank": 10,
+      "colors": 6,
+      "H1": 4,
+      "H2": 5,
+      "detectionObjects": 55,
+      "recognitionCrops": 38,
+      "nativePixelsEqual": null,
+      "checkedTextPixels": 14171,
+      "renderedGridAndLegendMatch": true
+    },
+    {
+      "id": "white-blank-no-legend",
+      "width": 300,
+      "height": 300,
+      "beads": 26,
+      "blank": 10,
+      "colors": 6,
+      "H1": 4,
+      "H2": 5,
+      "detectionObjects": 25,
+      "recognitionCrops": 26,
+      "nativePixelsEqual": true,
+      "checkedTextPixels": 16150,
+      "renderedGridAndLegendMatch": true
+    },
+    {
+      "id": "ten-colors-right-count",
+      "width": 620,
+      "height": 670,
+      "beads": 32,
+      "blank": 8,
+      "colors": 10,
+      "H1": 4,
+      "H2": 4,
+      "detectionObjects": 73,
+      "recognitionCrops": 52,
+      "nativePixelsEqual": null,
+      "checkedTextPixels": 15714,
+      "renderedGridAndLegendMatch": true
+    },
+    {
+      "id": "ten-colors-no-legend",
+      "width": 376,
+      "height": 262,
+      "beads": 32,
+      "blank": 8,
+      "colors": 10,
+      "H1": 4,
+      "H2": 4,
+      "detectionObjects": 27,
+      "recognitionCrops": 32,
+      "nativePixelsEqual": true,
+      "checkedTextPixels": 19390,
+      "renderedGridAndLegendMatch": true
+    },
+    {
+      "id": "sparse-edges-right-count",
+      "width": 620,
+      "height": 692,
+      "beads": 16,
+      "blank": 24,
+      "colors": 4,
+      "H1": 3,
+      "H2": 5,
+      "detectionObjects": 49,
+      "recognitionCrops": 24,
+      "nativePixelsEqual": null,
+      "checkedTextPixels": 13166,
+      "renderedGridAndLegendMatch": true
+    },
+    {
+      "id": "sparse-edges-no-legend",
+      "width": 262,
+      "height": 376,
+      "beads": 16,
+      "blank": 24,
+      "colors": 4,
+      "H1": 3,
+      "H2": 5,
+      "detectionObjects": 27,
+      "recognitionCrops": 16,
+      "nativePixelsEqual": true,
+      "checkedTextPixels": 14424,
+      "renderedGridAndLegendMatch": true
+    }
+  ]
+}

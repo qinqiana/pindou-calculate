@@ -1,0 +1,105 @@
+{
+  "expected": {
+    "H1": 4,
+    "H2": 5,
+    "H7": 5,
+    "C2": 4,
+    "A4": 4,
+    "F3": 4
+  },
+  "titleTotal": 26,
+  "status": "complete",
+  "grid": {
+    "cols": 6,
+    "rows": 6,
+    "cells": [
+      "H1",
+      "H2",
+      null,
+      "H7",
+      "H7",
+      null,
+      "H1",
+      "H2",
+      null,
+      "H7",
+      "C2",
+      "C2",
+      null,
+      "H2",
+      "A4",
+      "A4",
+      "C2",
+      null,
+      "F3",
+      "F3",
+      "A4",
+      null,
+      "H1",
+      "H2",
+      "F3",
+      null,
+      "H7",
+      "C2",
+      "H1",
+      null,
+      null,
+      "H2",
+      "A4",
+      "F3",
+      null,
+      "H7"
+    ]
+  },
+  "blankPositions": [
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      5,
+      4
+    ]
+  ],
+  "origin": "self-authored fixture",
+  "layout": "right-count",
+  "finalCrop": [
+    0,
+    0,
+    620,
+    616
+  ],
+  "paletteSource": "maxcleme/beadcolors@94b99999652866f1a1879d6369fe735f811949e5"
+}
