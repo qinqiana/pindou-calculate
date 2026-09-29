@@ -34,8 +34,8 @@ if __name__ == '__main__':
     parser.add_argument('--recognizer', type=Path, default=HERE/'recognize.py')
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    manifest = json.loads(args.manifest.read_text())['samples']
-    references = json.loads(args.references.read_text())
+    manifest = json.loads(args.manifest.read_text(encoding='utf-8'))['samples']
+    references = json.loads(args.references.read_text(encoding='utf-8'))
     ids = [sample['id'] for sample in manifest]
     if len(ids) != len(set(ids)):
         parser.error('样例编号重复，拒绝覆盖逐图结果')

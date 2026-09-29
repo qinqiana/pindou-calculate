@@ -14,7 +14,7 @@ if __name__ == '__main__':
     parser.add_argument('--output-dir', type=Path, required=True)
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    manifest = json.loads((HERE/'samples.json').read_text())
+    manifest = json.loads((HERE/'samples.json').read_text(encoding='utf-8'))
     results = []
     for sample in manifest['samples']:
         if args.split != 'all' and sample['split'] != args.split:
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         try:
             subprocess.run([sys.executable, str(HERE/'recognize.py'), str(ROOT/sample['path']),
                             '--output', str(output)], check=True, capture_output=True, text=True, timeout=30)
-            result = json.loads(output.read_text())
+            result = json.loads(output.read_text(encoding='utf-8'))
             counts = {c['code']: c['quantity'] for c in result['candidates']}
             record.update(status=result['status'], source=result['source'], counts=counts,
                           total=result['total'], elapsedSeconds=result['elapsedSeconds'],

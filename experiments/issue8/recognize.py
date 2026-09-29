@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def color_codes():
     # Read the existing static catalog, never a user's ledger or the sample manifest.
-    text = (ROOT / 'app/src/ledger/catalog.ts').read_text()
+    text = (ROOT / 'app/src/ledger/catalog.ts').read_text(encoding='utf-8')
     palette, _ = json.JSONDecoder().raw_decode(text.split('export const PALETTE: Palette = ', 1)[1])
     return {c['code'] for c in palette['colors']}
 
@@ -692,19 +692,23 @@ def recognize(path, on_progress=None):
 
 if __name__ == '__main__':
     import platform
-    import resource
+    try:
+        import resource
+    except ImportError:
+        resource = None  # Windows has no resource module; peak RSS is optional.
     import PIL
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('image', type=Path)
     parser.add_argument('--output', type=Path, help='Write candidates and evidence JSON')
     args = parser.parse_args()
     result = recognize(args.image)
-    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     result['runtime'] = {'python': platform.python_version(), 'pillow': PIL.__version__,
                          'numpy': np.__version__, 'opencv': cv2.__version__,
                          'system': platform.system(), 'machine': platform.machine(),
-                         'peakRssBytes': int(peak if platform.system() == 'Darwin' else peak*1024),
                          'glyphBytes': Path(__file__).with_name('glyphs.json').stat().st_size}
+    if resource is not None:
+        peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        result['runtime']['peakRssBytes'] = int(peak if platform.system() == 'Darwin' else peak*1024)
     if args.output:
         with args.output.open('w', encoding='utf-8') as stream:
             json.dump(result, stream, ensure_ascii=False, indent=2)
