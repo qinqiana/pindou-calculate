@@ -6,7 +6,8 @@ from pathlib import Path
 from PIL import Image
 
 root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parent / 'samples'
-fixtures = {f['id']: f for f in json.loads((Path(__file__).parent / 'fixtures.json').read_text())}
+fixture_file = Path(sys.argv[2]) if len(sys.argv)>2 else Path(__file__).parent / 'fixtures.json'
+fixtures = {f['id']: f for f in json.loads(fixture_file.read_text())}
 summary = json.loads((root / 'verification.json').read_text())
 crop_count = 0
 visible_chars = set('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()×x颗-/: ')
@@ -63,7 +64,7 @@ for sample in summary['samples']:
         assert not legends and answer['titleTotal'] is None
         assert not any(o['cls'] in ('title_text', 'count_text', 'code_text') for o in objects)
         # The exact final grid pixels must match the corresponding full-sheet sample.
-        full_folder = root / sample['id'].replace('no-legend', 'right-count')
+        full_folder = next(root / s['id'] for s in summary['samples'] if s['id'].startswith(fixture['id']+'-') and not s['id'].endswith('no-legend'))
         full = Image.open(full_folder / 'sheet.png').convert('RGB')
         gx, gy, gw, gh = next(o['box'] for o in read(full_folder, 'detection')['objects'] if o['cls'] == 'grid_region')
         x, y, w, h = grid
@@ -75,7 +76,7 @@ for sample in summary['samples']:
             code = next(o['text'] for o in children if o['cls'] == 'code_text')
             count = next(o['text'] for o in children if o['cls'] == 'count_text')
             assert code not in pairs
-            pairs[code] = int(count.removesuffix(' 颗'))
+            pairs[code] = int(count.removesuffix(' 颗').strip('()'))
         assert pairs == fixture['expected']
         assert answer['titleTotal'] == sum(pairs.values())
     # H1 is never collapsed into blank; both nearly-white codes remain beads.

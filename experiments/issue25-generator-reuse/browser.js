@@ -23,17 +23,18 @@ proto.fillText = function(text,x,y) {
   nativeText.call(this,text,x,y);
   const after = this.getImageData(x0,y0,w,h).data;
   let left=w,top=h,right=-1,bottom=-1;
-  const pixels=[];
+  const changed=new Uint8Array(w*h);
   for(let p=0;p<w*h;p++) {
     const i=p*4;
     if(before[i]!==after[i] || before[i+1]!==after[i+1] || before[i+2]!==after[i+2] || before[i+3]!==after[i+3]) {
       const px=p%w,py=Math.floor(p/w);
       left=Math.min(left,px);top=Math.min(top,py);right=Math.max(right,px);bottom=Math.max(bottom,py);
-      pixels.push([x0+px,y0+py,...after.slice(i,i+4)]);
+      changed[p]=1;
     }
   }
   check(right>=left, `Text drew no pixels: ${text}`);
-  events.push({text,anchor:[x,y],box:[x0+left,y0+top,right-left+1,bottom-top+1],font:this.font,pixels});
+  events.push({text,anchor:[x,y],box:[x0+left,y0+top,right-left+1,bottom-top+1],font:this.font,
+    raster:{x0,y0,w,h,changed,after}});
 };
 function canvas(w,h) { const c=document.createElement('canvas');c.width=w;c.height=h;return c; }
 const png=c=>c.toDataURL('image/png').split(',')[1];
@@ -49,21 +50,34 @@ function runSample(sample) {
   els={projectTitle:{textContent:'自制小样'}};
   mode=sample.mode==='no-legend'?'native':sample.mode;
   tracing=false;
-  const control=buildExportCanvas(); // Unmodified upstream renderer, same approved fonts.
+  DEVICE_LIMITS.exportPixels=12000000;
+  let control=null,upstreamRenderError=null;
+  try { control=buildExportCanvas(); } catch(error) {
+    check(error.message==='export-memory','Unexpected upstream rendering failure');
+    upstreamRenderError=error.message;
+  }
+  // The 138x239 page including its 64-color legend exceeds the upstream 12 MP cap.
+  // This desktop-only prototype uses 14 MP for that case; no App limits are changed.
+  if(upstreamRenderError) DEVICE_LIMITS.exportPixels=14000000;
   events=[];swatches=[];tracing=true;
   const full=renderObserved();tracing=false;
   const ctx=full.getContext('2d'),fullPixels=ctx.getImageData(0,0,full.width,full.height).data;
   let nativePixelsEqual=null;
-  if(mode==='native') {
+  const fontFitAdaptation=Math.max(7,Math.floor(full.layout.cell*.32))!==Math.max(9,Math.floor(full.layout.cell*.32));
+  if(mode==='native'&&control) {
     const expected=control.getContext('2d').getImageData(0,0,control.width,control.height).data;
     nativePixelsEqual=fullPixels.length===expected.length && fullPixels.every((v,i)=>v===expected[i]);
-    check(nativePixelsEqual,'Instrumentation changed native render pixels');
+    check(nativePixelsEqual||fontFitAdaptation,'Instrumentation changed native render pixels');
   }
   let checkedTextPixels=0;
-  for(const e of events) for(const [x,y,r,g,b,a] of e.pixels) {
-    const i=(y*full.width+x)*4;
-    check(fullPixels[i]===r && fullPixels[i+1]===g && fullPixels[i+2]===b && fullPixels[i+3]===a,`Overpainted text: ${e.text}`);
-    checkedTextPixels++;
+  for(const e of events) {
+    const {x0,y0,w,changed,after}=e.raster;
+    for(let p=0;p<changed.length;p++) if(changed[p]) {
+      const i=((y0+Math.floor(p/w))*full.width+x0+p%w)*4,j=p*4;
+      check(fullPixels[i]===after[j] && fullPixels[i+1]===after[j+1] && fullPixels[i+2]===after[j+2] && fullPixels[i+3]===after[j+3],`Overpainted text: ${e.text} at ${e.anchor}`);
+      checkedTextPixels++;
+    }
+    delete e.raster;
   }
   const l=full.layout,gridBox=[l.ox,l.oy,cols*l.cell,rows*l.cell];
   const crop=sample.mode==='no-legend'?[l.chartX,l.oy-l.ruler,l.chartWidth,rows*l.cell+2*l.ruler]:[0,0,full.width,full.height];
@@ -77,12 +91,17 @@ function runSample(sample) {
     const file=`crops/${name}.png`;images[file]=png(c);return file;
   }
   const gridTexts=events.filter(e=>inside(e.box,gridBox));
+  const textByCell=new Map();
+  for(const e of gridTexts) {
+    const col=Math.floor((e.anchor[0]-l.ox)/l.cell),row=Math.floor((e.anchor[1]-l.oy)/l.cell),index=row*cols+col;
+    check(!textByCell.has(index),'Two labels in one cell');textByCell.set(index,e);
+  }
   const observedCounts={};
   for(let row=0;row<rows;row++) for(let col=0;col<cols;col++) {
     const index=row*cols+col,code=p.grid.cells[index];
     const originalBox=[l.ox+col*l.cell,l.oy+row*l.cell,l.cell,l.cell];
-    const texts=gridTexts.filter(e=>inside(e.box,originalBox));
-    check(code===null?texts.length===0:texts.length===1&&texts[0].text===code,`Grid text mismatch ${row},${col}`);
+    const text=textByCell.get(index);
+    check(code===null?!text:text&&text.text===code&&inside(text.box,originalBox),`Grid text mismatch ${row},${col}`);
     if(code!==null) observedCounts[code]=(observedCounts[code]||0)+1;
     const box=move(originalBox),file=saveCrop(box,`cell-${row}-${col}`);
     cellRecords.push({row,col,box,crop:file,label:code===null?'blank':'bead',code});
@@ -98,12 +117,14 @@ function runSample(sample) {
     if(ay===25 || ay===l.summaryY+12) cls='title_text';
     else if(ay>=l.oy-l.ruler && ay<=l.oy+rows*l.cell+l.ruler) cls='axis_label';
     else if(ay===l.summaryY+38 && ax===full.width-14) cls='watermark';
-    const swatchIndex=swatches.findIndex(s=>ay>=s.box[1] && ay<=s.box[1]+s.box[3] && ax>=s.box[0] && ax<s.box[0]+(full.width-24)/Math.min(3,swatches.length));
+    const swatchIndex=swatches.findIndex(s=>ay>=s.box[1] && ay<s.box[1]+46 && ax>=s.box[0] && ax<s.box[0]+s.itemWidth);
     if(swatchIndex>=0) {
       const s=swatches[swatchIndex],code=PALETTE[s.index].code;
       parent=`li-${swatchIndex}`;
       if(e.text===code) cls='code_text';
-      else if(/^\d+ 颗$/.test(e.text)) {cls='count_text';check(e.text===`${sample.expected[code]} 颗`,'Legend count mismatch');}
+      else if(/^(\d+ 颗|\(\d+\))$/.test(e.text)) {
+        cls='count_text';check(e.text===(mode==='inline'?`(${sample.expected[code]})`:`${sample.expected[code]} 颗`),'Legend count mismatch');
+      }
     }
     const id=`text-${i}`,box=move(e.box);
     objects.push({id,cls,box,parent,text:['code_text','count_text','title_text'].includes(cls)?e.text:null});
@@ -124,6 +145,15 @@ function runSample(sample) {
   for(const c of cellRecords) if(c.label==='blank') {oc.fillStyle='#00aaff33';oc.fillRect(c.box[0]+3,c.box[1]+3,c.box[2]-6,c.box[3]-6);}
   for(const e of gridTexts) {oc.strokeStyle='#de0088';oc.strokeRect(...move(e.box));}
   images['sheet.png']=png(final);images['overlay.png']=png(overlay);
+  if(fontFitAdaptation&&control) {
+    const e=gridTexts.find(e=>e.text.length===3);
+    const row=Math.max(0,Math.floor((e.anchor[1]-l.oy)/l.cell)-1);
+    const col=Math.max(0,Math.floor((e.anchor[0]-l.ox)/l.cell)-1);
+    const region=[l.ox+col*l.cell,l.oy+row*l.cell,Math.min(10,cols-col)*l.cell,Math.min(6,rows-row)*l.cell];
+    for(const [name,source] of [['font-before',control],['font-after',full]]) {
+      const c=canvas(region[2],region[3]);c.getContext('2d').drawImage(source,...region,0,0,region[2],region[3]);images[name+'.png']=png(c);
+    }
+  }
   if(sample.id==='white-blank-native') {
     const input=canvas(cols*16,rows*16),ic=input.getContext('2d');
     p.grid.cells.forEach((code,i)=>{if(code!==null){ic.fillStyle=PALETTE.find(c=>c.code===code).hex;ic.fillRect(i%cols*16,Math.floor(i/cols)*16,16,16);}});
@@ -137,10 +167,12 @@ function runSample(sample) {
       grid:p.grid,blankPositions:cellRecords.filter(c=>c.label==='blank').map(c=>[c.row,c.col]),
       origin:'self-authored fixture',layout:sample.mode,finalCrop:crop,paletteSource:p.palette.source},
     'text-proof':textProof
-  },checks:{width:final.width,height:final.height,beads:p.statistics.totalBeads,blank:sample.blankCount,
+  },checks:{width:final.width,height:final.height,cols,rows,cellPixels:l.cell,
+    projectJsonRoundtrip:sample.projectJsonRoundtrip,beads:p.statistics.totalBeads,blank:sample.blankCount,
+    upstreamRenderError,exportPixelsLimit:DEVICE_LIMITS.exportPixels,
     colors:p.statistics.usedColors,H1:sample.expected.H1,H2:sample.expected.H2,
     detectionObjects:objects.length,recognitionCrops:recognition.length,
-    nativePixelsEqual,checkedTextPixels,renderedGridAndLegendMatch:true}};
+    fontFitAdaptation,nativePixelsEqual,checkedTextPixels,renderedGridAndLegendMatch:true}};
 }
 try {
   const samples=cases.map(runSample);
